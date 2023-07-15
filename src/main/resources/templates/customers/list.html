@@ -1,0 +1,53 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Users</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Клієнти</h1>
+    <form action="/users/search" method="get" class="form-inline">
+        <div class="input-group">
+            <input type="text" class="form-control" name="query" placeholder="Search by username">
+            <div class="input-group-append">
+                <button class="btn btn-info" type="submit">Search</button>
+            </div>
+        </div>
+    </form>
+    <div class="box">
+        <table style="border-collapse: collapse;">
+            <tr>
+                <th style="padding: 10px;">UserID</th>
+                <th style="padding: 10px;">Username</th>
+                <th style="padding: 10px;">Email</th>
+                <th style="padding: 10px;">Birthday</th>
+                <th style="padding: 10px;">First name</th>
+                <th style="padding: 10px;">Last name</th>
+                <th style="padding: 10px;">City</th>
+                <th style="padding: 10px;">Address</th>
+                <th style="padding: 10px;">Gender</th>
+                <!-- Добавьте другие необходимые поля -->
+            </tr>
+            <!-- Итерация по списку пользователей и отображение данных -->
+            <tr th:each="user : ${users}">
+                <td th:text="${user.id}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.username}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.email}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.birthday}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.firstName}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.lastName}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.city}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.address}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${user.gender}" style="text-align: left; padding: 10px;"></td>
+                <td><a th:href="'/user/' + ${user.id} + '/edit'"  class="btn btn-info">Редагувати</a></td>
+                <td><form th:action="'/user/' + ${user.id} + '/remove'" method="post">
+                    <button class="btn btn-warning">Delete</button>
+                </form></td>
+                <!-- Добавьте другие необходимые поля -->
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

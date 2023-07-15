@@ -1,0 +1,71 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Banners</title>
+    <style>
+        .movies-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .cinema {
+            flex: 0 0 200px;
+            margin: 10px;
+            text-align: center;
+        }
+
+        .movie-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .section-container {
+            text-align: center;
+        }
+
+        .section-title {
+            margin-bottom: 10px;
+        }
+        .add-movie-button {
+            display: inline-block;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            text-decoration: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .add-movie-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Кінотеатри</h1>
+    <h2><a href="/cinemas/cinema-add" class="add-movie-button">Додати кінотеатр</a></h2>
+    <div class="section-container">
+        <div class="movies-container">
+            <div th:each="cinema : ${cinemas}" class="cinema">
+                <img class="movie-image" th:src="@{'/upload/' + ${cinema.getLogo_image_path()}}">
+                <h3 th:text="${cinema.name}"></h3>
+                <td><a th:href="'/cinemas/' + ${cinema.cinema_id} + '/edit'"  class="btn btn-info">Редагувати</a></td>
+                <td><form th:action="'/cinemas/' + ${cinema.cinema_id} + '/remove'" method="post">
+                    <button class="btn btn-warning">Delete</button>
+                </form></td>
+            </div>
+        </div>
+    </div>
+    <div th:unless="${not #lists.isEmpty(cinemas)}">
+        <p>Немає кінотеатрів для відображення</p>
+    </div>
+</div>
+</body>
+</html>

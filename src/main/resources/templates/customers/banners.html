@@ -1,0 +1,201 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Banners</title>
+    <style>
+        .form-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            border: solid 1px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+
+        .image-container {
+            margin-right: 10px;
+        }
+
+    </style>
+</head>
+<body>
+<section layout:fragment="header">
+    <h1>Баннери</h1>
+</section>
+<div layout:fragment="content">
+    <div style="color: green; padding: 20px" th:if="${successMessage}">
+        <p th:text="${successMessage}"></p>
+    </div>
+    <div class="form-container">
+        <h3>На главной вверх</h3>
+        <form class="form_yura" enctype="multipart/form-data" th:action="@{/banners/main-banner}" method="post">
+            <div class="image-container">
+                <label for="upload1">Фото 1:</label>
+                <input type="file" id="upload1" name="upload1" class="form-control-file">
+                <label for="url1">URL 1:</label>
+                <input type="text" id="url1" name="url1" class="form-control">
+                <label for="caption1">Текст 1:</label>
+                <input type="text" id="caption1" name="caption1" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload2">Фото 2:</label>
+                <input type="file" id="upload2" name="upload2" class="form-control-file">
+                <label for="url2">URL 2:</label>
+                <input type="text" id="url2" name="url2" class="form-control">
+                <label for="caption2">Текст 2:</label>
+                <input type="text" id="caption2" name="caption2" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload3">Фото 3:</label>
+                <input type="file" id="upload3" name="upload3" class="form-control-file">
+                <label for="url3">URL 3:</label>
+                <input type="text" id="url3" name="url3" class="form-control">
+                <label for="caption3">Текст 3:</label>
+                <input type="text" id="caption3" name="caption3" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload4">Фото 4:</label>
+                <input type="file" id="upload4" name="upload4" class="form-control-file">
+                <label for="url4">URL 4:</label>
+                <input type="text" id="url4" name="url4" class="form-control">
+                <label for="caption4">Текст 4:</label>
+                <input type="text" id="caption4" name="caption4" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload5">Фото 5:</label>
+                <input type="file" id="upload5" name="upload5" class="form-control-file">
+                <label for="url5">URL 5:</label>
+                <input type="text" id="url5" name="url5" class="form-control">
+                <label for="caption5">Текст 5:</label>
+                <input type="text" id="caption5" name="caption5" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="rotation_speed">Скорость вращения:</label>
+                <select id="rotation_speed" name="rotation_speed" class="form-control">
+                    <option value="1">1 сек</option>
+                    <option value="2">2 сек</option>
+                    <option value="3">3 сек</option>
+                    <option value="4">4 сек</option>
+                    <option value="5">5 сек</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Отправить" class="btn btn-info" style="display: block; margin-left: 10px;">
+        </form>
+
+    </div>
+
+
+    <div class="form-container">
+        <h3 class="text-center">Сквозной баннер на заднем фоне</h3>
+        <form class="form_yura" enctype="multipart/form-data" th:action="@{/banners/back-banner}" method="post">
+            <div class="form-group">
+                <label for="upload6">Выберите файл:</label>
+                <input type="file" id="upload6" name="upload6" class="form-control-file">
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" id="photo_type_background" name="photo_type" value="background" onchange="handleCheckboxChange(this)" class="form-check-input">
+                    <label for="photo_type_background" class="form-check-label">Фото на фон</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="form-check">
+                    <input type="checkbox" id="photo_type_simple" name="photo_type" value="simple" onchange="handleCheckboxChange(this)" class="form-check-input">
+                    <label for="photo_type_simple" class="form-check-label">Просто фото</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Отправить" class="btn btn-info">
+            </div>
+        </form>
+
+        <script>
+            function handleCheckboxChange(checkbox) {
+                const checkboxes = document.getElementsByName("photo_type");
+                if (checkbox.checked) {
+                    for (let i = 0; i < checkboxes.length; i++) {
+                        if (checkboxes[i] !== checkbox) {
+                            checkboxes[i].checked = false;
+                        }
+                    }
+                }
+            }
+        </script>
+    </div>
+
+    <div class="form-container">
+        <h3 class="text-center">На главной новости акции</h3>
+        <form class="form_yura" enctype="multipart/form-data" th:action="@{/banners/stocks-banner}" method="post">
+            <div class="image-container">
+                <label for="upload7">Фото 1:</label>
+                <input type="file" id="upload7" name="upload1" class="form-control-file">
+                <br>
+                <label for="url6">URL 1:</label>
+                <input type="text" id="url6" name="url1" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload8">Фото 2:</label>
+                <input type="file" id="upload8" name="upload2" class="form-control-file">
+                <br>
+                <label for="url7">URL 2:</label>
+                <input type="text" id="url7" name="url2" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload9">Фото 3:</label>
+                <input type="file" id="upload9" name="upload3" class="form-control-file">
+                <br>
+                <label for="url8">URL 3:</label>
+                <input type="text" id="url8" name="url3" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload10">Фото 4:</label>
+                <input type="file" id="upload10" name="upload4" class="form-control-file">
+                <br>
+                <label for="url9">URL 4:</label>
+                <input type="text" id="url9" name="url4" class="form-control">
+            </div>
+
+            <div class="image-container">
+                <label for="upload11">Фото 5:</label>
+                <input type="file" id="upload11" name="upload5" class="form-control-file">
+                <br>
+                <label for="url10">URL 5:</label>
+                <input type="text" id="url10" name="url5" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="rotation_speed">Скорость вращения:</label>
+                <select id="rotation_speed1" name="rotation_speed" class="form-control">
+                    <option value="1">1 сек</option>
+                    <option value="2">2 сек</option>
+                    <option value="3">3 сек</option>
+                    <option value="4">4 сек</option>
+                    <option value="5">5 сек</option>
+                </select>
+            </div>
+
+            <input type="submit" value="Отправить" class="btn btn-info" style="margin-left: 10px">
+        </form>
+
+
+    </div>
+</div>
+</body>
+</html>

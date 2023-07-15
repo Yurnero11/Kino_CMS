@@ -1,0 +1,98 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+  <title>Фільми</title>
+  <style>
+    .gallery-row {
+      display: flex;
+    }
+
+    .gallery-input {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="header">
+  <ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Registration Client</li>
+  </ol>
+</section>
+<div layout:fragment="content">
+  <h1>Добавлення фільму</h1>
+  <form enctype="multipart/form-data" method="post" th:action="@{/films/film-add}" >
+    <h3>Назва фільму<input type="text" name="name_film" placeholder="Назва фільму" class="form-control"></h3>
+    <h3>Опис<input type="text" name="description" placeholder="Текст" class="form-control"></h3>
+    <h3>Головне фото<input type="file" name="main_photo" class="form-control gallery-input" placeholder="Фото"></h3>
+
+    <h3>Галерея картинок</h3>
+    <div class="gallery-row">
+      <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1">
+      <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 2">
+      <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 3">
+      <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 4">
+      <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 5">
+    </div>
+
+    <h3>Посилання на трейлер<input type="text" name="link" placeholder="Посилання на трейлер в ютубі" class="form-control"></h3>
+
+    <h3>Коли вийде фільм?</h3>
+    <div>
+      <label>
+        <input type="checkbox" name="movie_data" value="soon" onchange="checkBox(this)"> Скоро вийде
+      </label>
+      <label>
+        <input type="checkbox" name="movie_data" value="now" onchange="checkBox(this)"> Вже вийшов
+      </label>
+      <script>
+        function checkBox(checkbox) {
+          const checkboxes = document.getElementsByName("movie_data");
+          if (checkbox.checked) {
+            for (let i = 0; i < checkboxes.length; i++) {
+              if (checkboxes[i] !== checkbox) {
+                checkboxes[i].checked = false;
+              }
+            }
+          }
+        }
+      </script>
+    </div>
+
+
+    <h3>Тип фільму</h3>
+    <div>
+      <label>
+        <input type="checkbox" name="movie_type" value="3D" onchange="handleCheckboxChange(this)"> 3D
+      </label>
+      <label>
+        <input type="checkbox" name="movie_type" value="2D" onchange="handleCheckboxChange(this)"> 2D
+      </label>
+      <label>
+        <input type="checkbox" name="movie_type" value="IMAX" onchange="handleCheckboxChange(this)"> IMAX
+      </label>
+      <script>
+        function handleCheckboxChange(checkbox) {
+          const checkboxes = document.getElementsByName("movie_type");
+          if (checkbox.checked) {
+            for (let i = 0; i < checkboxes.length; i++) {
+              if (checkboxes[i] !== checkbox) {
+                checkboxes[i].checked = false;
+              }
+            }
+          }
+        }
+      </script>
+    </div>
+
+    <h3>Seo block</h3>
+    <h3>URL<input type="text" name="url" placeholder="URL" class="form-control"></h3>
+    <h3>Title<input type="text" name="title" placeholder="Title" class="form-control"></h3>
+    <h3>Keywords<input type="text" name="keywords" placeholder="word" class="form-control"></h3>
+    <h3>Description<input type="text" name="description_seo" placeholder="Description" class="form-control"></h3>
+    <button type="submit" class="btn btn-success">Додати фільм</button>
+  </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,55 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+  <title>Update user</title>
+</head>
+<body>
+<section layout:fragment="header">
+  <h1>Clients</h1>
+  <ol class="breadcrumb">
+    <li><a href="/"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Clients</li>
+  </ol>
+</section>
+<div layout:fragment="content">
+  <h1 th:each="user : ${users}">Update User by id# <span th:text="${user.id}"></span></h1>
+  <div th:each="user: ${users}">
+    <form method="post">
+      <h3>Username<input type="text" th:value="${user.username}" name="username" placeholder="Введіть новий username" class="form-control"></h3>
+      <h3>Email<input type="text" th:value="${user.email}" name="email" placeholder="Введіть новий email" class="form-control"></h3>
+      <h3>Birthday<input type="date" th:value="${user.birthday}" name="birthday" placeholder="Введіть новий birthday" class="form-control"></h3>
+      <h3>First name<input type="text" th:value="${user.firstName}" name="firstName" placeholder="Введіть новий firstName" class="form-control"></h3>
+      <h3>Last name<input type="text" th:value="${user.lastName}" name="lastName" placeholder="Введіть новий lastName" class="form-control"></h3>
+      <h3>City<input type="text" th:value="${user.city}" name="city" placeholder="Введіть новий city" class="form-control"></h3>
+      <h3>Address<input type="text" th:value="${user.address}" name="address" placeholder="Введіть новий address" class="form-control"></h3>
+      <h3>Gender</h3>
+      <label><input type="radio" name="gender" value="male" th:checked="${user.gender == 'male'}"> Male</label>
+      <label><input type="radio" name="gender" value="female" th:checked="${user.gender == 'female'}"> Female</label>
+      <button type="submit" class="btn btn-success">Update</button>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.0/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.0/themes/base/jquery-ui.css">
+
+    <script>
+      $(function() {
+        $('.datepicker').datepicker({ dateFormat: 'yy-mm-dd' });
+      });
+
+      const checkboxes = document.querySelectorAll('input[type="radio"]');
+      checkboxes.forEach((checkbox) => {
+        checkbox.addEventListener('change', function() {
+          checkboxes.forEach((otherCheckbox) => {
+            if (otherCheckbox !== checkbox) {
+              otherCheckbox.checked = false;
+            }
+          });
+        });
+      });
+    </script>
+  </div>
+</div>
+</body>
+</html>

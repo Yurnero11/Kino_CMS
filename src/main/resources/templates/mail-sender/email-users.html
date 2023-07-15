@@ -1,0 +1,71 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
+<head>
+  <title>Update news</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <h2>Email Users</h2>
+  <form id="emailForm" action="/send-email" method="post">
+    <table>
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Select</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="user : ${users}">
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td>
+          <input type="checkbox" th:value="${user.email}" name="recipients">
+        </td>
+      </tr>
+      </tbody>
+    </table>
+    <br>
+    <button type="button" onclick="selectRecipients()">Select All</button>
+    <button type="button" onclick="deselectRecipients()">Deselect All</button>
+    <button type="button" onclick="sendEmail()">Send Email</button>
+  </form>
+
+  <script>
+    function selectRecipients() {
+      var checkboxes = document.getElementsByName('recipients');
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = true;
+      }
+    }
+
+    function deselectRecipients() {
+      var checkboxes = document.getElementsByName('recipients');
+      for (var i = 0; i < checkboxes.length; i++) {
+        checkboxes[i].checked = false;
+      }
+    }
+
+    function sendEmail() {
+      var formData = new FormData(document.getElementById('emailForm'));
+
+      fetch('/send-email', {
+        method: 'POST',
+        body: formData
+      })
+              .then(function(response) {
+                return response.json();
+              })
+              .then(function(data) {
+                // Обработка ответа после отправки письма
+                alert(data.message);
+              })
+              .catch(function(error) {
+                // Обработка ошибки при отправке письма
+                alert('Failed to send email');
+              });
+    }
+  </script>
+</div>
+</body>
+</html>
