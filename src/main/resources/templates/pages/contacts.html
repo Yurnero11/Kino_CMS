@@ -1,0 +1,156 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<head>
+    <title>Контакты</title>
+    <style>
+        /* Стили для формы контакта */
+        .form {
+            display: none; /* Скрываем форму по умолчанию */
+            width: 300px;
+            margin-bottom: 20px;
+        }
+
+        /* Стили для кнопки добавления контакта */
+        #add-contact-btn {
+            margin-bottom: 10px;
+        }
+
+        /* Стили для таблицы контактов */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            text-align: left;
+            padding: 8px;
+        }
+
+        th, td {
+            background-color: white;
+        }
+
+        /* Стили для блока SEO */
+        h1 {
+            margin-top: 30px;
+        }
+
+        form h3 {
+            margin-bottom: 5px;
+        }
+
+        /* Стили для отображения логотипов */
+        .logo-img {
+            width: 100px; /* Задайте нужную ширину */
+            height: 100px; /* Задайте нужную высоту */
+            object-fit: cover; /* Чтобы изображение заполняло область и сохраняло пропорции */
+        }
+        /* Стили для блока с формой добавления контакта */
+        .add-contact-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        /* Стили для формы контакта */
+        .add-contact-form {
+            display: none; /* Скрываем форму по умолчанию */
+            width: 300px;
+            margin-bottom: 20px;
+        }
+    </style>
+    <script>
+        // Функция для отображения формы при клике на кнопку "Добавить контакт"
+        function showForm() {
+            var form = document.getElementById('add-contact-form');
+            form.style.display = 'block';
+            var addButton = document.getElementById('add-contact-btn');
+            addButton.style.display = 'none';
+        }
+    </script>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Контакты</h1>
+
+    <!-- Отображение списка контактов -->
+    <h2>Список контактов:</h2>
+    <table class="table table-bordered">
+        <tr>
+            <th>Имя кинотеатра</th>
+            <th>Адрес</th>
+            <th>Координаты</th>
+            <th>Логотип</th>
+            <th>Видалити</th>
+        </tr>
+        <tr th:each="contact : ${contactsList}">
+            <td th:text="${contact.cinema_name}"></td>
+            <td th:text="${contact.address}"></td>
+            <td th:text="${contact.coordinates}"></td>
+            <td><img th:src="@{'/upload/' + ${contact.logo_path}}" alt="Логотип" class="logo-img"></td>
+            <td>
+                <!-- Add a form with a "Delete" button for each contact -->
+                <form th:action="@{/pages/contacts/{id}/remove(id=${contact.cinema_id})}" method="post">
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+
+    <!-- Форма для добавления нового контакта -->
+    <div class="add-contact-block">
+        <button type="button" onclick="showForm()" id="add-contact-btn" class="btn btn-primary">Добавить контакт</button>
+        <form class="add-contact-form" th:action="@{/pages/contacts/add}" method="post" th:object="${contact}" enctype="multipart/form-data" id="add-contact-form">
+            <label for="cinema_name">Имя кинотеатра:</label>
+            <input type="text" id="cinema_name" name="cinema_name" th:field="*{cinema_name}" required/><br>
+
+            <label for="address">Адрес:</label>
+            <input type="text" id="address" name="address" th:field="*{address}" required/><br>
+
+            <label for="coordinates">Координаты:</label>
+            <input type="text" id="coordinates" name="coordinates" th:field="*{coordinates}" required/><br>
+
+            <!-- Поле для загрузки файла логотипа -->
+            <label for="logo">Логотип (jpeg, jpg, png):</label>
+            <input type="file" id="logo" name="logo" accept=".jpeg, .jpg, .png" required/><br>
+            <button type="submit" class="btn btn-success">Добавить</button>
+        </form>
+    </div>
+
+    <form class="yura" th:action="@{/pages/contacts/updateStatus}" method="post">
+        <h3>Статус</h3>
+        <div>
+            <label>
+                <input type="radio" name="status" value="on" th:checked="${cinemaContactsForTable[0].status == 'on'}"> Вмк
+            </label>
+            <label>
+                <input type="radio" name="status" value="off" th:checked="${cinemaContactsForTable[0].status == 'off'}"> Вимк
+            </label>
+        </div>
+        <button>Оновить</button>
+    </form>
+
+    <h1>Seo block</h1>
+    <form th:action="@{/pages/contacts/updateSeo}" method="post">
+        <!-- Ваши поля для SEO блока -->
+        <h3>URL<input type="text" name="url" placeholder="URL" class="form-control" th:value="${seoBlock.url}"></h3>
+        <h3>Title<input type="text" name="title" placeholder="Title" class="form-control" th:value="${seoBlock.title}"></h3>
+        <h3>Keywords<input type="text" name="keywords" placeholder="word" class="form-control" th:value="${seoBlock.keywords}"></h3>
+        <h3>Description<input type="text" name="description_seo" placeholder="Description" class="form-control" th:value="${seoBlock.description}"></h3>
+        <button type="submit" class="btn btn-success">Зберегти</button>
+    </form>
+</div>
+
+<!-- Подключение Bootstrap JavaScript (необходимо для некоторых функций Bootstrap) -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

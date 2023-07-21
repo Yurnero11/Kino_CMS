@@ -1,19 +1,17 @@
 package com.example.Kino_CMS.controller;
 
-import com.example.Kino_CMS.entity.EmailRequest;
-import com.example.Kino_CMS.entity.EmailResponse;
-import com.example.Kino_CMS.entity.FileUploads;
-import com.example.Kino_CMS.entity.User;
+import com.example.Kino_CMS.entity.*;
+import com.example.Kino_CMS.repository.EmailCountRepository;
 import com.example.Kino_CMS.repository.FileUploadsRepository;
 import com.example.Kino_CMS.service.EmailService;
 import com.example.Kino_CMS.service.UserService;
 import com.example.Kino_CMS.service.impl.FileUploadsServiceImpl;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.FileSystemResource;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -25,10 +23,11 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
+import org.springframework.data.domain.Pageable;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -38,7 +37,10 @@ import java.util.UUID;
 
 @Controller
 public class EmailController {
+    private final int pageSize = 6;
+
     private final FileUploadsRepository fileUploadsRepository;
+    private final EmailCountRepository emailCountRepository;
 
     @Autowired
     private EmailService emailService;
@@ -52,12 +54,6 @@ public class EmailController {
     @Autowired
     private JavaMailSender emailSender;
 
-    @GetMapping("/file-delete/{fileId}")
-    public String confirmDeleteFile(@PathVariable("fileId") Long fileId, Model model) {
-        // Подтверждение удаления файла
-        model.addAttribute("fileId", fileId);
-        return "confirm-delete"; // Ваш представление с подтверждением удаления файла
-    }
 
     @PostMapping("/file-delete/{fileId}")
     public String deleteFile(@PathVariable("fileId") Long fileId) {
@@ -70,14 +66,38 @@ public class EmailController {
         }
     }
 
-    public EmailController(FileUploadsRepository fileUploadsRepository) {
+    public EmailController(FileUploadsRepository fileUploadsRepository, EmailCountRepository emailCountRepository) {
         this.fileUploadsRepository = fileUploadsRepository;
+        this.emailCountRepository = emailCountRepository;
+    }
+
+    @GetMapping("/select-recipients")
+    public String showRecipientSelectionPage(Model model) {
+        Iterable<User> users = userService.getAllUsers(); // Здесь предполагается, что у вас есть метод для получения всех пользователей
+        model.addAttribute("users", users);
+        return "mail-sender/email-users"; // Вернуть имя шаблона Thymeleaf для страницы выбора получателей
     }
 
     @GetMapping("/email-users")
-    public String emailUsers(Model model) {
-        Iterable<User> users = userService.getAllUsers();
-        model.addAttribute("users", users);
+    public String emailUsers(@RequestParam(name = "page", defaultValue = "0") int page,
+                             @RequestParam(name = "query", required = false) String query,
+                             Model model) {
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
+        Page<User> userPage;
+        if (query != null && !query.isEmpty()) {
+            userPage = userService.searchUsers(query, pageable);
+        } else {
+            userPage = userService.getAllUsers(pageable);
+        }
+
+        int nextPage = page + 1;
+        model.addAttribute("nextPage", nextPage);
+
+        model.addAttribute("users", userPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", userPage.getTotalPages());
+
         return "mail-sender/email-users"; // Исправленный путь к представлению
     }
 
@@ -101,16 +121,26 @@ public class EmailController {
 
         boolean isDisabled = users.isEmpty(); // Определяет, должен ли быть список пользователей неактивным
 
+
         model.addAttribute("users", users);
         model.addAttribute("fileList", fileList); // Добавляем список файлов в модель
         model.addAttribute("limit", limit);
         model.addAttribute("disabled", isDisabled);
+        model.addAttribute("sentCount", emailCountRepository.getSentCount());
 
         // Инициализация поля fileIds
         model.addAttribute("fileIds", new ArrayList<Long>());
 
 
         return "/mail-sender/mail-sender";
+    }
+
+    @GetMapping("/email-sent-count")
+    @ResponseBody
+    public ResponseEntity<Integer> getEmailSentCount() {
+        int sentCount = emailCountRepository.getSentCount(); // Замените getSentCount() на ваш метод для получения значения из базы данных
+
+        return ResponseEntity.ok(sentCount);
     }
 
     @PostMapping("/send-email")
@@ -166,6 +196,14 @@ public class EmailController {
             }
 
             int sentCount = recipients.size(); // Получить количество отправленных писем
+
+            // Получение текущего значения общего количества отправленных писем
+            Count count = emailCountRepository.findById(1L).orElse(new Count(0));
+            count.setCount(count.getCount() + sentCount);
+
+            // Сохранение обновленного значения общего количества в базе данных
+            emailCountRepository.save(count);
+
             EmailResponse emailResponse = new EmailResponse("Email sent successfully", sentCount);
             return ResponseEntity.ok(emailResponse);
         } catch (IOException e) {
@@ -222,7 +260,15 @@ public class EmailController {
             }
 
             int sentCount = recipients.size(); // Получить количество отправленных писем
-            EmailResponse emailResponse = new EmailResponse("Email sent to all users successfully", sentCount);
+
+            // Получение текущего значения общего количества отправленных писем
+            Count count = emailCountRepository.findById(1L).orElse(new Count(0));
+            count.setCount(count.getCount() + sentCount);
+
+            // Сохранение обновленного значения общего количества в базе данных
+            emailCountRepository.save(count);
+
+            EmailResponse emailResponse = new EmailResponse("Email sent successfully", sentCount);
             return ResponseEntity.ok(emailResponse);
         } catch (IOException e) {
             e.printStackTrace();
@@ -270,12 +316,27 @@ public class EmailController {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo(recipientEmail);
         helper.setSubject(subject);
+
+        // Установите содержимое письма как HTML-файл
         helper.setText(content, true);
 
-        FileSystemResource fileResource = new FileSystemResource(filePath);
-        helper.addAttachment(originalFileName, fileResource);
+        // Прочитайте содержимое HTML-файла
+        String htmlContent = readHtmlFile(filePath);
+
+        // Установите содержимое HTML-файла как тело письма
+        helper.setText(htmlContent, true);
 
         emailSender.send(message);
+    }
+
+    private String readHtmlFile(String filePath) {
+        try {
+            byte[] contentBytes = Files.readAllBytes(Paths.get(filePath));
+            return new String(contentBytes, StandardCharsets.UTF_8);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
     private boolean checkFileExistsInDB(String originalFileName) {

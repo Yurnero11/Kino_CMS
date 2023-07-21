@@ -2,9 +2,75 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
 <head>
   <title>Update news</title>
+  <style>
+    /* Стили для таблицы */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th, td {
+      padding: 8px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    thead th {
+      background-color: #f2f2f2;
+    }
+
+    /* Стили для кнопок */
+    button {
+      padding: 10px 20px;
+      margin: 5px;
+      font-size: 14px;
+      border: none;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+    }
+
+    .page-item {
+      margin: 5px;
+    }
+
+    .page-link {
+      padding: 5px 10px;
+      border: 1px solid #ccc;
+      color: #333;
+      text-decoration: none;
+    }
+
+    .page-link:hover {
+      background-color: #f2f2f2;
+    }
+
+    .page-link.active {
+      background-color: #007bff;
+      color: #fff;
+      border: 1px solid #007bff;
+    }
+
+    .page-link.disabled {
+      color: #ccc;
+      pointer-events: none;
+    }
+
+  </style>
 </head>
 <body>
 <div layout:fragment="content">
+  <a th:href="@{/email-form}" style="display: block; margin-bottom: 10px;">Назад</a>
   <h2>Email Users</h2>
   <form id="emailForm" action="/send-email" method="post">
     <table>
@@ -20,52 +86,104 @@
         <td th:text="${user.username}"></td>
         <td th:text="${user.email}"></td>
         <td>
-          <input type="checkbox" th:value="${user.email}" name="recipients">
+          <input type="checkbox" th:value="${user.email}" name="recipients" class="recipient-checkbox">
         </td>
       </tr>
       </tbody>
     </table>
     <br>
-    <button type="button" onclick="selectRecipients()">Select All</button>
-    <button type="button" onclick="deselectRecipients()">Deselect All</button>
-    <button type="button" onclick="sendEmail()">Send Email</button>
+    <button type="button" onclick="selectRecipients()">Выбрать всех</button>
+    <button type="button" onclick="deselectRecipients()">Снять выбор со всех</button>
+    <!-- Добавим обработчик события для кнопки, чтобы сохранить выбранных получателей и перенаправить на страницу mail-form -->
+    <button type="button" onclick="saveAndRedirect()">Отправить почту</button>
   </form>
-
-  <script>
-    function selectRecipients() {
-      var checkboxes = document.getElementsByName('recipients');
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = true;
+  <div class="pagination">
+  <span class="page-item" th:class="${currentPage == 0 ? 'disabled' : ''}">
+    <a th:if="${currentPage > 0}" th:href="@{'/email-users?page=' + ${currentPage - 1}}" aria-label="Previous" class="page-link">
+      <span aria-hidden="true">&lsaquo;</span>
+    </a>
+  </span>
+    <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNum == currentPage ? 'active' : ''}">
+    <a th:href="@{'/email-users?page=' + ${pageNum}}" th:text="${pageNum + 1}" class="page-link"></a>
+  </span>
+    <span class="page-item" th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+    <a th:if="${currentPage < totalPages - 1}" th:href="@{'/email-users?page=' + ${currentPage + 1}}" aria-label="Next" class="page-link">
+      <span aria-hidden="true">&rsaquo;</span>
+    </a>
+  </span>
+    <script>
+      function saveAndRedirect() {
+        saveSelectedRecipients();
+        window.location.href = '/email-form'; // Перенаправить на страницу mail-form
       }
-    }
 
-    function deselectRecipients() {
-      var checkboxes = document.getElementsByName('recipients');
-      for (var i = 0; i < checkboxes.length; i++) {
-        checkboxes[i].checked = false;
+      document.addEventListener('DOMContentLoaded', function() {
+        // Получаем параметры URL
+        var params = new URLSearchParams(window.location.search);
+        var fileId = params.get('fileId');
+
+        if (fileId) {
+          // Здесь вы можете выполнить дополнительные действия с выбранным файлом, если необходимо
+          // Например, вы можете отобразить имя файла на странице или выполнить другие операции с файлом.
+        }
+      });
+      // Функция для сохранения выбранных пользователей в localStorage
+      function saveSelectedRecipients() {
+        var selectedRecipients = [];
+        var checkboxes = document.querySelectorAll('input[name="recipients"]:checked');
+
+        checkboxes.forEach(function(checkbox) {
+          selectedRecipients.push(checkbox.value);
+        });
+
+        localStorage.setItem('selectedRecipients', JSON.stringify(selectedRecipients));
       }
-    }
 
-    function sendEmail() {
-      var formData = new FormData(document.getElementById('emailForm'));
+      // Функция для восстановления выбранных пользователей при загрузке страницы
+      function restoreSelectedRecipients() {
+        var selectedRecipients = JSON.parse(localStorage.getItem('selectedRecipients'));
+        if (selectedRecipients) {
+          selectedRecipients.forEach(function(email) {
+            var checkbox = document.querySelector('input[name="recipients"][value="' + email + '"]');
+            if (checkbox) {
+              checkbox.checked = true;
+            }
+          });
+        }
+      }
 
-      fetch('/send-email', {
-        method: 'POST',
-        body: formData
-      })
-              .then(function(response) {
-                return response.json();
-              })
-              .then(function(data) {
-                // Обработка ответа после отправки письма
-                alert(data.message);
-              })
-              .catch(function(error) {
-                // Обработка ошибки при отправке письма
-                alert('Failed to send email');
-              });
-    }
+      // Вызываем восстановление выбранных пользователей при загрузке страницы
+      document.addEventListener('DOMContentLoaded', function() {
+        // Получаем параметры URL
+        var params = new URLSearchParams(window.location.search);
+        var fileId = params.get('fileId');
+
+        if (fileId) {
+          console.log('Received File ID:', fileId); // Добавьте эту строку для отладки
+          // Здесь вы можете выполнить дополнительные действия с выбранным файлом, если необходимо
+          // Например, вы можете отобразить имя файла на странице или выполнить другие операции с файлом.
+        }
+      });
+
+      function selectRecipients() {
+        var checkboxes = document.getElementsByName('recipients');
+        for (var i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = true;
+        }
+        // При выборе всех получателей сохраняем выбранных пользователей в localStorage
+        saveSelectedRecipients();
+      }
+
+      function deselectRecipients() {
+        var checkboxes = document.getElementsByName('recipients');
+        for (var i = 0; i < checkboxes.length; i++) {
+          checkboxes[i].checked = false;
+        }
+        // При снятии выбора всех получателей сохраняем выбранных пользователей в localStorage
+        saveSelectedRecipients();
+      }
   </script>
 </div>
+  </div>
 </body>
 </html>

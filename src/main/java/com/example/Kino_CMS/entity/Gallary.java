@@ -45,4 +45,5 @@ public class Gallary {
 
     @OneToOne(mappedBy = "gallery")
     private Promotions promotions;
+
 }

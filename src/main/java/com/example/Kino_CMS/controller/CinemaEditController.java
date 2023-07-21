@@ -83,8 +83,6 @@ public class CinemaEditController {
             return "redirect:/cinemas";
         }
 
-
-
         Cinemas cinema = optionalCinema.get();
         cinema.setName(cinemaName);
         cinema.setDescription(description);

@@ -2,8 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout">
 <head>
     <title>Update news</title>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script th:src="@{/js/email.js}"></script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -13,7 +11,7 @@
         }
 
         .container {
-            max-width: 600px;
+            max-width: 800px;
             margin: 0 auto;
             background-color: #ffffff;
             border: 1px solid #cccccc;
@@ -24,12 +22,12 @@
 
         .container.left {
             float: left;
-            margin-right: 50px;
+            margin-right: 20px;
         }
 
         .container.right {
-            float: right;
-            margin-left: 50px;
+            float: left;
+            margin-left: 20px;
         }
 
         .clearfix::after {
@@ -41,15 +39,18 @@
         h2 {
             margin-top: 0;
             margin-bottom: 20px;
+            font-size: 24px;
         }
 
         p {
             margin-top: 0;
             margin-bottom: 10px;
+            font-size: 16px;
         }
 
         label {
             font-weight: bold;
+            font-size: 16px;
         }
 
         input[type="text"],
@@ -85,13 +86,11 @@
             background-color: #0056b3;
         }
 
-        .checkbox-group {
-            margin-top: 10px;
-        }
-
         .checkbox-group label {
-            display: block;
-            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 16px;
         }
 
         .progress-bar {
@@ -118,10 +117,19 @@
             border-collapse: collapse;
         }
 
-        th, td {
+        th,
+        td {
             padding: 8px;
             text-align: left;
             border-bottom: 1px solid #ddd;
+            font-size: 14px;
+        }
+
+        .button-group {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            font-size: 16px;
         }
 
         th {
@@ -134,13 +142,12 @@
         }
 
         .delete-file {
-            background-color: #dc3545;
-            color: #fff;
+            background-color: transparent;
+            color: #dc3545;
             border: none;
-            padding: 8px 12px;
+            padding: 0;
             font-size: 14px;
             cursor: pointer;
-            border-radius: 3px;
         }
 
         .delete-file:hover {
@@ -181,6 +188,7 @@
 
         .recipients table {
             margin-top: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -190,37 +198,32 @@
         <div class="form-container">
             <div class="email-form">
                 <div>
-                    <h2>Email Form</h2>
-                    <p>Общее количество отправленных писем: <span id="sentCount">0</span></p>
+                    <h2>Поштова розсилка</h2>
+                    <p>Кількість пошт: <span th:text="${sentCount}"></span></p>
                     <form id="emailForm" action="/send-email" method="post" enctype="multipart/form-data" th:action="@{/send-email}">
-                        <label for="subject" class="hidden">Subject:</label>
-                        <input type="text" id="subject" name="subject" value="admin" readonly required class="hidden">
-                        <br>
-                        <label for="content" class="hidden">Content:</label>
-                        <textarea id="content" name="content" readonly required class="hidden">admin</textarea>
-                        <br>
-                        <label for="file">Загрузить файл:</label>
+                        <label for="file">Завантажити файл:</label>
                         <input type="file" id="file" name="file" required>
                         <div>
-                            <label>Выберите файл:</label>
+                            <label>Виберіть файл:</label>
                             <br>
                             <div th:each="file, iterStat : ${fileList}" th:if="${iterStat.index} &lt; 5">
                                 <input type="radio" name="selectedFile" th:value="${file.id}">
                                 <label th:text="${file.originalFileName}"></label>
                                 <button type="button" class="delete-file" th:data-file-id="${file.id}" onclick="deleteFile(this.getAttribute('data-file-id'))">
-                                    <span class="delete-icon">&#10060;</span> Delete
+                                    <span class="delete-icon">&#10060;</span>
                                 </button>
                                 <br>
                             </div>
                         </div>
                         <br>
-                        <div>
-                            <label><input type="checkbox" onclick="toggleSelectAll(this)"> Выбрать всех</label>
-                            <label><input type="checkbox" onclick="toggleSelectIndividuals(this)"> Выбрать отдельных</label>
+                        <div class="button-group" style="display: flex;">
+                            <label><input type="checkbox" name="selectAll" onclick="toggleSelectAll(this)"> Выбрать всех</label>
+                            <a href="/email-users">Выбрать конкретных юзеров</a>
                             <button type="button" onclick="sendEmail()">Отправить</button>
                         </div>
                         <br>
-                        <div id="recipients" class="hidden">
+                        <!-- Отображение таблицы с данными пользователей -->
+                        <div id="recipientsTable" class="hidden">
                             <label>Получатели:</label>
                             <br>
                             <table>
@@ -232,6 +235,7 @@
                                 </tr>
                                 </thead>
                                 <tbody>
+                                <!-- Итерация по списку пользователей на текущей странице -->
                                 <tr th:each="user : ${users}">
                                     <td th:text="${user.username}"></td>
                                     <td th:text="${user.email}"></td>
@@ -254,31 +258,68 @@
     </div>
     <div class="container right">
         <div class="form-container">
-            <h2>Placeholder Form</h2>
-            <p>Это форма заглушка.</p>
+            <h2>Смс розсилка</h2>
+            <p>(Не працююча форма)</p>
             <form>
                 <label for="placeholder" class="hidden">Placeholder:</label>
                 <input type="text" id="placeholder" name="placeholder" placeholder="Введите данные" required>
                 <br>
-                <button type="button">Отправить</button>
+                <div>
+                    <label><input type="checkbox"> Выбрать всех</label>
+                    <label><input type="checkbox" > Выбрать отдельных</label>
+                    <button type="button">Отправить</button>
+                </div>
             </form>
         </div>
     </div>
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            restoreSelectedRecipients();
+        });
+
+        function restoreSelectedRecipients() {
+            // Получаем выбранных получателей из localStorage
+            var selectedRecipients = JSON.parse(localStorage.getItem('selectedRecipients'));
+            if (selectedRecipients) {
+                // Находим и отмечаем соответствующие флажки для выбранных получателей
+                var checkboxes = document.querySelectorAll('input[name="recipients"]');
+                checkboxes.forEach(function(checkbox) {
+                    if (selectedRecipients.includes(checkbox.value)) {
+                        checkbox.checked = true;
+                    }
+                });
+            }
+        }
+
+        // Функция для восстановления выбранных получателей при загрузке страницы
+
+
+        // Функция для выбора или снятия всех получателей на текущей странице
         function toggleSelectAll(checkbox) {
-            var recipientsDiv = document.getElementById('recipients');
+            var recipientsDiv = document.getElementById('recipientsTable');
             var checkboxes = recipientsDiv.querySelectorAll('input[name="recipients"]');
             var isChecked = checkbox.checked;
 
             checkboxes.forEach(function(checkbox) {
                 checkbox.checked = isChecked;
             });
+
+            // При выборе или снятии всех получателей сохраняем выбранных получателей в localStorage
+            saveSelectedRecipients();
         }
 
         function toggleSelectIndividuals(checkbox) {
-            var recipientsDiv = document.getElementById('recipients');
+            var recipientsDiv = document.getElementById('recipientsTable');
             recipientsDiv.classList.toggle('hidden');
+            // При скрытии или показе списка получателей сохраняем выбранных получателей в localStorage
+            saveSelectedRecipients();
         }
+
+        // Вызываем восстановление выбранных получателей при загрузке страницы
+        document.addEventListener('DOMContentLoaded', function() {
+            restoreSelectedRecipients();
+        });
+
 
         function updateSentCount(count) {
             var sentCountSpan = document.getElementById('sentCount');
@@ -328,9 +369,9 @@
                         setTimeout(function() {
                             hideProgressBar();
                             updateSentCount(response.sentCount);
-                            localStorage.setItem('sentCount', response.sentCount); // Сохранение количества отправленных писем в localStorage
+                            localStorage.setItem('sentCount', response.sentCount);
                             alert(response.message);
-                            location.reload(); // Обновление страницы после отправки письма
+                            location.reload();
                         }, 500);
                     },
                     error: function() {
@@ -358,100 +399,15 @@
             progressBar.classList.add('hidden');
         }
 
-        function updateSentCount(count) {
-            var sentCountSpan = document.getElementById('sentCount');
-            sentCountSpan.innerText = count;
-        }
-
-        function sendSMS() {
-            showProgressBar();
-            updateProgressBar(0);
-
-            setTimeout(function() {
-                updateProgressBar(100);
-
-                var formData = new FormData(document.getElementById('smsForm'));
-
-                $.ajax({
-                    url: '/send-sms',
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        setTimeout(function() {
-                            hideProgressBar();
-                            updateSentCount(response.sentCountSMS);
-                            localStorage.setItem('sentCountSMS', response.sentCountSMS); // Сохранение количества отправленных SMS в localStorage
-                            alert(response.message);
-                            location.reload(); // Обновление страницы после отправки SMS
-                        }, 500);
-                    },
-                    error: function() {
-                        setTimeout(function() {
-                            hideProgressBar();
-                            alert('Failed to send SMS');
-                        }, 500);
-                    }
-                });
-            }, 500);
-        }
-
-        function updateProgressBar(progress) {
-            var progressBarFill = document.querySelector('.progress-bar-fill');
-            progressBarFill.style.width = progress + '%';
-        }
-
-        function showProgressBar() {
-            var progressBar = document.getElementById('progressBar');
-            progressBar.classList.remove('hidden');
-        }
-
-        function hideProgressBar() {
-            var progressBar = document.getElementById('progressBar');
-            progressBar.classList.add('hidden');
-        }
     </script>
 </div>
 <script>
-    function toggleSelectAll(checkbox) {
-        var recipientsDiv = document.getElementById('recipients');
-        var checkboxes = recipientsDiv.querySelectorAll('input[name="recipients"]');
-        var isChecked = checkbox.checked;
 
-        checkboxes.forEach(function(checkbox) {
-            checkbox.checked = isChecked;
-        });
-    }
-
-    function toggleSelectIndividuals(checkbox) {
-        var recipientsDiv = document.getElementById('recipients');
-        recipientsDiv.classList.toggle('hidden');
-    }
 
     function updateSentCount(count) {
         var sentCountSpan = document.getElementById('sentCount');
         sentCountSpan.innerText = count;
     }
-
-    function deleteFile(fileId) {
-        if (confirm("Вы уверены, что хотите удалить файл?")) {
-            var xhr = new XMLHttpRequest();
-            xhr.open('POST', '/file-delete/' + fileId, true);
-            xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            xhr.onload = function() {
-                if (xhr.status === 200) {
-                    // Файл успешно удален, перезагрузка страницы
-                    location.reload();
-                } else {
-                    // Обработка ошибки удаления файла
-                    console.error('Failed to delete file');
-                }
-            };
-            xhr.send();
-        }
-    }
-
 
     var sentCount = localStorage.getItem('sentCount');
     if (sentCount) {

@@ -2,7 +2,11 @@ package com.example.Kino_CMS.controller;
 
 import com.example.Kino_CMS.entity.User;
 import com.example.Kino_CMS.repository.UserRepository;
+import com.example.Kino_CMS.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
@@ -11,22 +15,46 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Controller
 public class UserController {
+    private final UserService userService;
+    private final int pageSize = 6; // Изменили значение pageSize на 6
+
     @Autowired
     private UserRepository userRepository;
 
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/users")
-    public String getAllUsers(Model model) {
-        Iterable<User> users = userRepository.findAll();
-        model.addAttribute("users", users);
+    public String getAllUsers(@RequestParam(name = "page", defaultValue = "0") int page,
+                              @RequestParam(name = "query", required = false) String query,
+                              Model model) {
+
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
+        Page<User> userPage;
+        if (query != null && !query.isEmpty()) {
+            userPage = userService.searchUsers(query, pageable);
+        } else {
+            userPage = userService.getAllUsers(pageable);
+        }
+
+        int nextPage = page + 1;
+        model.addAttribute("nextPage", nextPage);
+
+        model.addAttribute("users", userPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", userPage.getTotalPages());
+
+
         return "/customers/list";
     }
 

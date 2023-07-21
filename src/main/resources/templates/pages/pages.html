@@ -1,0 +1,126 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+  <title>Редагувати акцію</title>
+  <!-- Подключение стилей Bootstrap -->
+  <!-- Стили для таблицы -->
+  <style>
+    .table {
+      width: 100%;
+      margin-bottom: 1rem;
+      color: #212529;
+      border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+      padding: 0.75rem;
+      vertical-align: top;
+      border-top: 1px solid #dee2e6;
+    }
+
+    .table thead th {
+      vertical-align: bottom;
+      border-bottom: 2px solid #dee2e6;
+    }
+
+    .table tbody + tbody {
+      border-top: 2px solid #dee2e6;
+    }
+
+    .table-sm th,
+    .table-sm td {
+      padding: 0.3rem;
+    }
+
+    .table-bordered {
+      border: 1px solid #dee2e6;
+    }
+
+    .table-bordered th,
+    .table-bordered td {
+      border: 1px solid #dee2e6;
+    }
+
+    .table-bordered thead th,
+    .table-bordered thead td {
+      border-bottom-width: 2px;
+    }
+  </style>
+</head>
+<body>
+<div layout:fragment="content">
+  <h1>Сторінки</h1>
+  <h2><a href="/pages/page-add" class="btn btn-primary add-movie-button">Додати сторінку</a></h2>
+  <table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+      <th>Имя</th>
+      <th>Дата создания</th>
+      <th>Статус</th>
+      <th>Действия</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Вывод предустановленных страниц -->
+    <tr th:each="page : ${mainPages}">
+      <td>Головна сторінка</td>
+      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td th:text="${page.status}"></td>
+      <td><a href="/pages/main-page" class="btn btn-primary">Редактировать</a></td>
+    </tr>
+    <tr th:each="page : ${about_cinema}">
+      <td>Про кінотеатр</td>
+      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td th:text="${page.status}"></td>
+      <td><a href="/pages/about-cinema" class="btn btn-primary">Редактировать</a></td>
+    </tr>
+    <tr th:each="page : ${vip_halls}">
+      <td>Vip зал</td>
+      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td th:text="${page.status}"></td>
+      <td><a href="/pages/vip-hall" class="btn btn-primary">Редактировать</a></td>
+    </tr>
+    <tr th:each="page : ${advertising}">
+      <td>Реклама</td>
+      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td th:text="${page.status}"></td>
+      <td><a href="/pages/advertising-page" class="btn btn-primary">Редактировать</a></td>
+    </tr>
+    <tr th:each="page : ${kidsroom}">
+      <td>Дитяча кімната</td>
+      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td th:text="${page.status}"></td>
+      <td><a href="/pages/kids-room" class="btn btn-primary">Редактировать</a></td>
+    </tr>
+    <tr th:each="page : ${cinemaContactsForTable}">
+      <td>Контакти</td>
+      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td th:text="${page.status}"></td>
+      <td><a href="/pages/contacts" class="btn btn-primary">Редактировать</a></td>
+    </tr>
+    <!-- Добавьте аналогичные строки для остальных предустановленных страниц -->
+
+    <!-- Вывод пользовательских страниц из таблицы "pages" -->
+    <tr th:each="page : ${pages}">
+      <td th:text="${page.page_name}"></td>
+      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td>
+        <span th:if="${page.status}">Вкл</span>
+        <span th:unless="${page.status}">Выкл</span>
+      </td>
+      <td>
+        <a th:href="@{/pages/{id}/edit(id=${page.page_id})}" class="btn btn-primary">Редактировать</a>
+        <span th:if="${!#strings.equals(page.page_name, 'Головна сторінка') && !#strings.equals(page.page_name, 'Про кінотеатр') && !#strings.equals(page.page_name, 'Кафе бар') && !#strings.equals(page.page_name, 'Віп зал') && !#strings.equals(page.page_name, 'Реклама') && !#strings.equals(page.page_name, 'Дитяча кімната') && !#strings.equals(page.page_name, 'Контакти')}">
+            <form method="post" th:action="@{/pages/{id}/delete(id=${page.page_id})}" style="display: inline;">
+              <button type="submit" class="btn btn-danger">Удалить</button>
+            </form>
+          </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>

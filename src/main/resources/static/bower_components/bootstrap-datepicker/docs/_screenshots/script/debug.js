@@ -1,7 +1,7 @@
 /*
-    Usage: $ phantomjs --remote-debugger-port=9001 --remote-debugger-autorun=yes debug.js page.html
+    Usage: $ phantomjs --remote-debugger-port=9001 --remote-debugger-autorun=yes debug.js
 
-    Open Chrome tab to http://localhost:9001/; open second link (ie, path to page.html)
+    Open Chrome tab to http://localhost:9001/; open second link (ie, path to)
 */
 var system  = require('system' ), fs = require('fs'), webpage = require('webpage');
 

@@ -1,0 +1,43 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+  <title>Update Page</title>
+</head>
+<body>
+<div layout:fragment="content">
+  <h1>Editing Page</h1>
+  <form enctype="multipart/form-data" method="post" th:action="@{/pages/{id}/edit(id=${pages.page_id})}" >
+    <h3>Name <input type="text" name="name" placeholder="Name" class="form-control" th:value="${pages.page_name}"></h3>
+    <h3>Description <input type="text" name="description" placeholder="Description" class="form-control" th:value="${pages.description}"></h3>
+    <h3>Main Image <input type="file" name="mainImageFile" class="form-control gallery-input"></h3>
+
+    <h3>Image Gallery</h3>
+    <div class="gallery-row">
+      <input type="file" name="gallery_photo_1" class="form-control gallery-input">
+      <input type="file" name="gallery_photo_2" class="form-control gallery-input">
+      <input type="file" name="gallery_photo_3" class="form-control gallery-input">
+      <input type="file" name="gallery_photo_4" class="form-control gallery-input">
+      <input type="file" name="gallery_photo_5" class="form-control gallery-input">
+    </div>
+
+    <h3>Status</h3>
+    <div>
+      <label>
+        <input type="radio" name="status" value="on" th:checked="${pages.status == 'on'}"> On
+      </label>
+      <label>
+        <input type="radio" name="status" value="off" th:checked="${pages.status == 'off'}"> Off
+      </label>
+    </div>
+
+    <h3>Seo block</h3>
+    <h3>URL<input type="text" name="url" placeholder="URL" class="form-control" th:value="${pages.seo_url}"></h3>
+    <h3>Title<input type="text" name="title" placeholder="Title" class="form-control" th:value="${pages.seo_title}"></h3>
+    <h3>Keywords<input type="text" name="keywords" placeholder="Keywords" class="form-control" th:value="${pages.seo_keywords}"></h3>
+    <h3>Description<input type="text" name="description_seo" placeholder="Description" class="form-control" th:value="${pages.seo_description}"></h3>
+    <button type="submit" class="btn btn-success">Save</button>
+  </form>
+</div>
+</body>
+</html>

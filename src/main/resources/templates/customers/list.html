@@ -3,6 +3,40 @@
       layout:decorate="layout">
 <head>
     <title>Users</title>
+    <style>
+        .pagination {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .page-item {
+            margin: 5px;
+        }
+
+        .page-link {
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            color: #333;
+            text-decoration: none;
+        }
+
+        .page-link:hover {
+            background-color: #f2f2f2;
+        }
+
+        .page-link.active {
+            background-color: #007bff;
+            color: #fff;
+            border: 1px solid #007bff;
+        }
+
+        .page-link.disabled {
+            color: #ccc;
+            pointer-events: none;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -15,6 +49,7 @@
             </div>
         </div>
     </form>
+
     <div class="box">
         <table style="border-collapse: collapse;">
             <tr>
@@ -40,7 +75,7 @@
                 <td th:text="${user.city}" style="text-align: left; padding: 10px;"></td>
                 <td th:text="${user.address}" style="text-align: left; padding: 10px;"></td>
                 <td th:text="${user.gender}" style="text-align: left; padding: 10px;"></td>
-                <td><a th:href="'/user/' + ${user.id} + '/edit'"  class="btn btn-info">Редагувати</a></td>
+                <td><a th:href="'/user/' + ${user.id} + '/edit'" class="btn btn-info">Редагувати</a></td>
                 <td><form th:action="'/user/' + ${user.id} + '/remove'" method="post">
                     <button class="btn btn-warning">Delete</button>
                 </form></td>
@@ -48,6 +83,23 @@
             </tr>
         </table>
     </div>
+
+    <div class="pagination">
+    <span class="page-item" th:class="${currentPage == 0 ? 'disabled' : ''}">
+        <a th:if="${currentPage > 0}" th:href="@{'/users?page=' + ${currentPage - 1}}" aria-label="Previous" class="page-link">
+            <span aria-hidden="true">&lsaquo;</span>
+        </a>
+    </span>
+        <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNum == currentPage ? 'active' : ''}">
+        <a th:href="@{'/users?page=' + ${pageNum}}" th:text="${pageNum + 1}" class="page-link"></a>
+    </span>
+        <span class="page-item" th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
+        <a th:if="${currentPage < totalPages - 1}" th:href="@{'/users?page=' + ${currentPage + 1}}" aria-label="Next" class="page-link">
+            <span aria-hidden="true">&rsaquo;</span>
+        </a>
+    </span>
+    </div>
+
 </div>
 </body>
 </html>

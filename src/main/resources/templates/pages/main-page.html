@@ -1,0 +1,43 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="layout">
+<head>
+    <title>Update user</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Головна сторінка</h1>
+    <form enctype="multipart/form-data" method="post" th:action="@{/templates/pages/main-page}" >
+        <h3>Телефон<input type="text" name="phone_number_1" placeholder="000 00 0" class="form-control" th:value="${main_page.phone_number_1}"></h3>
+        <h3><input type="text" name="phone_number_2" placeholder="000 00 0" class="form-control" th:value="${main_page.phone_number_2}"></h3>
+        <h3>Seo текст<input type="text" name="seo_text" placeholder="Seo_text" class="form-control" th:value="${main_page.seo_text}"></h3>
+        <h3>Статус</h3>
+        <div>
+            <label>
+                <input type="radio" name="status" value="on" th:checked="${main_page.status == 'on'}"> Вмк
+            </label>
+            <label>
+                <input type="radio" name="status" value="off" th:checked="${main_page.status == 'off'}"> Вимк
+            </label>
+            <script>
+                function checkBox(checkboxId) {
+                    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
+                    checkboxes.forEach((checkbox) => {
+                        if (checkbox.id !== checkboxId) {
+                            checkbox.checked = false;
+                        }
+                    });
+                }
+            </script>
+        </div>
+
+        <h3>Seo block</h3>
+        <h3>URL<input type="text" name="url" placeholder="URL" class="form-control" th:value="${main_page.seo_url}"></h3>
+        <h3>Title<input type="text" name="title" placeholder="Title" class="form-control" th:value="${main_page.seo_title}"></h3>
+        <h3>Keywords<input type="text" name="keywords" placeholder="word" class="form-control" th:value="${main_page.seo_keywords}"></h3>
+        <h3>Description<input type="text" name="description_seo" placeholder="Description" class="form-control" th:value="${main_page.seo_description}"></h3>
+        <button type="submit" class="btn btn-success">Зберегти</button>
+    </form>
+</div>
+</body>
+</html>

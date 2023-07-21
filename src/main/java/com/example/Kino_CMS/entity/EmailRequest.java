@@ -10,6 +10,6 @@ import lombok.NoArgsConstructor;
 public class EmailRequest {
     private String email;
     private boolean sendToAll;
-    private String subject;
-    private String content;
+    private String subject = "Admin";
+    private String content = "Admin";
 }
