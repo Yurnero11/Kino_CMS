@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Website</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+</head>
+<body>
+<header class="header">
+  <!-- Добавляем класс "header" к хедеру -->
+  <!-- Здесь разместите маленький логотип -->
+  <div style="background-color: transparent; margin-top: 60px" >
+    <img src="/static/img/video-camera.png" alt="Logo" style="height: 100px; width: 100px; object-fit: cover;">
+  </div>
+  <!-- Навигационное меню -->
+  <nav style="margin-top: 60px;">
+    <ul>
+      <!-- Existing menu items -->
+      <li><a href="/home">Главная</a></li>
+      <li><a href="/posts">Афиша</a></li>
+      <li><a href="/schedule">Рассписание</a></li>
+      <li><a href="/soon">Скоро</a></li>
+      <li><a href="/cinemas">Кинотеатры</a></li>
+      <li><a href="/promotions">Акции</a></li>
+      <li><a href="/news">Новости</a></li>
+
+      <!-- Здесь добавляем класс "dropdown" к "Другие страницы" -->
+      <li class="dropdown">
+        <a href="#">Другие страницы</a>
+        <!-- Здесь меняем класс "dropdown-menu__list" на "dropdown-menu" -->
+        <ul class="dropdown-menu">
+          <!-- Отображаем ссылки на остальные страницы с status == 'on' -->
+          <li th:each="aboutCinema : ${about_cinema}" th:if="${aboutCinema.status == 'on'}">
+            <a th:href="@{/aboutCinema}" class="nav-link">О кинотеатре</a>
+          </li>
+          <li th:each="vipHall : ${vip_halls}" th:if="${vipHall.status == 'on'}">
+            <a th:href="@{/vipHall}" class="nav-link">Вип зал</a>
+          </li>
+          <li th:each="cafe_bar : ${cafe_bar}" th:if="${cafe_bar.status == 'on'}">
+            <a th:href="@{/cafeBar}" class="nav-link">Кафе бар</a>
+          </li>
+          <li th:each="advertisings : ${advertising}" th:if="${advertisings.status == 'on'}">
+            <a th:href="@{/advertising}" class="nav-link">Реклама</a>
+          </li>
+          <li th:each="kids_room : ${kidsroom}" th:if="${kids_room.status == 'on'}">
+            <a th:href="@{/kidsRoom}" class="nav-link">Детская комната</a>
+          </li>
+          <li th:each="cinema_contacts : ${cinemaContactsForTable}" th:if="${cinema_contacts.status == 'on'}">
+            <a th:href="@{/contacts}" class="nav-link">Контакты</a>
+          </li>
+          <li th:each="page : ${pages}" th:if="${page.status == 'on'}">
+            <a th:href="@{'/page/' + ${page.page_id}}"
+               class="nav-link"
+               th:text="${page.page_name}"
+               th:classappend="${currentPath.startsWith('/page/' + page.page_id)} ? 'active' : ''"></a>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+
+  <!-- Поле для поиска -->
+  <form action="/search" method="get" style="margin-top: 60px;">
+    <div class="link-image" style="display: flex; align-items: center;">
+      <!-- Ссылки на социальные сети -->
+      <a href="https://instagram.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/upload/1.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+      <a href="https://facebook.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/upload/facebook.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+      <a href="https://twitter.com" style="text-decoration: none;"><img th:src="@{/upload/twitter.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+    </div>
+    <input type="text" name="query" placeholder="Поиск">
+    <button type="submit">Найти</button>
+  </form>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Имя пользователя -->
+  <div class="user-info" style="margin-top: 60px;">
+    <a th:href="@{/user/profile/{id}(id=${id})}" class="user-link">
+      <i class="fas fa-user"></i>
+    </a>
+    <a href="/login" class="btn btn-primary logout-btn">
+      <i class="fas fa-sign-out"></i>
+    </a>
+  </div>
+
+  <style>
+
+    .user-link, .logout-btn {
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      color: #fff;
+      text-decoration: none;
+    }
+
+    .user-link:hover {
+      background-color: #007bff; /* Change the background color on hover for user-link */
+    }
+
+    .logout-btn {
+      background-color: #007bff;
+      /* Set the default background color for logout-btn */
+    }
+
+    .logout-btn:hover {
+      background-color: #0056b3; /* Change the background color on hover for logout-btn */
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+    }
+    /* Стили для хедера */
+    header {
+      background-image: url('/static/img/111.png'), linear-gradient(to bottom, purple, purple );
+      background-size: 100% 50%, 100% 50%;
+      background-repeat: no-repeat;
+      background-position: top, bottom;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 0;
+      height: 200px;
+      /* Set the color of all text inside the header to white */
+      color: #fff;
+    }
+
+    /* Add CSS rules for the navigation menu */
+    header nav {
+      /* Add a white background to the navigation menu */
+      background-color: #fff;
+      margin-top: 10px; /* Add margin to the navigation menu */
+      border-radius: 5px; /* Add border radius to the navigation menu */
+    }
+
+    header nav ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      display: flex; /* Use flexbox for navigation items */
+    }
+
+    header nav li {
+      margin-right: 10px;
+      position: relative; /* Add relative positioning to the li elements */
+    }
+
+    header nav a {
+      font-size: 20px;
+      color: black;
+      text-decoration: none;
+      display: block; /* Display links as block elements to fill the width of the parent li element */
+      padding: 10px; /* Add padding to create spacing between links */
+    }
+
+    header nav a:hover {
+      color: #ffcc00;
+    }
+
+    /* Стили для поля поиска */
+    header form input[type="text"] {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    header form button[type="submit"] {
+      padding: 10px;
+      background-color: #ffcc00;
+      color: #333;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    /* Стили для имени пользователя */
+    header div span a {
+      color: #ffcc00;
+      text-decoration: none;
+    }
+
+    header div span a:hover {
+      text-decoration: underline;
+    }
+
+    /* Стили для body */
+    body {
+      margin: 0; /* Remove default margin */
+      padding: 0; /* Remove default padding */
+    }
+
+    ul.dropdown-menu {
+      display: none;
+      position: absolute;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      padding: 0;
+      z-index: 1; /* Add a higher z-index to make sure the dropdown appears on top of other elements */
+      left: 0; /* Position the dropdown menu at the left of the parent li element */
+      top: 100%; /* Position the dropdown menu below the parent li element */
+      border-radius: 5px; /* Add border radius to the dropdown menu */
+    }
+
+    li.dropdown:hover .dropdown-menu {
+      display: block;
+    }
+
+    /* Стили для контейнера социальных сетей */
+    header .link-image {
+      display: flex;
+      align-items: center;
+      border: 1px solid black;
+      padding: 5px; /* Добавляем отступы внутри границы */
+      border-radius: 5px;
+      background-color: #fff; /* Задаем белый фон внутри границы */
+    }
+
+    /* Стили для ссылок на социальные сети */
+    header .link-image a {
+      text-decoration: none;
+      /* Добавляем границу для каждой ссылки внутри контейнера */
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 5px; /* Добавляем отступы внутри границы */
+    }
+
+    header .link-image a:hover {
+      color: #ffcc00;
+    }
+
+    .user-info {
+      /* Добавляем больший размер шрифта */
+      font-size: 20px;
+      /* Добавляем жирность тексту */
+      font-weight: bold;
+      /* Изменяем цвет текста на белый */
+      color: white;
+    }
+
+    .dropdown-menu a {
+      color: black; /* Цвет текста */
+      text-decoration: none; /* Убираем подчеркивание */
+    }
+
+    /* Стиль для ссылок при наведении курсора */
+    .dropdown-menu a:hover {
+      color: red; /* Изменяем цвет текста при наведении */
+      font-weight: bold; /* Можно добавить жирное начертание */
+      background-color: lightgray; /* Изменяем фон при наведении */
+    }
+
+  </style>
+</header>
+</body>
+</html>

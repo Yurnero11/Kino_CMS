@@ -1,12 +1,12 @@
 package com.example.Kino_CMS.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+import jakarta.persistence.*;
 @Entity
 @Data
 @AllArgsConstructor
@@ -63,4 +63,5 @@ public class VipHall {
     protected void onCreate() {
         creation_date = new Date();
     }
+
 }

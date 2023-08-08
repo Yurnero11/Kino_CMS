@@ -11,4 +11,5 @@ import org.springframework.data.repository.query.Param;
 public interface MovieRepository extends CrudRepository<Movies, Long> {
     @Query("SELECT COUNT(m) FROM Movies m WHERE m.movie_data = :movie_data")
     long countMoviesByMovieData(@Param("movie_data") String movieData);
+
 }

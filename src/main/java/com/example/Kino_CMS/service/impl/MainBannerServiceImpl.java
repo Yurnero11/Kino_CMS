@@ -2,17 +2,19 @@ package com.example.Kino_CMS.service.impl;
 
 import com.example.Kino_CMS.entity.MainBanners;
 import com.example.Kino_CMS.repository.MainBannersRepository;
-import com.example.Kino_CMS.service.MainBannersService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-public class MainBannerServiceImpl implements MainBannersService {
-    private final MainBannersRepository mainBannersRepository;
+@Service
+public class MainBannerServiceImpl {
+    private final MainBannersRepository mainBannerRepository;
 
-    public MainBannerServiceImpl(MainBannersRepository mainBannersRepository) {
-        this.mainBannersRepository = mainBannersRepository;
+    @Autowired
+    public MainBannerServiceImpl(MainBannersRepository mainBannerRepository) {
+        this.mainBannerRepository = mainBannerRepository;
     }
 
-    @Override
-    public void createBanner(MainBanners mainBanners) {
-        mainBannersRepository.save(mainBanners);
+    public MainBanners getLatestMainBanner() {
+        return mainBannerRepository.findFirstByOrderByBannerIdDesc();
     }
 }

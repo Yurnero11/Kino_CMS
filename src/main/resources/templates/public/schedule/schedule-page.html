@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ваш заголовок</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tiny-slider@2.9.3/dist/tiny-slider.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 8px;
+            text-align: center;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        /* Стилизация блока с картинкой */
+        .image-container {
+            float: right;
+            margin-left: 20px;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Очистка плавания */
+        .clearfix::after {
+            content: "";
+            display: table;
+            clear: both;
+        }
+
+        /* Стилизация контейнера таблиц */
+        .tables-container {
+            float: left;
+            width: 70%; /* Размер контейнера таблиц, на который его следует установить */
+        }
+
+        /* Стилизация блока с элементами в ряд */
+        .inline-block-container {
+            display: inline-block;
+            vertical-align: top;
+            margin: 10px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="public/content/header :: header"></div>
+
+<div class="inline-block-container">
+    <h3>Показывать только</h3>
+        <input type="checkbox" id="2d" name="2d" value="2D">
+        <label for="2d">3D</label>
+
+        <input type="checkbox" id="3d" name="3d" value="3D">
+        <label for="3d">DBOX</label>
+
+        <input type="checkbox" id="all" name="all" value="Все" checked>
+        <label for="all">VIP</label>
+
+
+        <label for="cities1">Киноеатр</label>
+        <select id="cities1">
+            <option value="Киев">Киев</option>
+            <option value="Харьков">Харьков</option>
+            <option value="Одесса">Одесса</option>
+            <option value="Чернигов">Чернигов</option>
+            <option value="Львов">Львов</option>
+            <option value="Николаев">Николаев</option>
+            <option value="Кривой">Кривой Рог</option>
+            <option value="Полтава">Полтава</option>
+            <option value="Кропивницкий">Кропивницкий</option>
+            <option value="Краматорск">Краматорск</option>
+            <option value="Черновцы">Черновцы</option>
+            <option value="Запорожье">Запорожье</option>
+            <option value="Сумы">Сумы</option>
+            <!-- Добавьте другие города по необходимости -->
+        </select>
+
+
+
+        <label for="cities2">Дата</label>
+        <select id="cities2">
+            <option value="Киев">Киев</option>
+            <option value="Харьков">Харьков</option>
+            <option value="Одесса">Одесса</option>
+            <option value="Чернигов">Чернигов</option>
+            <option value="Львов">Львов</option>
+            <option value="Николаев">Николаев</option>
+            <option value="Кривой">Кривой Рог</option>
+            <option value="Полтава">Полтава</option>
+            <option value="Кропивницкий">Кропивницкий</option>
+            <option value="Краматорск">Краматорск</option>
+            <option value="Черновцы">Черновцы</option>
+            <option value="Запорожье">Запорожье</option>
+            <option value="Сумы">Сумы</option>
+            <!-- Добавьте другие города по необходимости -->
+        </select>
+
+
+
+        <label for="cities3">Фильм</label>
+        <select id="cities3">
+            <option value="Киев">Киев</option>
+            <option value="Харьков">Харьков</option>
+            <option value="Одесса">Одесса</option>
+            <option value="Чернигов">Чернигов</option>
+            <option value="Львов">Львов</option>
+            <option value="Николаев">Николаев</option>
+            <option value="Кривой">Кривой Рог</option>
+            <option value="Полтава">Полтава</option>
+            <option value="Кропивницкий">Кропивницкий</option>
+            <option value="Краматорск">Краматорск</option>
+            <option value="Черновцы">Черновцы</option>
+            <option value="Запорожье">Запорожье</option>
+            <option value="Сумы">Сумы</option>
+            <!-- Добавьте другие города по необходимости -->
+        </select>
+
+
+
+        <label for="cities4">Зал</label>
+        <select id="cities4">
+            <option value="Киев">Киев</option>
+            <option value="Харьков">Харьков</option>
+            <option value="Одесса">Одесса</option>
+            <option value="Чернигов">Чернигов</option>
+            <option value="Львов">Львов</option>
+            <option value="Николаев">Николаев</option>
+            <option value="Кривой">Кривой Рог</option>
+            <option value="Полтава">Полтава</option>
+            <option value="Кропивницкий">Кропивницкий</option>
+            <option value="Краматорск">Краматорск</option>
+            <option value="Черновцы">Черновцы</option>
+            <option value="Запорожье">Запорожье</option>
+            <option value="Сумы">Сумы</option>
+            <!-- Добавьте другие города по необходимости -->
+        </select>
+</div>
+
+<!-- Чекбоксы для выбора типа сеанса -->
+
+<div class="clearfix">
+    <div class="tables-container">
+        <h2>24 июля, Воскресенье</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Время</th>
+                <th>Фильм</th>
+                <th>Зал</th>
+                <th>Цена в грн</th>
+                <th>Бронировать</th>
+            </tr>
+            </thead>
+            <tbody id="table1-body">
+            <!-- Здесь будут добавляться данные -->
+            </tbody>
+        </table>
+
+        <h2>25 июля, Понедельник</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Время</th>
+                <th>Фильм</th>
+                <th>Зал</th>
+                <th>Цена в грн</th>
+                <th>Бронировать</th>
+            </tr>
+            </thead>
+            <tbody id="table2-body">
+            <!-- Здесь будут добавляться данные -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="image-container">
+        <img src="/static/img/112.jpg" alt="Картинка">
+    </div>
+</div>
+
+<div class="footer" th:replace="public/content/footer :: footer"></div>
+</body>
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        const dataDay1 = [
+            { time: "10:00", movie: "Фильм 1", hall: "Зал 1", price: "100", link: "/schedule/ticket" },
+            { time: "12:00", movie: "Фильм 2", hall: "Зал 2", price: "100", link: "/schedule/ticket" },
+            { time: "14:00", movie: "Фильм 3", hall: "Зал 3", price: "100", link: "/schedule/ticket" },
+            { time: "16:00", movie: "Фильм 4", hall: "Зал 4", price: "100", link: "/schedule/ticket" },
+            { time: "18:00", movie: "Фильм 5", hall: "Зал 5", price: "100", link: "/schedule/ticket" },
+            { time: "20:00", movie: "Фильм 6", hall: "Зал 6", price: "100", link: "/schedule/ticket" },
+            { time: "22:00", movie: "Фильм 7", hall: "Зал 7", price: "100", link: "/schedule/ticket" },
+            { time: "24:00", movie: "Фильм 8", hall: "Зал 8", price: "100", link: "/schedule/ticket" },
+            { time: "00:00", movie: "Фильм 9", hall: "Зал 9", price: "100", link: "/schedule/ticket" },
+            { time: "09:00", movie: "Фильм 10", hall: "Зал 10", price: "100", link: "/schedule/ticket" },
+            { time: "13:00", movie: "Фильм 11", hall: "Зал 11", price: "100", link: "/schedule/ticket" },
+
+        ];
+
+        const dataDay2 = [
+            { time: "12:00", movie: "Фильм 2", hall: "Зал 2", price: "120", link: "/schedule/ticket" },
+            { time: "12:00", movie: "Фильм 2", hall: "Зал 2", price: "100", link: "/schedule/ticket" },
+            { time: "14:00", movie: "Фильм 3", hall: "Зал 3", price: "100", link: "/schedule/ticket" },
+            { time: "16:00", movie: "Фильм 4", hall: "Зал 4", price: "100", link: "/schedule/ticket" },
+            { time: "18:00", movie: "Фильм 5", hall: "Зал 5", price: "100", link: "/schedule/ticket" },
+            { time: "20:00", movie: "Фильм 6", hall: "Зал 6", price: "100", link: "/schedule/ticket" },
+            { time: "22:00", movie: "Фильм 7", hall: "Зал 7", price: "100", link: "/schedule/ticket" },
+            { time: "24:00", movie: "Фильм 8", hall: "Зал 8", price: "100", link: "/schedule/ticket" },
+            { time: "00:00", movie: "Фильм 9", hall: "Зал 9", price: "100", link: "/schedule/ticket" },
+            { time: "09:00", movie: "Фильм 10", hall: "Зал 10", price: "100", link: "/schedule/ticket" },
+            { time: "13:00", movie: "Фильм 11", hall: "Зал 11", price: "100", link: "/schedule/ticket" },
+        ];
+
+        const table1Body = document.getElementById("table1-body");
+        const table2Body = document.getElementById("table2-body");
+
+        function populateTable(tableBody, data) {
+            for (let i = 0; i < data.length; i++) {
+                const row = document.createElement("tr");
+                const timeCell = document.createElement("td");
+                const movieCell = document.createElement("td");
+                const hallCell = document.createElement("td");
+                const priceCell = document.createElement("td");
+                const linkCell = document.createElement("td");
+
+                timeCell.textContent = data[i].time;
+                movieCell.textContent = data[i].movie;
+                hallCell.textContent = data[i].hall;
+                priceCell.textContent = data[i].price;
+                const link = document.createElement("a");
+                link.textContent = "Бронировать";
+                link.href = data[i].link;
+                linkCell.appendChild(link);
+
+                row.appendChild(timeCell);
+                row.appendChild(movieCell);
+                row.appendChild(hallCell);
+                row.appendChild(priceCell);
+                row.appendChild(linkCell);
+
+                tableBody.appendChild(row);
+            }
+        }
+
+        populateTable(table1Body, dataDay1);
+        populateTable(table2Body, dataDay2);
+    });
+</script>
+</html>

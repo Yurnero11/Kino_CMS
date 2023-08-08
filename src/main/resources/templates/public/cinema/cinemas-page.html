@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ваш заголовок</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tiny-slider@2.9.3/dist/tiny-slider.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Add custom styles here */
+        .section-container {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .movies-container {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            max-width: calc(100% - 400px); /* Adjust the width to make space for the image */
+        }
+
+        .cinema {
+            width: 50%; /* Adjust the width to make two items per row */
+            padding: 5px; /* Add some padding between cinema items */
+            box-sizing: border-box; /* Include padding in the item's width calculation */
+            text-align: center;
+        }
+
+        .movie-image {
+            width: 200px;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .cinema-list {
+            flex: 1;
+            max-width: 400px;
+            text-align: center;
+            display: flex; /* Add this line to enable flexbox */
+            flex-direction: column; /* Add this line to make items stack vertically */
+            align-items: center; /* Add this line to center items horizontally */
+        }
+
+        .cinema-list img {
+            padding-bottom: 10px; /* Add some padding between the images */
+            max-width: 100%;
+            height: auto;
+        }
+
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .main-wrapper {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer {
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff; /* Цвет ссылки (синий) */
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.2s ease-in-out; /* Плавное изменение цвета при наведении */
+        }
+
+        a:hover {
+            color: #0056b3; /* Цвет ссылки при наведении (темнее синий) */
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="public/content/header :: header"></div>
+
+<div>
+    <img style="width: 100%; height: 600px" src="/static/img/cinema.png" alt="cinema">
+</div>
+
+<div class="main-wrapper">
+    <h3 style="padding-left: 650px">Наши кинотеатры</h3>
+    <div class="section-container">
+        <div class="movies-container">
+            <div th:each="cinema : ${cinemas}" class="cinema">
+                <img class="movie-image" th:src="@{'/upload/' + ${cinema.logo_image_path}}">
+                <a th:href="@{'/cinema/' + ${cinema.cinema_id}}">
+                    <h3 th:text="${cinema.name}"></h3>
+                </a>
+            </div>
+        </div>
+        <div class="cinema-list">
+            Контекстная реклама
+            <img src="/static/img/112.jpg" alt="logo">
+        </div>
+    </div>
+</div>
+
+<div class="footer" th:replace="public/content/footer :: footer"></div>
+
+</body>
+</html>

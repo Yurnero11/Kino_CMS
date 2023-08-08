@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ваш заголовок</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tiny-slider@2.9.3/dist/tiny-slider.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Общие стили для страницы */
+        body {
+            display: flex;
+            flex-wrap: wrap; /* Обертка для элементов внутри body */
+        }
+
+        .left-content-wrapper {
+            flex: 1;
+            width: 70%; /* Занимает 70% ширины */
+        }
+
+        .left-content {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2 колонки равной ширины */
+            gap: 20px; /* Расстояние между карточками */
+            padding: 20px;
+        }
+
+        .promotion-card {
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .promotion-image {
+            width: 100%;
+            max-height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .promotion-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-top: 8px;
+        }
+
+        .promotion-date {
+            font-size: 14px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        .promotion-description {
+            margin-top: 8px;
+        }
+
+        /* Стили для блока с картинкой справа */
+        .right-content {
+            flex: 1;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .right-content img {
+            width: 80%;
+            height: auto;
+            max-height: 500px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="public/content/header :: header"></div>
+<div>
+    <img style="width: 100%; height: 600px" src="/static/img/promotion.jpg" alt="promotion">
+</div>
+
+<h3 style="text-align: center">Акции и скидки</h3>
+
+<div class="left-content-wrapper" style="background-color: #0E2231">
+    <div class="left-content">
+        <!-- Карточки акций -->
+        <div th:each="promotion : ${promotions}" class="promotion-card" th:if="${promotion.status == 'on'}">
+            <img class="promotion-image" th:src="${'/upload/' + promotion.main_image_path}" alt="promotion">
+            <a th:text="${promotion.promotion_title}" style="color: blue" th:href="@{/promotions/{promotion_id}(promotion_id=${promotion.promotion_id})}"></a>
+            <div class="promotion-date" style="color: white; background-color: black; border: 1px; border-radius: 10px" th:text="|${promotion.publication_date}|"></div>
+            <div class="promotion-description" style="color: white" th:text="${promotion.promotion_description}"></div>
+        </div>
+    </div>
+</div>
+
+
+<div class="footer" th:replace="public/content/footer :: footer"></div>
+
+</body>
+</html>

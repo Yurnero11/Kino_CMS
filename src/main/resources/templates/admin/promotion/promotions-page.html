@@ -1,0 +1,35 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/layout/layout">
+<head>
+    <title>Update user</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1>Акції</h1>
+    <h2><a href="/admin/promotions/promotions-add" class="add-movie-button">Додати акцію</a></h2>
+    <div class="box">
+        <table style="border-collapse: collapse;">
+            <tr>
+                <th style="padding: 10px;">Id</th>
+                <th style="padding: 10px;">Name</th>
+                <th style="padding: 10px;">Status</th>
+            </tr>
+            <!-- Итерация по списку пользователей и отображение данных -->
+            <tr th:each="promotions : ${promotion}">
+                <td th:text="${promotions.promotion_id}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${promotions.promotion_title}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${promotions.status}" style="text-align: left; padding: 10px;"></td>
+                <td><a th:href="'/admin/promotions/' + ${promotions.promotion_id} + '/edit'"  class="btn btn-info">Редагувати</a></td>
+                <td><form th:action="'/admin/promotions/' + ${promotions.promotion_id} + '/remove'" method="post">
+                    <button class="btn btn-danger">Delete</button>
+                </form></td>
+                <!-- Добавьте другие необходимые поля -->
+            </tr>
+        </table>
+    </div>
+</div>
+</body>
+</html>

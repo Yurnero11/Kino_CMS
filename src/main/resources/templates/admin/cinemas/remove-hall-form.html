@@ -1,0 +1,28 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/layout/layout">
+<head>
+  <title>Update cinema</title>
+</head>
+<body>
+<section layout:fragment="header">
+  <h1>Кінотеатри</h1>
+  <ol class="breadcrumb">
+    <li><a href="/templates/public"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Кінотеатри</li>
+  </ol>
+</section>
+<div layout:fragment="content">
+  <h1>Remove Hall</h1>
+  <p>Are you sure you want to remove this hall?</p>
+  <p>Cinema ID: <span th:text="${cinema.cinema_id}"></span></p>
+  <p>Hall ID: <span th:text="${hall.hall_id}"></span></p>
+  <form method="post" th:action="@{/admin/cinemas/{cinema_id}/edit/{hall_id}/remove(cinema_id=${cinema.cinema_id}, hall_id=${hall.hall_id})}">
+    <button type="submit" class="btn btn-danger">Remove</button>
+    <a href="/cinemas" class="btn btn-primary">Cancel</a>
+  </form>
+</div>
+</body>
+</html>

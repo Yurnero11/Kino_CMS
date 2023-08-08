@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ваш заголовок</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tiny-slider@2.9.3/dist/tiny-slider.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <style>
+        /* Стили для header */
+        .header {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .header img {
+            width: 100px;
+            height: 100px;
+            padding-right: 20px; /* Измените размер логотипа по вашему усмотрению */
+        }
+
+        .header h1 {
+            margin: 0 20px;
+        }
+
+        .contact-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .contact-list li {
+            margin-bottom: 5px;
+        }
+
+        /* Стили для content */
+        .content {
+            display: flex;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .image-wrapper {
+            display: flex;
+        }
+
+        .image-wrapper img {
+            width: 400px;
+            height: 400px;
+            padding: 20px/* Измените размер картинок по вашему усмотрению */
+        }
+
+        .map-container {
+            width: 500px;
+            height: 500px;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="public/content/header :: header"></div>
+
+<div>
+    <img style="width: 100%; height: 600px" src="/static/img/cinema.png" alt="cinema">
+</div>
+
+
+<h1 style="text-align: center">Контакты</h1>
+<div style="width: 70%; padding-left: 400px" th:each="contact : ${contactsList}" class="contact-card-container">
+    <div class="header">
+        <h1 th:text="${contact.cinema_name}"></h1>
+        <img th:src="${'/upload/' + contact.logo_path}" alt="Логотип">
+        <ul class="contact-list">
+            <li th:text="${contact.address}"></li>
+            <li>Ширина: <p th:text="${contact.coordinates1}"></p></li>
+            <li>Долгота: <p th:text="${contact.coordinates2}"></p></li>
+        </ul>
+    </div>
+
+
+    <div class="content">
+        <div class="image-wrapper">
+            <img th:src="${'/upload/' + contact.logo_path}" alt="Изображение 2">
+        </div>
+    </div>
+
+    <div>
+        <div th:id="'map-' + ${contact.cinema_id}" class="map-container"></div>
+        <script th:inline="javascript">
+            var latitude = [[${contact.coordinates1}]];
+            var longitude = [[${contact.coordinates2}]];
+            var mapContainer = document.getElementById('map-[[${contact.cinema_id}]]');
+            initMapForContact(latitude, longitude, mapContainer);
+
+            function initMapForContact(latitude, longitude, mapContainer) {
+                console.log("Initializing map for latitude:", latitude, " and longitude:", longitude);
+
+                var location = { lat: latitude, lng: longitude };
+
+                var map = L.map(mapContainer).setView(location, 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+
+                L.marker(location).addTo(map);
+            }
+        </script>
+        <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    </div>
+    <hr>
+</div>
+
+<div th:each="contact : ${contactsList}">
+
+</div>
+
+
+
+
+
+<!-- Вызов функции инициализации карт для каждого контакта после загрузки страницы -->
+
+
+<div th:replace="public/content/footer :: footer"></div>
+<!-- Вызов функции инициализации карт для каждого контакта после загрузки страницы -->
+
+</body>
+</html>

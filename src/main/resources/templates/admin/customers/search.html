@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/layout/layout">
+<head>
+  <title>Clients</title>
+</head>
+<body>
+<section layout:fragment="header">
+  <h1>Clients</h1>
+  <ol class="breadcrumb">
+    <li><a href="/templates/public"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Clients</li>
+  </ol>
+</section>
+<div layout:fragment="content">
+  <table>
+    <thead>
+    <tr>
+      <th>Имя пользователя</th>
+      <th>Email</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Перебор пользователей и отображение их данных -->
+    <tr th:each="user : ${users}">
+      <td th:text="${user.username}"></td>
+      <td th:text="${user.email}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+</body>
+</html>

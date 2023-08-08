@@ -1,12 +1,10 @@
 package com.example.Kino_CMS.entity;
 
-import org.hibernate.annotations.Cascade;
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-
+import jakarta.persistence.*;
 import java.util.List;
 
 @Entity

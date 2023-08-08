@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ваш заголовок</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tiny-slider@2.9.3/dist/tiny-slider.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Общие стили для страницы */
+        /* Общие стили для страницы */
+        body {
+            display: flex;
+        }
+
+        /* Стили для основного контейнера */
+        .main-content {
+            display: flex;
+            padding: 20px;
+            justify-content: center;
+            width: 70%;
+        }
+
+        /* Стили для контейнера акции */
+        .promotion-container {
+            display: flex;
+            align-items: center;
+        }
+
+        /* Стили для изображения акции */
+        .promotion-image {
+            width: 500px;
+            height: 500px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        /* Стили для описания акции */
+        .promotion-details {
+            margin-left: 20px;
+        }
+
+        /* Стили для заголовка акции */
+        .promotion-title {
+            font-weight: bold;
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* Стили для описания акции */
+        .promotion-description {
+            /* Здесь можно добавить стили для описания, если требуется */
+        }
+    </style>
+</head>
+<body>
+<div th:replace="public/content/header :: header"></div>
+<div>
+    <img style="width: 100%; height: 600px" src="/static/img/promotion.jpg" alt="promotion">
+</div>
+
+<div class="main-content" style="background-color: #0E2231;">
+    <!-- Карточка акции -->
+    <div class="promotion-container">
+        <img class="promotion-image" th:src="${'/upload/' + promotions.main_image_path}" alt="promotion">
+        <div class="promotion-details">
+            <div class="promotion-title" style="color: white" th:text="${promotions.promotion_title}"></div>
+            <div class="promotion-description" style="color: white" th:text="${promotions.promotion_description}"></div>
+        </div>
+    </div>
+</div>
+
+<div class="footer" th:replace="public/content/footer :: footer"></div>
+
+</body>
+</html>

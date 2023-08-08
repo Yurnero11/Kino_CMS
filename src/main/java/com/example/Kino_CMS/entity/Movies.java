@@ -1,9 +1,9 @@
 package com.example.Kino_CMS.entity;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.ToString;
-
+import lombok.NoArgsConstructor;
 @Entity
 @Data
 
@@ -41,4 +41,7 @@ public class Movies {
 
     @Column(name = "movie_data")
     private String movie_data;
+
+    @Column(name = "information_about_film")
+    private String information_about_film;
 }

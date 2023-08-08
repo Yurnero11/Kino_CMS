@@ -1,6 +1,5 @@
 package com.example.Kino_CMS.entity;
 
-import com.sun.tools.javac.Main;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

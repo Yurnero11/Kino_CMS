@@ -1,5 +1,6 @@
 package com.example.Kino_CMS.entity;
 
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

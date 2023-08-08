@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Афіша</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <style>
+        /* Стили для видео блока */
+        .video-container {
+            width: 100%;
+            max-width: 800px; /* Ограничение максимальной ширины видео */
+            margin: 0 auto;
+            margin-top: 20px;
+        }
+
+        /* Стили для атрибутов видео */
+        .video-container iframe {
+            width: 100%;
+            height: 400px; /* Задайте высоту видео по своему усмотрению */
+        }
+
+        /* Стили для футера */
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            /* Прикрепить футер к нижней части экрана */
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        /* Добавьте отступ для контента, чтобы избежать перекрытия футера */
+        body {
+            margin-bottom: 80px;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-gap: 5px;
+            margin: 20px;
+        }
+
+        .day {
+            text-align: center;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border: 1px solid #ccc;
+        }
+
+        .slot {
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+
+        .container {
+            max-width: 1200px; /* Максимальная ширина контейнера */
+            margin: 0 auto; /* Выравнивание контейнера по центру */
+            display: flex; /* Используем flexbox для центрирования содержимого */
+            flex-direction: column; /* Размещаем элементы вертикально */
+            align-items: center; /* Выравнивание элементов по центру по горизонтали */
+        }
+
+        .movie-details {
+            display: flex;
+            justify-content: center; /* Выравнивание элементов по центру по горизонтали */
+            max-width: 800px; /* Максимальная ширина блока с деталями фильма */
+            margin: 20px;
+        }
+
+        .movie-image {
+            max-width: 200px;
+            margin-right: 20px;
+        }
+
+        .movie-description {
+            flex: 1;
+        }
+
+        /*============================================================================================================*/
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
+
+        .main-container {
+            max-width: 1400px; /* Установите максимальную ширину блока */
+            margin: 0 auto; /* Выравнивание блока по центру страницы */
+            display: flex; /* Добавим flex-контейнер для элементов */
+        }
+
+        .image-container,
+        .slider-container {
+            flex: 1; /* Оба блока займут равное пространство внутри .main-container */
+        }
+
+        .carousel img {
+            object-fit: cover; /* Растягиваем изображения внутри слайдера */
+        }
+
+        .slider-content {
+            /* Установим правый отступ для контейнера слайдера,
+             * чтобы он не прилипал к правому краю .wrapper */
+            margin-right: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .wrapper{
+            display: flex;
+            max-width: 1200px;
+            position: relative;
+        }
+        .wrapper i{
+            top: 50%;
+            height: 44px;
+            width: 44px;
+            color: #343F4F;
+            cursor: pointer;
+            font-size: 1.15rem;
+            position: absolute;
+            text-align: center;
+            line-height: 44px;
+            background: #fff;
+            border-radius: 50%;
+            transform: translateY(-50%);
+            transition: transform 0.1s linear;
+        }
+        .wrapper i:active{
+            transform: translateY(-50%) scale(0.9);
+        }
+        .wrapper i:hover{
+            background: #f2f2f2;
+        }
+        .wrapper i:first-child{
+            left: -22px;
+            display: none;
+        }
+        .wrapper i:last-child{
+            right: -22px;
+        }
+        .wrapper .carousel{
+            font-size: 0px;
+            cursor: pointer;
+            overflow: hidden;
+            white-space: nowrap;
+            scroll-behavior: smooth;
+        }
+        .carousel.dragging{
+            cursor: grab;
+            scroll-behavior: auto;
+        }
+        .carousel.dragging img{
+            pointer-events: none;
+        }
+        .carousel img{
+            height: 340px;
+            object-fit: cover;
+            user-select: none;
+            margin-left: 14px;
+            width: calc(100% / 3);
+        }
+        .carousel img:first-child{
+            margin-left: 0px;
+        }
+        @media screen and (max-width: 900px) {
+            .carousel img{
+                width: calc(100% / 2);
+            }
+        }
+        @media screen and (max-width: 550px) {
+            .carousel img{
+                width: 100%;
+            }
+        }
+
+        /*====================================================*/
+
+    </style>
+</head>
+<body>
+<div th:replace="public/content/header :: header"></div>
+
+<h1 style="text-align: center">Фільм: <span  th:text="${movies.name}"></span></h1>
+<div class="video-container">
+    <iframe width="560" height="315" th:src="${movies.trailer_url}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+</div>
+
+<div style="text-align: center;">
+    <label for="cities">Выберите город: </label>
+    <select id="cities">
+        <option value="Киев">Киев</option>
+        <option value="Харьков">Харьков</option>
+        <option value="Одесса">Одесса</option>
+        <option value="Чернигов">Чернигов</option>
+        <option value="Львов">Львов</option>
+        <option value="Николаев">Николаев</option>
+        <option value="Кривой">Кривой Рог</option>
+        <option value="Полтава">Полтава</option>
+        <option value="Кропивницкий">Кропивницкий</option>
+        <option value="Краматорск">Краматорск</option>
+        <option value="Черновцы">Черновцы</option>
+        <option value="Запорожье">Запорожье</option>
+        <option value="Сумы">Сумы</option>
+        <!-- Добавьте другие города по необходимости -->
+    </select>
+</div>
+
+<!-- Чекбоксы для выбора типа сеанса -->
+<div style="text-align: center; margin-top: 10px;">
+    <input type="checkbox" id="2d" name="2d" value="2D">
+    <label for="2d">2D</label>
+
+    <input type="checkbox" id="3d" name="3d" value="3D">
+    <label for="3d">3D</label>
+
+    <input type="checkbox" id="all" name="all" value="Все" checked>
+    <label for="all">Все</label>
+</div>
+
+<div class="calendar">
+    <div class="day">Пн</div>
+    <div class="day">Вт</div>
+    <div class="day">Ср</div>
+    <div class="day">Чт</div>
+    <div class="day">Пт</div>
+    <div class="day">Сб</div>
+    <div class="day">Вс</div>
+
+    <div class="slot">
+        <div><b>12:00</b></div>
+        <div>Зал 1</div>
+        <div>28 Июля</div>
+    </div>
+    <div class="slot">
+        <div><b>14:00</b></div>
+        <div>Зал 2</div>
+        <div>28 Июля</div>
+    </div>
+    <div class="slot">
+        <div><b>16:00</b></div>
+        <div>Зал 3</div>
+        <div>28 Июля</div>
+    </div>
+    <div class="slot">
+        <div><b>18:00</b></div>
+        <div>Зал 3</div>
+        <div>28 Июля</div>
+    </div>
+    <div class="slot">
+        <div><b>20:00</b></div>
+        <div>Зал 3</div>
+        <div>28 Июля</div>
+    </div>
+    <div class="slot">
+        <div><b>22:00</b></div>
+        <div>Зал 3</div>
+        <div>28 Июля</div>
+    </div>
+    <div class="slot">
+        <div><b>00:00</b></div>
+        <div>Зал 3</div>
+        <div>28 Июля</div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="movie-details">
+        <img style="height: 350px" class="movie-image" th:src="'/upload/' + ${movies.main_page_path}" alt="Фильм">
+        <div class="movie-description">
+            <form action="#" method="post" onsubmit="return false;">
+                <button class="btn btn-warning" type="submit">Купити білет</button>
+            </form>
+            <h2 th:text="${movies.name}"></h2>
+            <p style="max-width: 1000px; word-wrap: break-word; text-align: center; margin: 0 auto;" th:text="${movies.description}"></p>
+        </div>
+    </div>
+</div>
+
+
+<div class="main-container">
+    <div class="image-container">
+        <img style="width: 400px;" th:src="${'/upload/' + movies.information_about_film}" alt="img">
+    </div>
+    <div class="slider-container">
+        <div class="mini-slider">
+            <div class="wrapper">
+                <i id="left" class="fa-solid fa-angle-left"></i>
+                <div class="carousel">
+                    <img style="height: 300px; width: 300px;" th:each="imagePath : ${galleryPaths}" th:src="'/upload/' + ${imagePath}" alt="Slide" draggable="false">
+                </div>
+                <i id="right" class="fa-solid fa-angle-right"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div style="display: flex; justify-content: center; align-items: center; height: 300px; padding-top: 30px">
+    <img style="width: 1000px; height: 300px;" src="/static/img/advertising.jpg" alt="logo">
+</div>
+
+<div class="footer" th:replace="public/content/footer :: footer"></div>
+</body>
+<script>
+    const carousel = document.querySelector(".carousel"),
+        firstImg = carousel.querySelectorAll("img")[0],
+        arrowIcons = document.querySelectorAll(".wrapper i");
+    let isDragStart = false, isDragging = false, prevPageX, prevScrollLeft, positionDiff;
+    const showHideIcons = () => {
+        // showing and hiding prev/next icon according to carousel scroll left value
+        let scrollWidth = carousel.scrollWidth - carousel.clientWidth; // getting max scrollable width
+        arrowIcons[0].style.display = carousel.scrollLeft == 0 ? "none" : "block";
+        arrowIcons[1].style.display = carousel.scrollLeft == scrollWidth ? "none" : "block";
+    }
+    arrowIcons.forEach(icon => {
+        icon.addEventListener("click", () => {
+            let firstImgWidth = firstImg.clientWidth + 14; // getting first img width & adding 14 margin value
+            // if clicked icon is left, reduce width value from the carousel scroll left else add to it
+            carousel.scrollLeft += icon.id == "left" ? -firstImgWidth : firstImgWidth;
+            setTimeout(() => showHideIcons(), 60); // calling showHideIcons after 60ms
+        });
+    });
+    const autoSlide = () => {
+        // if there is no image left to scroll then return from here
+        if(carousel.scrollLeft - (carousel.scrollWidth - carousel.clientWidth) > -1 || carousel.scrollLeft <= 0) return;
+        positionDiff = Math.abs(positionDiff); // making positionDiff value to positive
+        let firstImgWidth = firstImg.clientWidth + 14;
+        // getting difference value that needs to add or reduce from carousel left to take middle img center
+        let valDifference = firstImgWidth - positionDiff;
+        if(carousel.scrollLeft > prevScrollLeft) { // if user is scrolling to the right
+            return carousel.scrollLeft += positionDiff > firstImgWidth / 3 ? valDifference : -positionDiff;
+        }
+        // if user is scrolling to the left
+        carousel.scrollLeft -= positionDiff > firstImgWidth / 3 ? valDifference : -positionDiff;
+    }
+    const dragStart = (e) => {
+        // updatating global variables value on mouse down event
+        isDragStart = true;
+        prevPageX = e.pageX || e.touches[0].pageX;
+        prevScrollLeft = carousel.scrollLeft;
+    }
+    const dragging = (e) => {
+        // scrolling images/carousel to left according to mouse pointer
+        if(!isDragStart) return;
+        e.preventDefault();
+        isDragging = true;
+        carousel.classList.add("dragging");
+        positionDiff = (e.pageX || e.touches[0].pageX) - prevPageX;
+        carousel.scrollLeft = prevScrollLeft - positionDiff;
+        showHideIcons();
+    }
+    const dragStop = () => {
+        isDragStart = false;
+        carousel.classList.remove("dragging");
+        if(!isDragging) return;
+        isDragging = false;
+        autoSlide();
+    }
+    carousel.addEventListener("mousedown", dragStart);
+    carousel.addEventListener("touchstart", dragStart);
+    document.addEventListener("mousemove", dragging);
+    carousel.addEventListener("touchmove", dragging);
+    document.addEventListener("mouseup", dragStop);
+    carousel.addEventListener("touchend", dragStop);
+</script>
+</html>

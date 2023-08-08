@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 public class MainBanners {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int banner_id;
+    private int bannerId;
 
     @Column(name = "image_path_1")
     private String imagePath1;

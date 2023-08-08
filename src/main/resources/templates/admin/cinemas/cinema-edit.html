@@ -1,0 +1,70 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/layout/layout">
+<head>
+  <title>Update cinema</title>
+</head>
+<body>
+<section layout:fragment="header">
+  <h1>Кінотеатри</h1>
+  <ol class="breadcrumb">
+    <li><a href="/templates/public"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Кінотеатри</li>
+  </ol>
+</section>
+<div layout:fragment="content">
+  <h1>Update Cinema by id# <span th:text="${cinema.cinema_id}"></span></h1>
+  <form method="post" enctype="multipart/form-data" th:object="${cinema}">
+    <input type="hidden" th:field="*{cinema_id}">
+    <h3>Назва кінотеатру<input type="text" th:field="*{name}" placeholder="Назва кінотеатру" class="form-control"></h3>
+    <h3>Опис<input type="text" th:field="*{description}" placeholder="Текст" class="form-control"></h3>
+    <h3>Умова<input type="text" th:field="*{conditions}" placeholder="Текст" class="form-control"></h3>
+    <h3>Логотип<input type="file" name="logotype" class="form-control gallery-input" placeholder="Фото" th:field="${cinema.logo_image_path}"></h3>
+    <h3>Фото верхнього банера<input type="file" name="head_banner" class="form-control gallery-input" placeholder="Фото"></h3>
+
+    <h3>Галерея картинок</h3>
+    <div class="gallery-row">
+      <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1">
+      <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 2">
+      <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 3">
+      <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 4">
+      <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 5">
+    </div>
+
+    <!-- тут список добавленых залов-->
+    <h2>Список залов</h2>
+    <a th:href="@{/admin/cinemas/{cinema_id}/edit/hall-add(cinema_id=${cinema.cinema_id})}" class="add-movie-button">Додати зал</a>
+    <div class="box">
+      <table style="border-collapse: collapse;">
+        <tr>
+          <th style="padding: 10px;">ID</th>
+          <th style="padding: 10px;">Дата створення</th>
+          <th></th>
+        </tr>
+        <tr th:each="hall : ${cinema.halls}">
+          <td style="text-align: left; padding: 10px;" th:text="${hall.hall_id}"></td>
+          <td style="text-align: left; padding: 10px;" th:text="${#dates.format(hall.creation_date, 'dd-MM-yyyy')}"></td>
+          <td>
+            <a th:href="'/admin/cinemas/' + ${cinema.cinema_id} + '/edit/' + ${hall.hall_id} + '/edit'" class="btn btn-info">Редагувати</a>
+          </td>
+          <td>
+            <a th:href="@{/admin/cinemas/{cinema_id}/edit/{hall_id}/remove(cinema_id=${cinema_id}, hall_id=${hall.hall_id})}"
+               class="btn btn-danger">Видалити зал</a>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <!--  -->
+
+    <h3>Seo block</h3>
+    <h3>URL<input type="text" th:field="*{seoBlocks.url}" placeholder="URL" class="form-control"></h3>
+    <h3>Title<input type="text" th:field="*{seoBlocks.title}" placeholder="Title" class="form-control"></h3>
+    <h3>Keywords<input type="text" th:field="*{seoBlocks.keywords}" placeholder="word" class="form-control"></h3>
+    <h3>Description<input type="text" th:field="*{seoBlocks.description}" placeholder="Description" class="form-control"></h3>
+    <button type="submit" class="btn btn-success">Оновити кінотеатр</button>
+  </form>
+</div>
+</body>
+</html>

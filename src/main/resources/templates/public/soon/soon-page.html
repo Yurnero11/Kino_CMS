@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ваш заголовок</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tiny-slider@2.9.3/dist/tiny-slider.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .movie {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 10px;
+            max-width: 200px;
+            text-align: center;
+        }
+
+        .movie-image {
+            width: 100%;
+            height: 250px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+
+        /* Стили для секции фильмов */
+        .section-container {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .movies-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+        }
+
+        body {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007bff; /* Цвет ссылки (синий) */
+            font-size: 18px;
+            font-weight: bold;
+            transition: color 0.2s ease-in-out; /* Плавное изменение цвета при наведении */
+        }
+
+        a:hover {
+            color: #0056b3; /* Цвет ссылки при наведении (темнее синий) */
+        }
+
+    </style>
+</head>
+<body>
+<div th:replace="public/content/header :: header"></div>
+
+<div class="content">
+    <div class="section-container">
+        <h3 class="section-title" style="text-align: center">Вже вийшов</h3>
+        <div class="movies-container">
+            <div th:each="movie, iterationStatus : ${movies}" th:if="${movie.movie_data == 'soon'}" class="movie">
+                <img class="movie-image" th:src="@{'/upload/' + ${movie.main_page_path}}">
+                <a th:href="@{'/soon/' + ${movie.movie_id}}">
+                    <h3 th:text="${movie.name}"></h3>
+                </a>
+                <form action="#" method="post" onsubmit="return false;">
+                    <button class="btn btn-warning" type="submit">Купити білет</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="footer" th:replace="public/content/footer :: footer"></div>
+</body>
+</html>

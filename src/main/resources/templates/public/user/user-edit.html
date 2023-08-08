@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Your Website</title>
+
+    <!-- Здесь подключите ваши стили, скрипты и другие метаданные -->
+    <!-- Add Bootstrap CSS link here -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        html, body {
+            height: 100%;
+            font-size: 15px;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+        }
+
+        .container {
+            flex: 1; /* Fill the available vertical space between header and footer */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Vertically center the form */
+        }
+
+        .form-row {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .form-column-left,
+        .form-column-right {
+            flex: 1;
+            padding: 10px;
+        }
+
+        /* Adjust the form layout for smaller screens */
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Включаем шаблон header.html -->
+<div th:replace="public/content/header :: header"></div>
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form id="profileForm" th:action="@{/user/profile/__${user.id}__}" th:object="${user}" method="post">
+                <div class="form-row">
+                <!-- Первая половина полей для редактирования профиля -->
+                <div class="form-column-left"> <!-- Add the form-column-left class here -->
+                    <div class="mb-3">
+                        <label for="firstName" class="form-label">First Name:</label>
+                        <input type="text" id="firstName" class="form-control" th:field="*{firstName}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="lastName" class="form-label">Last Name:</label>
+                        <input type="text" id="lastName" class="form-control" th:field="*{lastName}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username:</label>
+                        <input type="text" id="username" class="form-control" th:field="*{username}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email:</label>
+                        <input type="text" id="email" class="form-control" th:field="*{email}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Phone:</label>
+                        <input type="text" id="phone" class="form-control" th:field="*{phone}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="birthday" class="form-label">Birthday:</label>
+                        <input type="date" id="birthday" class="form-control" name="birthday" th:value="*{birthday}">
+                        <input type="hidden" id="prevBirthday" name="prevBirthday" th:value="${#temporals.format(user.birthday, 'yyyy-MM-dd')}">
+                    </div>
+                    <!-- ... Add more fields here that you want in the left column ... -->
+                </div>
+                <div class="form-column-right"> <!-- Add the form-column-right class here -->
+                    <!-- Вторая половина полей для редактирования профиля -->
+                    <div class="mb-3">
+                        <label for="city" class="form-label">City:</label>
+                        <input type="text" id="city" class="form-control" th:field="*{city}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address:</label>
+                        <input type="text" id="address" class="form-control" th:field="*{address}">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cardNumber" class="form-label">Card Number:</label>
+                        <input type="text" id="cardNumber" class="form-control" th:field="*{cardNumber}">
+                    </div>
+                    <!-- ... Add more fields here that you want in the right column ... -->
+                    <input type="hidden" id="originalPasswordHash" name="originalPasswordHash" th:value="${user.passwordHash}" />
+                    <input type="hidden" id="originalPasswordRepit" name="originalPasswordRepit" th:value="${user.passwordRepit}" />
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password:</label>
+                        <input type="password" id="password" class="form-control" th:field="*{passwordHash}" placeholder="Enter new password">
+                    </div>
+                    <div class="mb-3">
+                        <label for="passwordRepit" class="form-label">Repeat Password:</label>
+                        <input type="password" id="passwordRepit" class="form-control" th:field="*{passwordRepit}" placeholder="Repeat new password">
+                    </div>
+                    <div class="mb-3">
+                        <label>Language:</label>
+                        <input type="radio" id="ukrainian" name="language" value="ukrainian" th:checked="${user.language == 'ukrainian'}">
+                        <label for="ukrainian">Ukrainian</label><br>
+                        <input type="radio" id="nonUkrainian" name="language" value="nonUkrainian" th:checked="${user.language == 'nonUkrainian'}">
+                        <label for="nonUkrainian">Non-Ukrainian</label>
+                    </div>
+                    <div class="mb-3">
+                        <label>Gender:</label>
+                        <input type="radio" id="male" name="gender" value="male" th:checked="${user.gender == 'male'}">
+                        <label for="male">Male</label>
+                        <input type="radio" id="female" name="gender" value="female" th:checked="${user.gender == 'female'}">
+                        <label for="female">Female</label>
+                    </div>
+                    <!-- ... Add more fields here that you want in the right column ... -->
+                </div>
+                    <!-- Move the button to a new row -->
+                    <div th:if="${error}" class="text-danger" th:text="${error}"></div>
+
+                    <!-- Move the button to a new row -->
+                    <div class="row">
+                        <div class="col-md-6 offset-md-3 text-center mt-3">
+                            <button type="submit" class="btn btn-primary">Save Profile</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+            <div th:if="${updateSuccess}" class="update-message mt-3 text-center">Your profile has been updated.</div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Включаем шаблон footer.html -->
+<div th:replace="public/content/footer :: footer"></div>
+</body>
+</html>

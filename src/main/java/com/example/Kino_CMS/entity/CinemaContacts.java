@@ -1,6 +1,5 @@
 package com.example.Kino_CMS.entity;
 
-import com.example.Kino_CMS.entity.SeoBlocks;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +23,11 @@ public class CinemaContacts {
     @Column(name = "address")
     private String address;
 
-    @Column(name = "coordinates")
-    private String coordinates;
+    @Column(name = "coordinates1")
+    private double coordinates1;
+
+    @Column(name = "coordinates2")
+    private double coordinates2;
 
     @Column(name = "logo_path")
     private String logo_path;

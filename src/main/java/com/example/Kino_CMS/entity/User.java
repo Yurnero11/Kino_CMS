@@ -1,11 +1,10 @@
 package com.example.Kino_CMS.entity;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -15,7 +14,6 @@ import java.util.Date;
 @AllArgsConstructor
 @Table(name = "users")
 public class User {
-    @jakarta.persistence.Id
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -23,6 +21,11 @@ public class User {
 
     @Column(name = "registration_date")
     private Date registrationDate;
+
+    @PrePersist
+    protected void onCreate() {
+        registrationDate = new Date();
+    }
 
     @Column(name = "birthday")
     private LocalDate birthday;
@@ -49,15 +52,17 @@ public class User {
     @Column(name = "card_number")
     private String cardNumber;
 
+
     @Column(name = "password_hash")
     private String passwordHash;
 
-    @Column(name = "password_salt")
-    private String passwordSalt;
+    @Column(name = "password_repit")
+    private String passwordRepit;
 
     @Column(name = "language")
     private String language;
 
     @Column(name = "gender")
     private String gender;
+
 }

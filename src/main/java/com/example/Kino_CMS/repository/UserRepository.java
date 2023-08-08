@@ -14,7 +14,11 @@ import java.util.List;
 public interface UserRepository  extends JpaRepository<User, Long> {
     // Метод поиска пользователей по имени пользователя
     List<User> findByUsernameContaining(String username);
+    User findByEmail(String email);
     long countByGender(String gender);
     List<User> findByEmailIn(List<String> emails);
     Page<User> findByUsernameContainingIgnoreCase(String username, Pageable pageable);
+
+    User findByUsername(String username);
+
 }

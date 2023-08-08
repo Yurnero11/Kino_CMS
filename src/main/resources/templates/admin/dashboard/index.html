@@ -1,0 +1,212 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/layout/layout">
+<head>
+    <title>Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.10.1/main.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        #chartContainer {
+            display: block;
+            margin: 0 auto;
+        }
+
+        #chartContainer1 {
+            display: block;
+            margin: 0 auto;
+        }
+
+        .centered-content {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .centered-content > .col-lg-3 {
+            margin: 0 10px; /* Add horizontal spacing between blocks */
+        }
+
+        .centered-charts {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            align-items: flex-start;
+            margin-top: 20px;
+        }
+
+        .centered-charts > .col-lg-3 {
+            margin: 0 10px; /* Add horizontal spacing between charts */
+        }
+    </style>
+</head>
+<body>
+
+<div layout:fragment="content">
+    <div>
+        <h3>Статистика</h3>
+    </div>
+
+    <div class="centered-content">
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning" style="background-color:red; border-radius: 20px">
+                <div class="inner">
+                    <h3 style="color:black;" th:text="${userCount}"></h3>
+                    <h4 style="color: black;">User Registrations</h4>
+                </div>
+                <div class="icon" >
+                    <i class="ion ion-person-add"></i>
+                </div>
+                <a style="border-radius: 20px" href="/admin/users" class="small-box-footer">More info</a>
+            </div>
+        </div>
+
+        <div class="col-lg-3 col-6">
+            <!-- small box -->
+            <div class="small-box bg-warning" style="background-color:yellow; border-radius: 20px">
+                <div class="inner">
+                    <h3 style="color:black;" th:text="${movieCount}"></h3>
+                    <h4 style="color: black;">Movie</h4>
+                </div>
+                <div class="icon" >
+                    <i class="ion ion-stats-bars"></i>
+                </div>
+                <a style="border-radius: 20px" href="/admin/films" class="small-box-footer">More info</a>
+            </div>
+        </div>
+    </div>
+
+    <div class="centered-charts">
+        <div class="col-lg-3 col-6 d-flex justify-content-center">
+            <canvas id="chartContainer"></canvas>
+        </div>
+
+        <div class="col-lg-3 col-6 d-flex justify-content-center">
+            <canvas id="movieChartContainer"></canvas>
+        </div>
+    </div>
+
+    <div id="calendar"></div>
+
+    <script th:inline="javascript">
+        var maleCount = /*[[${maleCount}]]*/ 0;
+        var femaleCount = /*[[${femaleCount}]]*/ 0;
+
+        var total = maleCount + femaleCount;
+        var malePercentage = (maleCount / total) * 100;
+        var femalePercentage = (femaleCount / total) * 100;
+
+        console.log("maleCount:", maleCount);
+        console.log("femaleCount:", femaleCount);
+        console.log("total:", total);
+
+        var chartData = {
+            labels: ['Male', 'Female'],
+            datasets: [{
+                data: [maleCount, femaleCount],
+                backgroundColor: ['red', 'blue']
+            }]
+        };
+
+        var chartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+                        var value = data.datasets[0].data[tooltipItem.index];
+                        var totalCount = maleCount + femaleCount;
+                        var percentage = (value / totalCount) * 100;
+
+                        return label + ': ' + value + ' (' + percentage.toFixed(2) + '%)';
+                    }
+                }
+            }
+        };
+
+        var chartCanvas = document.getElementById('chartContainer');
+        new Chart(chartCanvas, {
+            type: 'pie',
+            data: chartData,
+            options: chartOptions
+        });
+    </script>
+
+
+    <script>
+        var nowMovie =[[${nowMovie}]];
+        var soonMovie = [[${soonMovie}]];
+
+        var totalMovieCount = nowMovie + soonMovie;
+        var nowMoviePercentage = (nowMovie / totalMovieCount) * 100;
+        var soonMoviePercentage = (soonMovie / totalMovieCount) * 100;
+
+        console.log("nowMovie:", nowMovie);
+        console.log("soonMovie:", soonMovie);
+        console.log("totalMovieCount:", totalMovieCount);
+
+        var movieChartData = {
+            labels: ['now', 'soon'],
+            datasets: [{
+                data: [nowMovie, soonMovie],
+                backgroundColor: ['green', 'blue']
+            }]
+        };
+
+        var movieChartOptions = {
+            responsive: true,
+            maintainAspectRatio: false,
+            tooltips: {
+                callbacks: {
+                    label: function(tooltipItem, data) {
+                        var label = data.labels[tooltipItem.index];
+                        var value = data.datasets[0].data[tooltipItem.index];
+                        var totalCount = nowMovie + soonMovie;
+                        var percentage = (value / totalCount) * 100;
+
+                        return label + ': ' + value + ' (' + percentage.toFixed(2) + '%)';
+                    }
+                }
+            }
+        };
+
+        var movieChartCanvas = document.getElementById('movieChartContainer');
+        new Chart(movieChartCanvas, {
+            type: 'pie',
+            data: movieChartData,
+            options: movieChartOptions
+        });
+    </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                height: 'auto',
+                headerToolbar: {
+                    left: 'prev,next today',
+                    center: 'title',
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
+                },
+                events: [
+                    // Можно добавить события календаря сюда, если необходимо
+                ]
+            });
+
+            // Показать календарь
+            calendar.render();
+        });
+
+    </script>
+</div>
+
+</body>
+</html>
