@@ -3,6 +3,8 @@ package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.KidsRoom;
 import com.example.Kino_CMS.repository.KidsRoomRepository;
+import com.example.Kino_CMS.service.impl.KidsRoomServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -23,15 +25,12 @@ import java.util.UUID;
 
 @Controller
 public class KidsRoomController {
-    private final KidsRoomRepository kidsRoomRepository;
-
-    public KidsRoomController(KidsRoomRepository kidsRoomRepository) {
-        this.kidsRoomRepository = kidsRoomRepository;
-    }
+    @Autowired
+    private KidsRoomServiceImpl kidsRoomService;
 
     @GetMapping("/admin/pages/kids-room")
     public String kidsRoom(Model model){
-        KidsRoom kidsRoom = kidsRoomRepository.findById(1L).orElse(new KidsRoom());
+        KidsRoom kidsRoom = kidsRoomService.getKidsRoomById(1L).orElse(new KidsRoom());
         model.addAttribute("kids_room", kidsRoom);
         return "admin/pages/kids-room";
     }
@@ -57,7 +56,7 @@ public class KidsRoomController {
         // переданные через th:object в представлении.
 
         // Выполните поиск существующего объекта MainPage по его id в базе данных.
-        Optional<KidsRoom> existingMainPage = kidsRoomRepository.findById(1L);
+        Optional<KidsRoom> existingMainPage = kidsRoomService.getKidsRoomById(1L);
 
         if (existingMainPage.isPresent()) {
             KidsRoom currentPage = existingMainPage.get();
@@ -110,7 +109,7 @@ public class KidsRoomController {
             // Повторите для image_path_2, image_path_3, image_path_4 и image_path_5
 
             // Сохраните обновленный объект MainPage в базе данных.
-            kidsRoomRepository.save(currentPage);
+            kidsRoomService.saveKidsRoom(currentPage);
 
             // Вы можете добавить атрибуты Flash для отображения сообщений об успешном обновлении, если хотите.
             redirectAttributes.addFlashAttribute("successMessage", "Данные успешно обновлены.");

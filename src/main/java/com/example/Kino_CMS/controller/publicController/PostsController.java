@@ -4,6 +4,7 @@ import com.example.Kino_CMS.entity.Gallary;
 import com.example.Kino_CMS.entity.Movies;
 import com.example.Kino_CMS.repository.MovieRepository;
 import com.example.Kino_CMS.service.impl.MovieServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,13 +16,8 @@ import java.util.Optional;
 
 @Controller
 public class PostsController {
-    private final MovieServiceImpl movieServiceImpl;
-    private final MovieRepository movieRepository;
-
-    public PostsController(MovieServiceImpl movieServiceImpl, MovieRepository movieRepository) {
-        this.movieServiceImpl = movieServiceImpl;
-        this.movieRepository = movieRepository;
-    }
+    @Autowired
+    private MovieServiceImpl movieServiceImpl;
 
     @GetMapping("/posts")
     public String posts(Model model){
@@ -32,7 +28,7 @@ public class PostsController {
 
     @GetMapping("/posts/{movie_id}")
     public String postFilm(@PathVariable(value = "movie_id") long id, Model model){
-        Optional<Movies> optionalMovies = movieRepository.findById(id);
+        Optional<Movies> optionalMovies = movieServiceImpl.getMovieById(id);
         if (optionalMovies.isEmpty()) {
             return "redirect:/posts";
         }
@@ -48,7 +44,6 @@ public class PostsController {
             galleryPaths.add(gallery.getImagePath5());
             model.addAttribute("galleryPaths", galleryPaths);
         }
-
 
         // Добавление объекта cinema в модель
         model.addAttribute("movies", movies);

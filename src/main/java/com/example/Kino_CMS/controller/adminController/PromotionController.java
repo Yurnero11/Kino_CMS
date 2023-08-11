@@ -6,7 +6,12 @@ import com.example.Kino_CMS.entity.SeoBlocks;
 import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.PromotionRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
+import com.example.Kino_CMS.service.GallaryService;
+import com.example.Kino_CMS.service.SeoBlocksService;
+import com.example.Kino_CMS.service.impl.GallaryServiceImpl;
 import com.example.Kino_CMS.service.impl.PromotionServiceImpl;
+import com.example.Kino_CMS.service.impl.SeoBlocksServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,19 +32,13 @@ import java.util.UUID;
 
 @Controller
 public class PromotionController {
-    private final GalleryRepository galleryRepository;
-    private final SeoBlocksRepository seoBlocksRepository;
-    private final PromotionRepository promotionRepository;
+    @Autowired
+    private PromotionServiceImpl promotionServiceImpl;
+    @Autowired
+    private SeoBlocksServiceImpl seoBlocksService;
+    @Autowired
+    private GallaryServiceImpl gallaryService;
 
-    private final PromotionServiceImpl promotionServiceImpl;
-
-    public PromotionController(GalleryRepository galleryRepository, SeoBlocksRepository seoBlocksRepository, PromotionRepository promotionRepository, PromotionServiceImpl promotionServiceImpl) {
-        this.galleryRepository = galleryRepository;
-        this.seoBlocksRepository = seoBlocksRepository;
-
-        this.promotionRepository = promotionRepository;
-        this.promotionServiceImpl = promotionServiceImpl;
-    }
 
     @GetMapping("/admin/promotions")
     public String promotions(Model model){
@@ -94,9 +93,9 @@ public class PromotionController {
         promotions.setGallery(gallary);
         promotions.setSeoBlocks(seoBlocks);
 
-        promotionRepository.save(promotions);
-        galleryRepository.save(gallary);
-        seoBlocksRepository.save(seoBlocks);
+        promotionServiceImpl.savePromotions(promotions);
+        gallaryService.saveGallary(gallary);
+        seoBlocksService.saveSeoBlock(seoBlocks);
 
         return "redirect:/admin/promotions";
     }

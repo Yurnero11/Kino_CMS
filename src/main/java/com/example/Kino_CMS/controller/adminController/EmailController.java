@@ -3,7 +3,6 @@ package com.example.Kino_CMS.controller.adminController;
 import com.example.Kino_CMS.entity.*;
 import com.example.Kino_CMS.repository.EmailCountRepository;
 import com.example.Kino_CMS.repository.FileUploadsRepository;
-import com.example.Kino_CMS.service.impl.EmailServiceImpl;
 import com.example.Kino_CMS.service.impl.UserServiceImpl;
 import com.example.Kino_CMS.service.impl.FileUploadsServiceImpl;
 import jakarta.mail.MessagingException;
@@ -28,6 +27,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
@@ -39,11 +39,10 @@ import java.util.UUID;
 public class EmailController {
     private final int pageSize = 6;
 
-    private final FileUploadsRepository fileUploadsRepository;
-    private final EmailCountRepository emailCountRepository;
-
     @Autowired
-    private EmailServiceImpl emailServiceImpl;
+    private FileUploadsRepository fileUploadsRepository;
+    @Autowired
+    private EmailCountRepository emailCountRepository;
 
     @Autowired
     private UserServiceImpl userServiceImpl;
@@ -58,11 +57,32 @@ public class EmailController {
     @PostMapping("/file-delete/{fileId}")
     public String deleteFile(@PathVariable("fileId") Long fileId) {
         try {
-            fileUploadsService.deleteFile(fileId);
+            // Получите информацию о файле по его ID
+            FileUploads fileUploads = fileUploadsService.getFileById(fileId);
+            if (fileUploads != null) {
+                // Удалите файл из папки
+                deleteFileFromFolder(fileUploads.getOriginalFileName());
+
+                // Удалите запись о файле из базы данных
+                fileUploadsService.deleteFile(fileId);
+            }
+
             return "redirect:/email-users";
         } catch (Exception e) {
             // Обработка ошибки удаления файла
             return "redirect:/email-users?error";
+        }
+    }
+
+    private void deleteFileFromFolder(String originalFileName) {
+        String uploadPath = "upload/email_upload";
+        Path filePath = Paths.get(uploadPath, originalFileName);
+
+        try {
+            Files.delete(filePath);
+        } catch (IOException e) {
+            // Handle the exception, e.g., log an error
+            e.printStackTrace();
         }
     }
 

@@ -13,14 +13,9 @@ import java.util.Optional;
 
 @Controller
 public class PublicPromotionsController {
-    private final PromotionRepository promotionRepository;
-    private final PromotionServiceImpl promotionServiceImpl;
-
     @Autowired
-    public PublicPromotionsController(PromotionRepository promotionRepository, PromotionServiceImpl promotionServiceImpl) {
-        this.promotionRepository = promotionRepository;
-        this.promotionServiceImpl = promotionServiceImpl;
-    }
+    private PromotionServiceImpl promotionServiceImpl;
+
 
     @GetMapping("/promotions")
     public String promotionsIndex(Model model){
@@ -32,7 +27,7 @@ public class PublicPromotionsController {
     @GetMapping("/promotions/{promotion_id}")
     public String promotionsPage(@PathVariable(value = "promotion_id") long id,
                                  Model model){
-        Optional<Promotions> optionalPromotions = promotionRepository.findById(id);
+        Optional<Promotions> optionalPromotions = promotionServiceImpl.getPromotionById(id);
         if (optionalPromotions.isEmpty()) {
             return "redirect:/promotions";
         }

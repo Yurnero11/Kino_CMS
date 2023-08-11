@@ -6,6 +6,7 @@ import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.HallRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.CinemaServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -31,14 +32,14 @@ public class CinemaController {
     private final CinemaRepository cinemaRepository;
     private final HallRepository hallRepository;
 
-    private final CinemaServiceImpl service;
+    @Autowired
+    private CinemaServiceImpl service;
 
-    public CinemaController(SeoBlocksRepository seoBlocksRepository, GalleryRepository galleryRepository, CinemaRepository cinemaRepository, HallRepository hallRepository, CinemaServiceImpl service) {
+    public CinemaController(SeoBlocksRepository seoBlocksRepository, GalleryRepository galleryRepository, CinemaRepository cinemaRepository, HallRepository hallRepository) {
         this.seoBlocksRepository = seoBlocksRepository;
         this.galleryRepository = galleryRepository;
         this.cinemaRepository = cinemaRepository;
         this.hallRepository = hallRepository;
-        this.service = service;
     }
 
 
@@ -276,10 +277,27 @@ public class CinemaController {
             return "redirect:/cinemas";
         }
 
-        hallRepository.delete(optionalHall.get());
+        Halls hall = optionalHall.get();
+
+        // Получите имена файлов изображений зала из базы данных
+        String schemaImageFilename = hall.getSchema_image_path();
+        String topBannerImageFilename = hall.getTop_banner_image_path();
+
+        // Если есть имена файлов изображений, удаляем файлы
+        if (schemaImageFilename != null && !schemaImageFilename.isEmpty()) {
+            deleteImage(schemaImageFilename);
+        }
+
+        if (topBannerImageFilename != null && !topBannerImageFilename.isEmpty()) {
+            deleteImage(topBannerImageFilename);
+        }
+
+        hallRepository.delete(hall);
 
         return "redirect:/admin/cinemas";
     }
+
+
 
     @GetMapping("/admin/cinemas/{cinema_id}/edit/{hall_id}/remove")
     public String showRemoveHallForm(@PathVariable("cinema_id") long cinemaId,
@@ -310,11 +328,28 @@ public class CinemaController {
 
     @PostMapping("/admin/cinemas/{cinema_id}/remove")
     @PreAuthorize("hasRole('ADMIN')")
-    public String removeCinema(@PathVariable(value = "cinema_id") long id, Model model){
+    public String removeCinema(@PathVariable(value = "cinema_id") long id, Model model) {
         Cinemas cinemas = cinemaRepository.findById(id).orElseThrow();
+
+        // Получите имена файлов изображений кинотеатра из базы данных
+        String logoImageFilename = cinemas.getLogo_image_path();
+        String topBannerImageFilename = cinemas.getTop_banner_image_path();
+
+        // Если есть имена файлов изображений, удаляем файлы
+        if (logoImageFilename != null && !logoImageFilename.isEmpty()) {
+            deleteImage(logoImageFilename);
+        }
+
+        if (topBannerImageFilename != null && !topBannerImageFilename.isEmpty()) {
+            deleteImage(topBannerImageFilename);
+        }
+
+        // Удаляем кинотеатр из базы данных
         cinemaRepository.delete(cinemas);
+
         return "redirect:/admin/cinemas";
     }
+
 
 
     private final String uploadDir = "upload";
@@ -350,6 +385,18 @@ public class CinemaController {
             return fileName.substring(dotIndex + 1);
         } else {
             return "";
+        }
+    }
+
+    private void deleteImage(String imageFilename) {
+        String uploadPath = "upload";
+        Path imagePath = Paths.get(uploadPath, imageFilename);
+
+        try {
+            Files.delete(imagePath);
+        } catch (IOException e) {
+            // Handle the exception, e.g., log an error
+            e.printStackTrace();
         }
     }
 }

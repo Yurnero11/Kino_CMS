@@ -2,7 +2,9 @@ package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.CafeBar;
 import com.example.Kino_CMS.repository.CafeBarRepository;
+import com.example.Kino_CMS.service.CafeBarService;
 import com.example.Kino_CMS.service.impl.CafeBarServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -23,11 +25,9 @@ import java.util.UUID;
 
 @Controller
 public class CafeBarController {
-    private final CafeBarServiceImpl cafeBarService;
+    @Autowired
+    private CafeBarServiceImpl cafeBarService;
 
-    public CafeBarController(CafeBarServiceImpl cafeBarService) {
-        this.cafeBarService = cafeBarService;
-    }
 
     @GetMapping("/admin/pages/cafe-bar")
     public String cafeBar(Model model){

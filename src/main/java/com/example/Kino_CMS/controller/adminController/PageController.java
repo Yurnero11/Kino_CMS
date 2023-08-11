@@ -3,6 +3,8 @@ package com.example.Kino_CMS.controller.adminController;
 import com.example.Kino_CMS.entity.Cinemas;
 import com.example.Kino_CMS.entity.Pages;
 import com.example.Kino_CMS.repository.PageRepository;
+import com.example.Kino_CMS.service.impl.PageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +25,8 @@ import java.util.UUID;
 
 @Controller
 public class PageController {
-    private final PageRepository pageRepository;
-
-    public PageController(PageRepository pageRepository) {
-        this.pageRepository = pageRepository;
-    }
+    @Autowired
+    private PageServiceImpl pageService;
 
     @GetMapping("/admin/pages/page-add")
     public String pageAdd(Model model){
@@ -66,16 +65,55 @@ public class PageController {
         pages.setSeo_keywords(keywords);
         pages.setSeo_description(descriptionSeo);
 
-        pageRepository.save(pages);
+        pageService.savePages(pages);
 
         return "redirect:/admin/pages";
     }
 
     @PostMapping("/admin/pages/{page_id}/delete")
-    public String deletePages(@PathVariable(value = "page_id") long id, Model model){
-        Pages pages = pageRepository.findById(id).orElseThrow();
-        pageRepository.delete(pages);
+    public String deletePages(@PathVariable(value = "page_id") long id, Model model) {
+        Pages pages = pageService.findById(id).orElseThrow();
+
+        // Удаление изображений из папки, если пути к изображениям указаны в объекте Pages
+        if (pages.getMain_image_path() != null) {
+            deleteImage(pages.getMain_image_path());
+        }
+
+        if (pages.getImage_path_1() != null) {
+            deleteImage(pages.getImage_path_1());
+        }
+
+        if (pages.getImage_path_2() != null) {
+            deleteImage(pages.getImage_path_2());
+        }
+
+        if (pages.getImage_path_3() != null) {
+            deleteImage(pages.getImage_path_3());
+        }
+
+        if (pages.getImage_path_4() != null) {
+            deleteImage(pages.getImage_path_4());
+        }
+
+        if (pages.getImage_path_5() != null) {
+            deleteImage(pages.getImage_path_5());
+        }
+
+        pageService.delete(pages);
+
         return "redirect:/admin/pages";
+    }
+
+    private void deleteImage(String imageFilename) {
+        String uploadPath = "upload";
+        Path imagePath = Paths.get(uploadPath, imageFilename);
+
+        try {
+            Files.delete(imagePath);
+        } catch (IOException e) {
+            // Handle the exception, e.g., log an error
+            e.printStackTrace();
+        }
     }
 
     private final String uploadDir = "upload";

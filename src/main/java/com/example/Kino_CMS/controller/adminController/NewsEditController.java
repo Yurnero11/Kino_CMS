@@ -5,6 +5,7 @@ import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.NewsRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.NewsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,18 +27,12 @@ import java.util.UUID;
 
 @Controller
 public class NewsEditController {
-    private final NewsServiceImpl newsServiceImpl;
-    private final GalleryRepository galleryRepository;
-    private final SeoBlocksRepository seoBlocksRepository;
-    private final NewsRepository newsRepository;
+    @Autowired
+    private NewsServiceImpl newsService;
 
+    @Autowired
+    private NewsRepository newsRepository;
 
-    public NewsEditController(NewsServiceImpl newsServiceImpl, GalleryRepository galleryRepository, SeoBlocksRepository seoBlocksRepository, NewsRepository newsRepository) {
-        this.newsServiceImpl = newsServiceImpl;
-        this.galleryRepository = galleryRepository;
-        this.seoBlocksRepository = seoBlocksRepository;
-        this.newsRepository = newsRepository;
-    }
 
 
     @GetMapping("/admin/news/{news_id}/edit")
@@ -46,7 +41,7 @@ public class NewsEditController {
             return "redirect:/news";
         }
 
-        Optional<News> newsOptional = newsRepository.findById(id);
+        Optional<News> newsOptional = newsService.getNewsById(id);
         if (newsOptional.isEmpty()) {
             return "redirect:/admin/news";
         }
@@ -77,7 +72,7 @@ public class NewsEditController {
             @RequestParam("keywords") String keywords,
             @RequestParam("description_seo") String descriptionSeo)
     {
-        Optional<News> newsOptional = newsRepository.findById(id);
+        Optional<News> newsOptional = newsService.getNewsById(id);
         if (newsOptional.isEmpty()) {
             return "redirect:/admin/cinemas";
         }
@@ -104,22 +99,41 @@ public class NewsEditController {
             news.setMain_image_path(news.getMain_image_path()); // Сохраняем старое значение
         }
 
-        newsRepository.save(news);
+        newsService.saveNews(news);
 
         return "redirect:/admin/news";
     }
 
     @PostMapping("/admin/news/{news_id}/remove")
-    public String removeNews(@PathVariable("news_id") long news_id){
-        Optional<News> optionalNews = newsRepository.findById(news_id);
+    public String removeNews(@PathVariable("news_id") long news_id) {
+        Optional<News> optionalNews = newsService.getNewsById(news_id);
         if (optionalNews.isEmpty()) {
-            // Обработка ошибки - кинотеатр не найден
+            // Обработка ошибки - новость не найдена
             return "redirect:/admin/news";
         }
 
-        newsRepository.delete(optionalNews.get());
+        News news = optionalNews.get();
+
+        // Удаление файла из папки, если имя файла указано в объекте News
+        if (news.getMain_image_path() != null) {
+            deleteImage(news.getMain_image_path());
+        }
+
+        newsService.delete(news);
 
         return "redirect:/admin/news";
+    }
+
+    private void deleteImage(String imageFilename) {
+        String uploadPath = "upload";
+        Path imagePath = Paths.get(uploadPath, imageFilename);
+
+        try {
+            Files.delete(imagePath);
+        } catch (IOException e) {
+            // Handle the exception, e.g., log an error
+            e.printStackTrace();
+        }
     }
 
 

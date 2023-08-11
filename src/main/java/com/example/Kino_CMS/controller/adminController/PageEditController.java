@@ -4,6 +4,9 @@ import com.example.Kino_CMS.entity.Cinemas;
 import com.example.Kino_CMS.entity.Pages;
 import com.example.Kino_CMS.entity.User;
 import com.example.Kino_CMS.repository.PageRepository;
+import com.example.Kino_CMS.service.PageService;
+import com.example.Kino_CMS.service.impl.PageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -29,11 +32,12 @@ import java.util.UUID;
 
 @Controller
 public class PageEditController {
-    private final PageRepository pageRepository;
+    @Autowired
+    private PageServiceImpl pageService;
 
-    public PageEditController(PageRepository pageRepository) {
-        this.pageRepository = pageRepository;
-    }
+    @Autowired
+    private PageRepository pageRepository;
+
 
     @GetMapping("/admin/pages/{page_id}/edit")
     public String editPage(@PathVariable("page_id") long id, Model model) {
@@ -41,7 +45,7 @@ public class PageEditController {
             return "redirect:/admin/pages";
         }
 
-        Optional<Pages> pagesOptional = pageRepository.findById(id);
+        Optional<Pages> pagesOptional = pageService.findById(id);
         if (pagesOptional.isPresent()) {
             Pages page = pagesOptional.get();
             model.addAttribute("pages", page);
@@ -69,7 +73,7 @@ public class PageEditController {
                            @RequestParam("description_seo") String descriptionSeo,
                            RedirectAttributes redirectAttributes
     ){
-        Optional<Pages> optionalPages = pageRepository.findById(id);
+        Optional<Pages> optionalPages = pageService.findById(id);
         if (optionalPages.isEmpty()) {
             return "redirect:/admin/pages";
         }
@@ -97,7 +101,7 @@ public class PageEditController {
             pages.setMain_image_path(pages.getMain_image_path()); // Сохраняем старое значение
         }
 
-        pageRepository.save(pages);
+        pageService.savePages(pages);
         return "redirect:/admin/pages";
     }
 

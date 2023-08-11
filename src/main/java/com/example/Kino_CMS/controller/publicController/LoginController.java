@@ -2,6 +2,8 @@ package com.example.Kino_CMS.controller.publicController;
 
 import com.example.Kino_CMS.entity.User;
 import com.example.Kino_CMS.repository.UserRepository;
+import com.example.Kino_CMS.service.impl.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
@@ -16,12 +18,10 @@ import java.time.LocalDate;
 
 @Controller
 public class LoginController {
-    private final UserRepository userRepository;
-
-    public LoginController(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private UserServiceImpl userService;
 
     @GetMapping("/register")
     public String register(){
@@ -32,6 +32,7 @@ public class LoginController {
     public String registerUser(@RequestParam String firstName,
                                @RequestParam String lastName,
                                @RequestParam String username,
+                               @RequestParam String email,
                                @RequestParam String password,
                                @RequestParam String confirmPassword,
                                @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate birthday,
@@ -41,6 +42,12 @@ public class LoginController {
         User existingUser = userRepository.findByUsername(username);
         if (existingUser != null) {
             model.addAttribute("error", "Пользователь с таким именем уже существует");
+            return "public/login-page/registration";
+        }
+
+        User existingEmailUser = userRepository.findByEmail(email);
+        if (existingEmailUser != null) {
+            model.addAttribute("error", "Пользователь с таким email уже существует");
             return "public/login-page/registration";
         }
 
@@ -60,6 +67,7 @@ public class LoginController {
         newUser.setFirstName(firstName);
         newUser.setLastName(lastName);
         newUser.setUsername(username);
+        newUser.setEmail(email);
         newUser.setBirthday(birthday);
 
         String hashedPassword = new BCryptPasswordEncoder().encode(password);
@@ -67,7 +75,7 @@ public class LoginController {
         String hashedConfirmPassword = new BCryptPasswordEncoder().encode(confirmPassword);
         newUser.setPasswordRepit(hashedConfirmPassword); // Используем один и тот же хеш для обоих полей
 
-        userRepository.save(newUser);
+        userService.saveUser(newUser);
 
         return "redirect:/login";
     }

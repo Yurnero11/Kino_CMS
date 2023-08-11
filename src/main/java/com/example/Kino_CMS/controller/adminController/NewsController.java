@@ -6,7 +6,11 @@ import com.example.Kino_CMS.entity.SeoBlocks;
 import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.NewsRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
+import com.example.Kino_CMS.service.GallaryService;
+import com.example.Kino_CMS.service.impl.GallaryServiceImpl;
 import com.example.Kino_CMS.service.impl.NewsServiceImpl;
+import com.example.Kino_CMS.service.impl.SeoBlocksServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -27,17 +31,15 @@ import java.util.UUID;
 
 @Controller
 public class NewsController {
-    private final NewsServiceImpl newsServiceImpl;
-    private final GalleryRepository galleryRepository;
-    private final SeoBlocksRepository seoBlocksRepository;
-    private final NewsRepository newsRepository;
+    @Autowired
+    private GallaryServiceImpl gallaryService;
 
-    public NewsController(NewsServiceImpl newsServiceImpl, GalleryRepository galleryRepository, SeoBlocksRepository seoBlocksRepository, NewsRepository newsRepository) {
-        this.newsServiceImpl = newsServiceImpl;
-        this.galleryRepository = galleryRepository;
-        this.seoBlocksRepository = seoBlocksRepository;
-        this.newsRepository = newsRepository;
-    }
+    @Autowired
+    private SeoBlocksServiceImpl seoBlocksService;
+
+    @Autowired
+    private NewsServiceImpl newsServiceImpl;
+
 
     @GetMapping("/admin/news")
     public String news_add(Model model){
@@ -92,14 +94,12 @@ public class NewsController {
         news.setGallery(gallary);
         news.setSeoBlocks(seoBlocks);
 
-        newsRepository.save(news);
-        galleryRepository.save(gallary);
-        seoBlocksRepository.save(seoBlocks);
+        newsServiceImpl.saveNews(news);
+        gallaryService.saveGallary(gallary);
+        seoBlocksService.saveSeoBlock(seoBlocks);
 
         return "redirect:/admin/news";
     }
-
-
 
 
 

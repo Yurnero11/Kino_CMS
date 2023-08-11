@@ -6,6 +6,13 @@ import com.example.Kino_CMS.entity.MainBanners;
 import com.example.Kino_CMS.repository.BackgroundBannerRepository;
 import com.example.Kino_CMS.repository.LastBannerRepository;
 import com.example.Kino_CMS.repository.MainBannersRepository;
+import com.example.Kino_CMS.service.BackgroundBannerService;
+import com.example.Kino_CMS.service.LastBannerService;
+import com.example.Kino_CMS.service.MainBannerService;
+import com.example.Kino_CMS.service.impl.BackgroundBannerServiceImpl;
+import com.example.Kino_CMS.service.impl.LastBannerServiceImpl;
+import com.example.Kino_CMS.service.impl.MainBannerServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,15 +31,13 @@ import java.util.UUID;
 
 @Controller
 public class BannerController {
-    private final MainBannersRepository mainBannersRepository;
-    private final BackgroundBannerRepository backgroundBannerRepository;
-    private final LastBannerRepository lastBannerRepository;
+    @Autowired
+    private MainBannerServiceImpl mainBannerService;
+    @Autowired
+    private BackgroundBannerServiceImpl backgroundBannerService;
+    @Autowired
+    private LastBannerServiceImpl lastBannerService;
 
-    public BannerController(MainBannersRepository mainBannersRepository, BackgroundBannerRepository backgroundBannerRepository, LastBannerRepository lastBannerRepository) {
-        this.mainBannersRepository = mainBannersRepository;
-        this.backgroundBannerRepository = backgroundBannerRepository;
-        this.lastBannerRepository = lastBannerRepository;
-    }
 
     @GetMapping("/admin/banners")
     public String banners(Model model) {
@@ -86,7 +91,7 @@ public class BannerController {
         mainBanners.setSpeed(rotation_speed);
 
         // Сохранение модели в базу данных
-        mainBannersRepository.save(mainBanners);
+        mainBannerService.saveMainBanners(mainBanners);
 
         // Перенаправление с атрибутом успеха
         redirectAttributes.addFlashAttribute("successMessage", "Баннеры успешно добавлены.");
@@ -105,7 +110,7 @@ public class BannerController {
         backgroundBanner.setBackground_type(photo_type);
         backgroundBanner.setImage_path(saveImage(upload6));
 
-        backgroundBannerRepository.save(backgroundBanner);
+        backgroundBannerService.saveBackgroundBanner(backgroundBanner);
         redirectAttributes.addFlashAttribute("successMessage", "Баннеры успешно добавлены.");
 
         return "redirect:/admin/banners";
@@ -141,7 +146,7 @@ public class BannerController {
 
         lastBanner.setSpeed(rotation_speed);
 
-        lastBannerRepository.save(lastBanner);
+        lastBannerService.saveLastBanner(lastBanner);
         redirectAttributes.addFlashAttribute("successMessage", "Баннеры успешно добавлены.");
 
         return "redirect:/admin/banners";

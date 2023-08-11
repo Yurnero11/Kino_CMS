@@ -112,10 +112,38 @@ public class FilmController {
 
     @PostMapping("/admin/films/{id}/remove")
     @PreAuthorize("hasRole('ADMIN')")
-    public String removeFilm(@PathVariable(value = "id") long id, Model model){
+    public String removeFilm(@PathVariable(value = "id") long id, Model model) {
         Movies movies = movieRepository.findById(id).orElseThrow();
+
+        // Получите имена файлов изображений из базы данных
+        String mainImageFilename = movies.getMain_page_path();
+        String infoImageFilename = movies.getInformation_about_film();
+
+        // Если есть имена файлов изображений, удаляем файлы
+        if (mainImageFilename != null && !mainImageFilename.isEmpty()) {
+            deleteImage(mainImageFilename);
+        }
+
+        if (infoImageFilename != null && !infoImageFilename.isEmpty()) {
+            deleteImage(infoImageFilename);
+        }
+
+        // Удаляем фильм из базы данных
         movieRepository.delete(movies);
+
         return "redirect:/admin/films";
+    }
+
+    private void deleteImage(String imageFilename) {
+        String uploadPath = "upload";
+        Path imagePath = Paths.get(uploadPath, imageFilename);
+
+        try {
+            Files.delete(imagePath);
+        } catch (IOException e) {
+            // Handle the exception, e.g., log an error
+            e.printStackTrace();
+        }
     }
 
     private final String uploadDir = "upload";

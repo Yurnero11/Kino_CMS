@@ -2,6 +2,8 @@ package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.*;
 import com.example.Kino_CMS.repository.*;
+import com.example.Kino_CMS.service.impl.PageServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,27 +12,23 @@ import java.util.List;
 
 @Controller
 public class PagesController {
-    private final PageRepository pageRepository;
-    private final MainPageRepository mainPageRepository;
-    private final AboutCinemaRepository aboutCinemaRepository;
-    private final VipHallRepository vipHallRepository;
-    private final AdvertisingRepository advertisingRepository;
-    private final KidsRoomRepository kidsRoomRepository;
-    private final CinemaContactsRepository contactsRepository;
-    private final ContactForTableRepository contactForTableRepository;
-    private final CafeBarRepository cafeBarRepository;
+    @Autowired
+    private  PageRepository pageRepository;
+    @Autowired
+    private  MainPageRepository mainPageRepository;
+    @Autowired
+    private  AboutCinemaRepository aboutCinemaRepository;
+    @Autowired
+    private  VipHallRepository vipHallRepository;
+    @Autowired
+    private  AdvertisingRepository advertisingRepository;
+    @Autowired
+    private  KidsRoomRepository kidsRoomRepository;
+    @Autowired
+    private  ContactForTableRepository contactForTableRepository;
+    @Autowired
+    private  CafeBarRepository cafeBarRepository;
 
-    public PagesController(PageRepository pageRepository, MainPageRepository mainPageRepository, AboutCinemaRepository aboutCinemaRepository, VipHallRepository vipHallRepository, AdvertisingRepository advertisingRepository, KidsRoomRepository kidsRoomRepository, CinemaContactsRepository contactsRepository, ContactForTableRepository contactForTableRepository, CafeBarRepository cafeBarRepository) {
-        this.pageRepository = pageRepository;
-        this.mainPageRepository = mainPageRepository;
-        this.aboutCinemaRepository = aboutCinemaRepository;
-        this.vipHallRepository = vipHallRepository;
-        this.advertisingRepository = advertisingRepository;
-        this.kidsRoomRepository = kidsRoomRepository;
-        this.contactsRepository = contactsRepository;
-        this.contactForTableRepository = contactForTableRepository;
-        this.cafeBarRepository = cafeBarRepository;
-    }
 
     @GetMapping("/admin/pages")
     public String pages(Model model){

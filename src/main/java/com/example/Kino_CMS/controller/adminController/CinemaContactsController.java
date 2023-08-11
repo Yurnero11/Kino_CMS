@@ -5,6 +5,10 @@ import com.example.Kino_CMS.repository.CinemaContactsRepository;
 import com.example.Kino_CMS.repository.ContactForTableRepository;
 import com.example.Kino_CMS.repository.SeoBlockCinemaContactRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
+import com.example.Kino_CMS.service.CinemaContactService;
+import com.example.Kino_CMS.service.impl.CinemaContactsServiceImpl;
+import com.example.Kino_CMS.service.impl.ContactForTableServiceImpl;
+import com.example.Kino_CMS.service.impl.SeoBlockCinemaContactServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -24,28 +28,25 @@ import java.util.UUID;
 
 @Controller
 public class CinemaContactsController {
-    private final CinemaContactsRepository contactsRepository;
-    private final SeoBlocksRepository seoBlocksRepository;
-    private final SeoBlockCinemaContactRepository seoBlockCinemaContactRepository;
-    private final ContactForTableRepository contactForTableRepository;
+    @Autowired
+    private CinemaContactsServiceImpl cinemaContactsService;
 
     @Autowired
-    public CinemaContactsController(CinemaContactsRepository contactsRepository, SeoBlocksRepository seoBlocksRepository, SeoBlockCinemaContactRepository seoBlockCinemaContactRepository, ContactForTableRepository contactForTableRepository) {
-        this.contactsRepository = contactsRepository;
-        this.seoBlocksRepository = seoBlocksRepository;
-        this.seoBlockCinemaContactRepository = seoBlockCinemaContactRepository;
-        this.contactForTableRepository = contactForTableRepository;
-    }
+    private SeoBlockCinemaContactServiceImpl seoBlockCinemaContactService;
+
+    @Autowired
+    private ContactForTableServiceImpl contactForTableService;
+
 
     @GetMapping("/admin/pages/contacts")
     public String showContactsPage(Model model) {
-        Iterable<CinemaContacts> contactsList = contactsRepository.findAll();
+        Iterable<CinemaContacts> contactsList = cinemaContactsService.getAllCinemaContact();
         model.addAttribute("contactsList", contactsList);
 
-        List<Contact_for_table> contactForTables = contactForTableRepository.findAll();
+        Iterable<Contact_for_table> contactForTables = contactForTableService.getAllContacts();
         model.addAttribute("cinemaContactsForTable", contactForTables);
 
-        SeoBlockCinemaContact seoBlockCinemaContact = seoBlockCinemaContactRepository.findById(1L).orElse(new SeoBlockCinemaContact());
+        SeoBlockCinemaContact seoBlockCinemaContact = seoBlockCinemaContactService.getSeoBlockById(1L).orElse(new SeoBlockCinemaContact());
         model.addAttribute("seoBlock", seoBlockCinemaContact);
 
         // Создаем пустой объект для формы контакта
@@ -55,15 +56,31 @@ public class CinemaContactsController {
         return "admin/pages/contacts";
     }
 
-    @PostMapping ("/admin/pages/contacts/{cinema_id}/remove")
+    @PostMapping("/admin/pages/contacts/{cinema_id}/remove")
     public String deleteContact(@PathVariable("cinema_id") Long id) {
         // Find the contact by id
-        CinemaContacts contactToDelete = contactsRepository.findById(id).orElse(null);
+        Optional<CinemaContacts> contactToDeleteOptional = cinemaContactsService.getCinemaContactById(id);
 
         // Check if the contact exists
-        if (contactToDelete != null) {
+        if (contactToDeleteOptional.isPresent()) {
+            CinemaContacts contactToDelete = contactToDeleteOptional.get();
+
+            // Delete the associated photo
+            String photoFilename = contactToDelete.getLogo_path();
+            if (photoFilename != null && !photoFilename.isEmpty()) {
+                String uploadPath = "upload";
+                Path filePath = Paths.get(uploadPath, photoFilename);
+
+                try {
+                    Files.delete(filePath);
+                } catch (IOException e) {
+                    // Handle the exception, e.g., log an error
+                    e.printStackTrace();
+                }
+            }
+
             // Delete the contact from the repository
-            contactsRepository.delete(contactToDelete);
+            cinemaContactsService.delete(contactToDelete);
         }
 
         // Redirect to the contacts page after deletion
@@ -80,7 +97,7 @@ public class CinemaContactsController {
         // Проверяем, удалось ли сохранить логотип, и сохраняем информацию о контакте
         if (logoPath != null) {
             newContact.setLogo_path(logoPath);
-            contactsRepository.save(newContact);
+            cinemaContactsService.saveCinemaContact(newContact);
         }
 
         return "redirect:/admin/pages/contacts";
@@ -93,7 +110,7 @@ public class CinemaContactsController {
                                  @RequestParam("description_seo") String descriptionSeo,
                                  RedirectAttributes redirectAttributes)
     {
-        Optional<SeoBlockCinemaContact> existingMainPage = seoBlockCinemaContactRepository.findById(1L);
+        Optional<SeoBlockCinemaContact> existingMainPage = seoBlockCinemaContactService.getSeoBlockById(1L);
 
         if (existingMainPage.isPresent()) {
             SeoBlockCinemaContact currentPage = existingMainPage.get();
@@ -104,7 +121,7 @@ public class CinemaContactsController {
             currentPage.setTitle(title);
             currentPage.setDescription(descriptionSeo);
 
-            seoBlockCinemaContactRepository.save(currentPage);
+            seoBlockCinemaContactService.saveSeoBlock(currentPage);
 
             // Вы можете добавить атрибуты Flash для отображения сообщений об успешном обновлении, если хотите.
             redirectAttributes.addFlashAttribute("successMessage", "Данные успешно обновлены.");
@@ -120,14 +137,14 @@ public class CinemaContactsController {
     @PostMapping("/admin/pages/contacts/updateStatus")
     public String updateStatus(@RequestParam("status") String status) {
         // Получаем контакт по его идентификатору из базы данных
-        Optional<Contact_for_table> optionalContact = contactForTableRepository.findById(1L);
+        Optional<Contact_for_table> optionalContact = contactForTableService.getContactForTable(1L);
 
         // Проверяем, что контакт найден
         if (optionalContact.isPresent()) {
             // Обновляем статус контакта
             Contact_for_table contact = optionalContact.get();
             contact.setStatus(status);
-            contactForTableRepository.save(contact);
+            contactForTableService.saveContact_for_table(contact);
         }
 
         // После обновления статуса, вы можете перенаправить пользователя на страницу со списком контактов или на ту же страницу, где была форма

@@ -4,6 +4,7 @@ import com.example.Kino_CMS.entity.AboutCinema;
 import com.example.Kino_CMS.entity.MainPage;
 import com.example.Kino_CMS.repository.AboutCinemaRepository;
 import com.example.Kino_CMS.service.impl.AboutCinemaServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,13 +25,8 @@ import java.util.UUID;
 
 @Controller
 public class AboutCinemaController {
-    private final AboutCinemaRepository aboutCinemaRepository;
-    private final AboutCinemaServiceImpl aboutCinemaServiceImpl;
-
-    public AboutCinemaController(AboutCinemaRepository aboutCinemaRepository, AboutCinemaServiceImpl aboutCinemaServiceImpl) {
-        this.aboutCinemaRepository = aboutCinemaRepository;
-        this.aboutCinemaServiceImpl = aboutCinemaServiceImpl;
-    }
+    @Autowired
+    private AboutCinemaServiceImpl aboutCinemaServiceImpl;
 
     @GetMapping("/admin/pages/about-cinema")
     public String aboutCinema(Model model){

@@ -33,7 +33,7 @@ public class MainPageController {
     @GetMapping("/admin/pages/main-page")
     public String mainPage(Model model) {
         // Получаем объект MainPage из базы данных по id (например, id=2)
-        MainPage mainPage = mainPageRepository.findById(2L).orElse(new MainPage()); // Если запись с id=2 не найдена, то вернем пустой объект MainPage
+        MainPage mainPage = mainPageServiceImpl.getMainPageById(2L); // Если запись с id=2 не найдена, то вернем пустой объект MainPage
 
         model.addAttribute("main_page", mainPage);
         return "admin/pages/main-page";
@@ -41,7 +41,7 @@ public class MainPageController {
 
     @PostMapping("/admin/pages/main-page")
     public String mainPageEdit(@ModelAttribute("phone_number_1") String phone_number_1,
-                               @ModelAttribute("phone_number_1") String phone_number_2,
+                               @ModelAttribute("phone_number_2") String phone_number_2,
                                @RequestParam("seo_text") String seo_text,
                                @RequestParam("status") String status,
                                @RequestParam("url") String url,
@@ -72,7 +72,7 @@ public class MainPageController {
             currentPage.setSeo_description(descriptionSeo);
 
             // Сохраните обновленный объект MainPage в базе данных.
-            mainPageRepository.save(currentPage);
+            mainPageServiceImpl.saveMainPage(currentPage);
 
             // Вы можете добавить атрибуты Flash для отображения сообщений об успешном обновлении, если хотите.
             redirectAttributes.addFlashAttribute("successMessage", "Данные успешно обновлены.");
@@ -84,5 +84,4 @@ public class MainPageController {
 
         return "redirect:/admin/pages";
     }
-
 }

@@ -36,8 +36,10 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         http
                 .securityMatcher("/admin/**")
                 .authorizeHttpRequests(authorize -> authorize
-                        .anyRequest().hasRole("ADMIN")
-                ).formLogin(form -> form
+                        .requestMatchers("/admin/**", "/admin/home", "/customers/**", "/dashboard/**", "/error/**", "/fragments/**"
+                                , "/bower_components/**", "/dist/**", "/plugins/**").hasRole("ADMIN")
+                )
+                .formLogin(form -> form
                         .loginPage("/admin/login")
                         .defaultSuccessUrl("/admin/home", true) // Redirect to /admin/home after successful login
                         .permitAll()
@@ -52,6 +54,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/pages/contacts/{cinema_id}/remove"))
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/pages/contacts/updateStatus"))
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/pages/{page_id}/delete"))
+                .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/pages/contacts/updateSeo"))
                 .csrf((csrf) -> csrf
                         .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
                 )
@@ -64,6 +67,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
         http
                 .securityMatcher("/**")
                 .authorizeHttpRequests(authorize -> authorize
+                        .requestMatchers("/register").permitAll()
                         .anyRequest().hasRole("ADMIN")
                 ).formLogin(form -> form
                         .loginPage("/login")

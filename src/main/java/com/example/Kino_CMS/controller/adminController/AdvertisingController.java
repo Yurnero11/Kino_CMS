@@ -4,6 +4,7 @@ import com.example.Kino_CMS.entity.Advertising;
 import com.example.Kino_CMS.entity.CafeBar;
 import com.example.Kino_CMS.entity.VipHall;
 import com.example.Kino_CMS.repository.AdvertisingRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,11 +25,8 @@ import java.util.UUID;
 
 @Controller
 public class AdvertisingController {
-    private final AdvertisingRepository advertisingRepository;
-
-    public AdvertisingController(AdvertisingRepository advertisingRepository) {
-        this.advertisingRepository = advertisingRepository;
-    }
+    @Autowired
+    private AdvertisingRepository advertisingRepository;
 
     @GetMapping("/admin/pages/advertising-page")
     public String advertisingPage(Model model){

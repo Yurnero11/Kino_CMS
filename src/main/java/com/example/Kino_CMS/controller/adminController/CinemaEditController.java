@@ -6,6 +6,7 @@ import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.HallRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.CinemaServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -26,20 +27,11 @@ import java.util.UUID;
 
 @Controller
 public class CinemaEditController {
-    private final SeoBlocksRepository seoBlocksRepository;
-    private final GalleryRepository galleryRepository;
-    private final CinemaRepository cinemaRepository;
-    private final HallRepository hallRepository;
+    @Autowired
+    private CinemaRepository cinemaRepository;
 
-    private final CinemaServiceImpl service;
-
-    public CinemaEditController(SeoBlocksRepository seoBlocksRepository, GalleryRepository galleryRepository, CinemaRepository cinemaRepository, HallRepository hallRepository, CinemaServiceImpl service) {
-        this.seoBlocksRepository = seoBlocksRepository;
-        this.galleryRepository = galleryRepository;
-        this.cinemaRepository = cinemaRepository;
-        this.hallRepository = hallRepository;
-        this.service = service;
-    }
+    @Autowired
+    private CinemaServiceImpl service;
 
     @GetMapping("/admin/cinemas/{cinema_id}/edit")
     public String editCinema(@PathVariable(value = "cinema_id") long id, Model model) {
@@ -78,7 +70,7 @@ public class CinemaEditController {
                                    @RequestParam("seoBlocks.description") String descriptionSeo,
                                    RedirectAttributes redirectAttributes) {
 
-        Optional<Cinemas> optionalCinema = cinemaRepository.findById(id);
+        Optional<Cinemas> optionalCinema = service.getCinemaById(id);
         if (optionalCinema.isEmpty()) {
             return "redirect:/admin/cinemas";
         }
@@ -105,7 +97,7 @@ public class CinemaEditController {
             cinema.setLogo_image_path(cinema.getLogo_image_path()); // Сохраняем старое значение
         }
 
-        cinemaRepository.save(cinema);
+        service.saveCinemas(cinema);
 
         return "redirect:/admin/cinemas";
     }

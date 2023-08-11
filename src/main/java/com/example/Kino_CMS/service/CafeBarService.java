@@ -6,4 +6,6 @@ import com.example.Kino_CMS.entity.CafeBar;
 public interface CafeBarService {
     public CafeBar getCafeBarById(Long cafe_id);
     CafeBar saveCafeBar(CafeBar cafeBar);
+
+    Iterable<CafeBar> getAllCafeBars();
 }

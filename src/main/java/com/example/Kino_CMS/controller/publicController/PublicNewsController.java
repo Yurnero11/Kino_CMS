@@ -13,14 +13,8 @@ import java.util.Optional;
 
 @Controller
 public class PublicNewsController {
-    private final NewsRepository newsRepository;
-    private final NewsServiceImpl newsServiceImpl;
-
     @Autowired
-    public PublicNewsController(NewsRepository newsRepository, NewsServiceImpl newsServiceImpl) {
-        this.newsRepository = newsRepository;
-        this.newsServiceImpl = newsServiceImpl;
-    }
+    private NewsServiceImpl newsServiceImpl;
 
     @GetMapping("/news")
     public String news(Model model){
@@ -32,7 +26,7 @@ public class PublicNewsController {
     @GetMapping("/news/{news_id}")
     public String newsPage(@PathVariable(value = "news_id") long id,
                                  Model model){
-        Optional<News> optionalNews = newsRepository.findById(id);
+        Optional<News> optionalNews = newsServiceImpl.getNewsById(id);
         if (optionalNews.isEmpty()) {
             return "redirect:/news";
         }

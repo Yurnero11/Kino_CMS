@@ -10,7 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 public interface UserServiceInterface {
     Page<User> getAllUsers(Pageable pageable);
 
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+    Page<User> searchUsers(String query, Pageable pageable);
+    Iterable<User> getAllUsers();
+
+    User saveUser(User user);
 
 
 }

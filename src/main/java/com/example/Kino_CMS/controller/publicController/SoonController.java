@@ -16,14 +16,8 @@ import java.util.Optional;
 
 @Controller
 public class SoonController {
-    private final MovieServiceImpl movieServiceImpl;
-    private final MovieRepository movieRepository;
-
     @Autowired
-    public SoonController(MovieServiceImpl movieServiceImpl, MovieRepository movieRepository) {
-        this.movieServiceImpl = movieServiceImpl;
-        this.movieRepository = movieRepository;
-    }
+    private MovieServiceImpl movieServiceImpl;
 
     @GetMapping("/soon")
     public String soonPage(Model model){
@@ -34,7 +28,7 @@ public class SoonController {
 
     @GetMapping("/soon/{movie_id}")
     public String soonPage(@PathVariable(value = "movie_id") long id, Model model){
-        Optional<Movies> optionalMovies = movieRepository.findById(id);
+        Optional<Movies> optionalMovies = movieServiceImpl.getMovieById(id);
         if (optionalMovies.isEmpty()) {
             return "redirect:/posts";
         }

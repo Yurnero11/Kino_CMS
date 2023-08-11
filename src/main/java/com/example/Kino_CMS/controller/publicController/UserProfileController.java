@@ -17,8 +17,6 @@ import java.util.Optional;
 
 @Controller
 public class UserProfileController {
-
-
     private final UserRepository userRepository;
     private final SessionServiceImpl sessionServiceImpl;
 

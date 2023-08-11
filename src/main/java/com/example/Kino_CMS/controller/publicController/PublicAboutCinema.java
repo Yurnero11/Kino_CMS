@@ -10,18 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
 public class PublicAboutCinema {
-    private final AboutCinemaRepository aboutCinemaRepository;
-    private final AboutCinemaServiceImpl aboutCinemaServiceImpl;
-
     @Autowired
-    public PublicAboutCinema(AboutCinemaRepository aboutCinemaRepository, AboutCinemaServiceImpl aboutCinemaServiceImpl) {
-        this.aboutCinemaRepository = aboutCinemaRepository;
-        this.aboutCinemaServiceImpl = aboutCinemaServiceImpl;
-    }
+    private AboutCinemaServiceImpl aboutCinemaServiceImpl;
 
     @GetMapping("/aboutCinema")
     public String aboutCinema(Model model){
-        AboutCinema aboutCinema = aboutCinemaRepository.findById(1L).orElse(new AboutCinema()); // Если запись с id=2 не найдена, то вернем пустой объект MainPage
+        AboutCinema aboutCinema = aboutCinemaServiceImpl.getAboutCinemaById(1L);// Если запись с id=2 не найдена, то вернем пустой объект MainPage
         model.addAttribute("about_cinema", aboutCinema);
         return "/public/pages/public-about-cinema";
     }

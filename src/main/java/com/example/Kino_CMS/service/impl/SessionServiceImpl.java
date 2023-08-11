@@ -2,43 +2,60 @@ package com.example.Kino_CMS.service.impl;
 
 import com.example.Kino_CMS.entity.User;
 import com.example.Kino_CMS.repository.UserRepository;
+import com.example.Kino_CMS.service.SessionService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service
-public class SessionServiceImpl {
-
-    private final UserRepository userRepository;
-    private final HttpServletRequest request;
+public class SessionServiceImpl implements SessionService {
+    private static final Logger log = LogManager.getLogger(SessionServiceImpl.class);
 
     @Autowired
-    public SessionServiceImpl(UserRepository userRepository, HttpServletRequest request) {
-        this.userRepository = userRepository;
-        this.request = request;
-    }
+    private UserRepository userRepository;
 
-    // Метод, который вызывается при успешной аутентификации
+    @Autowired
+    private HttpServletRequest request;
+
+    @Override
     public void setUserIdInSession() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && authentication.isAuthenticated()) {
-            String username = authentication.getName();
-            User user = userRepository.findByUsername(username);
-            if (user != null) {
-                Integer userId = user.getId();
-                // Сохраняем userId в сессии
-                HttpSession session = request.getSession();
-                session.setAttribute("userId", userId);
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            if (authentication != null && authentication.isAuthenticated()) {
+                String username = authentication.getName();
+                User user = userRepository.findByUsername(username);
+                if (user != null) {
+                    Integer userId = user.getId();
+                    HttpSession session = request.getSession();
+                    session.setAttribute("userId", userId);
+                    log.info("User ID {} set in session", userId);
+                }
             }
+        } catch (Exception e) {
+            log.error("Error while setting user ID in session", e);
+            throw e;
         }
     }
 
-    // Метод для получения userId из сессии
+    @Override
     public Integer getUserIdFromSession() {
-        HttpSession session = request.getSession();
-        return (Integer) session.getAttribute("userId");
+        try {
+            HttpSession session = request.getSession();
+            Integer userId = (Integer) session.getAttribute("userId");
+            if (userId != null) {
+                log.info("Retrieved user ID {} from session", userId);
+            } else {
+                log.info("User ID not found in session");
+            }
+            return userId;
+        } catch (Exception e) {
+            log.error("Error while getting user ID from session", e);
+            throw e;
+        }
     }
 }

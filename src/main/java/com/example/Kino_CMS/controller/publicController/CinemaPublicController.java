@@ -7,6 +7,7 @@ import com.example.Kino_CMS.repository.CinemaRepository;
 import com.example.Kino_CMS.repository.HallRepository;
 import com.example.Kino_CMS.service.impl.CinemaServiceImpl;
 import com.example.Kino_CMS.service.impl.HallServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,17 +19,10 @@ import java.util.Optional;
 
 @Controller
 public class CinemaPublicController {
-    private final CinemaServiceImpl service;
-    private final CinemaRepository cinemaRepository;
-    private final HallRepository hallRepository;
-    private final HallServiceImpl hallService;
-
-    public CinemaPublicController(CinemaServiceImpl service, CinemaRepository cinemaRepository, HallRepository hallRepository, HallServiceImpl hallService) {
-        this.service = service;
-        this.cinemaRepository = cinemaRepository;
-        this.hallRepository = hallRepository;
-        this.hallService = hallService;
-    }
+    @Autowired
+    private  CinemaServiceImpl service;
+    @Autowired
+    private  HallServiceImpl hallService;
 
     @GetMapping("/cinemas")
     public String cinemas(Model model){
@@ -39,7 +33,7 @@ public class CinemaPublicController {
 
     @GetMapping("/cinema/{cinema_id}")
     public String cinemaPage(@PathVariable(value = "cinema_id") long id, Model model){
-        Optional<Cinemas> optionalCinemas = cinemaRepository.findById(id);
+        Optional<Cinemas> optionalCinemas = service.getCinemaById(id);
         if (optionalCinemas.isEmpty()) {
             return "redirect:/cinemas";
         }
@@ -71,7 +65,7 @@ public class CinemaPublicController {
                            @PathVariable("hall_id") Long hallId,
                            Model model)
     {
-        Optional<Halls> optionalHalls = hallRepository.findById(hallId);
+        Optional<Halls> optionalHalls = hallService.getHallById(hallId);
         if (optionalHalls.isEmpty()) {
             return "redirect:/cinemas";
         }

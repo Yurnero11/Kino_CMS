@@ -4,7 +4,10 @@ import com.example.Kino_CMS.entity.Promotions;
 import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.PromotionRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
+import com.example.Kino_CMS.service.impl.GallaryServiceImpl;
 import com.example.Kino_CMS.service.impl.PromotionServiceImpl;
+import com.example.Kino_CMS.service.impl.SeoBlocksServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,19 +29,16 @@ import java.util.UUID;
 
 @Controller
 public class PromotionEditController {
-    private final GalleryRepository galleryRepository;
-    private final SeoBlocksRepository seoBlocksRepository;
-    private final PromotionRepository promotionRepository;
+    @Autowired
+    private PromotionRepository promotionRepository;
+    @Autowired
+    private PromotionServiceImpl promotionServiceImpl;
+    @Autowired
+    private SeoBlocksServiceImpl seoBlocksService;
+    @Autowired
+    private GallaryServiceImpl gallaryService;
 
-    private final PromotionServiceImpl promotionServiceImpl;
 
-    public PromotionEditController(GalleryRepository galleryRepository, SeoBlocksRepository seoBlocksRepository, PromotionRepository promotionRepository, PromotionServiceImpl promotionServiceImpl) {
-        this.galleryRepository = galleryRepository;
-        this.seoBlocksRepository = seoBlocksRepository;
-
-        this.promotionRepository = promotionRepository;
-        this.promotionServiceImpl = promotionServiceImpl;
-    }
 
     @GetMapping("/admin/promotions/{promotion_id}/edit")
     public String editCinema(@PathVariable(value = "promotion_id") long id, Model model) {
@@ -104,22 +104,41 @@ public class PromotionEditController {
             promotions.setMain_image_path(promotions.getMain_image_path()); // Сохраняем старое значение
         }
 
-        promotionRepository.save(promotions);
+        promotionServiceImpl.savePromotions(promotions);
 
         return "redirect:/admin/promotions";
     }
 
     @PostMapping("/admin/promotions/{promotions_id}/remove")
-    public String removeNews(@PathVariable("promotions_id") long promotion_id){
+    public String removePromotion(@PathVariable("promotions_id") long promotion_id) {
         Optional<Promotions> optionalPromotions = promotionRepository.findById(promotion_id);
         if (optionalPromotions.isEmpty()) {
-            // Обработка ошибки - кинотеатр не найден
+            // Обработка ошибки - акция не найдена
             return "redirect:/admin/promotions";
         }
 
-        promotionRepository.delete(optionalPromotions.get());
+        Promotions promotion = optionalPromotions.get();
+
+        // Удаление изображения из папки, если путь к изображению указан
+        if (promotion.getMain_image_path() != null) {
+            deleteImage(promotion.getMain_image_path());
+        }
+
+        promotionServiceImpl.delete(promotion);
 
         return "redirect:/admin/promotions";
+    }
+
+    private void deleteImage(String imageFilename) {
+        String uploadPath = "upload";
+        Path imagePath = Paths.get(uploadPath, imageFilename);
+
+        try {
+            Files.delete(imagePath);
+        } catch (IOException e) {
+            // Handle the exception, e.g., log an error
+            e.printStackTrace();
+        }
     }
 
     private final String uploadDir = "upload";
