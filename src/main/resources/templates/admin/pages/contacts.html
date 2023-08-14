@@ -108,7 +108,27 @@
 
                 <!-- Поле для загрузки файла логотипа -->
                 <label for="logo">Логотип (jpeg, jpg, png):</label>
-                <input type="file" id="logo" name="logo" accept=".jpeg, .jpg, .png" required/><br>
+                <input type="file" id="logo" name="logo" accept=".jpeg, .jpg, .png" required onchange="displayImage(this, 'logoImage', 'logoThumbnailContainer')"/><br>
+                <div id="logoThumbnailContainer"></div>
+
+                <script>
+                    function displayImage(input, imgId, thumbnailContainerId) {
+                        var thumbnailContainer = document.getElementById(thumbnailContainerId);
+                        thumbnailContainer.innerHTML = ""; // Очистить предыдущие миниатюры
+
+                        if (input.files && input.files[0]) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                var thumbnail = document.createElement("img");
+                                thumbnail.src = e.target.result;
+                                thumbnail.style.width = "100px"; // Устанавливаем размеры миниатюры
+                                thumbnail.style.height = "100px";
+                                thumbnailContainer.appendChild(thumbnail);
+                            };
+                            reader.readAsDataURL(input.files[0]);
+                        }
+                    }
+                </script>
                 <button type="submit" class="btn btn-success">Добавить</button>
             </form>
         </div>

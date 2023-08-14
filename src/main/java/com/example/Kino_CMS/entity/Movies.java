@@ -42,6 +42,7 @@ public class Movies {
     @Column(name = "movie_data")
     private String movie_data;
 
-    @Column(name = "information_about_film")
-    private String information_about_film;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "about_movie_id")
+    private AboutMovie aboutMovie;
 }

@@ -27,18 +27,90 @@
   <form enctype="multipart/form-data" method="post" th:action="@{/admin/films/film-add}" >
     <h3>Назва фільму<input type="text" name="name_film" placeholder="Назва фільму" class="form-control"></h3>
     <h3>Опис<input type="text" name="description" placeholder="Текст" class="form-control"></h3>
-    <h3>Головне фото<input type="file" name="main_photo" class="form-control gallery-input" placeholder="Фото"></h3>
+    <h3>Головне фото
+      <input type="file" name="main_photo" class="form-control gallery-input" placeholder="Фото" id="mainPhotoInput" onchange="displayImage(this, 'mainPhotoImage')">
+    </h3>
+    <div id="mainPhotoThumbnailContainer">
+      <img src="/static/img/download.jpg" id="mainPhotoImage" style="width: 100px; height: 100px;"/>
+    </div>
 
     <h3>Галерея картинок</h3>
     <div class="gallery-row">
-      <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1">
-      <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 2">
-      <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 3">
-      <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 4">
-      <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 5">
+      <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1" id="galleryPhoto1Input" onchange="displayImage(this, 'galleryPhoto1Image')">
+      <br><div id="galleryPhoto1ThumbnailContainer">
+        <img src="/static/img/download.jpg" id="galleryPhoto1Image" style="width: 100px; height: 100px;" />
+      </div>
+
+      <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 2" id="galleryPhoto2Input" onchange="displayImage(this, 'galleryPhoto2Image')">
+      <br><div id="galleryPhoto2ThumbnailContainer">
+        <img src="/static/img/download.jpg" id="galleryPhoto2Image" style="width: 100px; height: 100px;" />
+      </div>
+
+      <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 3" id="galleryPhoto3Input" onchange="displayImage(this, 'galleryPhoto3Image')">
+      <br><div id="galleryPhoto3ThumbnailContainer">
+        <img src="/static/img/download.jpg" id="galleryPhoto3Image" style="width: 100px; height: 100px;" />
+      </div>
+
+      <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 4" id="galleryPhoto4Input" onchange="displayImage(this, 'galleryPhoto4Image')">
+      <br><div id="galleryPhoto4ThumbnailContainer">
+        <img src="/static/img/download.jpg" id="galleryPhoto4Image" style="width: 100px; height: 100px;" />
+      </div>
+
+      <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 5" id="galleryPhoto5Input" onchange="displayImage(this, 'galleryPhoto5Image')"><br>
+      <div id="galleryPhoto5ThumbnailContainer">
+        <img src="/static/img/download.jpg" id="galleryPhoto5Image" style="width: 100px; height: 100px;" />
+      </div>
     </div>
 
-    <h3>Інформація про фільм(картинка)<input type="file" name="information" class="form-control gallery-input" placeholder="Фото"></h3>
+    <div>
+      <h3>Інформація про фільм</h3>
+      <label for="year">Год:</label><br>
+      <input type="number" id="year" name="year"><br>
+
+      <label for="composer">Композитор:</label><br>
+      <input type="text" id="composer" name="composer"><br>
+
+      <label for="producer">Продюсер:</label><br>
+      <input type="text" id="producer" name="producer"><br>
+
+      <label for="director">Режиссер:</label><br>
+      <input type="text" id="director" name="director"><br>
+
+      <label for="screenwriter">Сценарист:</label><br>
+      <input type="text" id="screenwriter" name="screenwriter"><br>
+
+      <label for="cinematographer">Оператор:</label><br>
+      <input type="text" id="cinematographer" name="cinematographer"><br>
+
+      <label for="genre">Жанр:</label><br>
+      <input type="text" id="genre" name="genre"><br>
+
+      <label for="budget">Бюджет:</label><br>
+      <input type="number" step="0.01" id="budget" name="budget"><br>
+
+      <label for="ageRating">Возрастной рейтинг:</label><br>
+      <input type="text" id="ageRating" name="ageRating"><br>
+
+      <label for="duration">Длительность (чч:мм:сс):</label><br>
+      <input type="time" id="duration" name="duration" step="1"><br>
+    </div>
+
+    <script>
+      function displayImage(input, imgId) {
+        var thumbnailContainer = document.getElementById(imgId + "ThumbnailContainer");
+        var imageContainer = document.getElementById(imgId);
+        imageContainer.src = ""; // Очистить предыдущую миниатюру
+
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            imageContainer.src = e.target.result;
+            thumbnailContainer.style.display = "block"; // Показать контейнер с изображением
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    </script>
 
     <h3>Посилання на трейлер<input type="text" name="link" placeholder="Посилання на трейлер в ютубі" class="form-control"></h3>
 

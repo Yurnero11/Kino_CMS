@@ -66,7 +66,7 @@ public class BannerController {
             RedirectAttributes redirectAttributes
     ) {
         // Создание объекта MainBanners
-        MainBanners mainBanners = new MainBanners();
+        MainBanners mainBanners = mainBannerService.getMainBanners();;
 
 
         // Сохранение URL и текста в соответствующие поля модели
@@ -106,7 +106,7 @@ public class BannerController {
         RedirectAttributes redirectAttributes
         ){
 
-        BackgroundBanner backgroundBanner = new BackgroundBanner();
+        BackgroundBanner backgroundBanner = backgroundBannerService.getBackgroundBanner();
         backgroundBanner.setBackground_type(photo_type);
         backgroundBanner.setImage_path(saveImage(upload6));
 
@@ -130,7 +130,7 @@ public class BannerController {
             @RequestParam("url5") String url5,
             @RequestParam("rotation_speed") int rotation_speed,
             RedirectAttributes redirectAttributes){
-        LastBanner lastBanner = new LastBanner();
+        LastBanner lastBanner = lastBannerService.getLastBanner();
 
         lastBanner.setUrl1(url1);
         lastBanner.setUrl2(url2);

@@ -45,6 +45,7 @@ public class WebSecurityConfig implements WebMvcConfigurer {
                         .permitAll()
                 )
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/user/{id}/edit"))
+                .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/films/{film_id}/remove"))
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/cinemas/{cinema_id}/edit"))
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/cinemas/{cinema_id}/edit/hall-add"))
                 .csrf((csrf) -> csrf.ignoringRequestMatchers("/admin/cinemas/{cinema_id}/edit/{hall_id}/edit"))

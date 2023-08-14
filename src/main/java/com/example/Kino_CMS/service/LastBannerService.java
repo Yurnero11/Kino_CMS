@@ -4,4 +4,5 @@ import com.example.Kino_CMS.entity.LastBanner;
 
 public interface LastBannerService {
     LastBanner saveLastBanner(LastBanner lastBanner);
+    LastBanner getLastBanner();
 }

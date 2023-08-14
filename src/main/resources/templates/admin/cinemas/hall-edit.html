@@ -16,17 +16,51 @@
         <input type="hidden" name="hall_id" th:value="${hall.hall_id}">
         <h3>Hall Number <input type="text" name="hall_number" placeholder="Hall Number" class="form-control" th:value="${hall.number}"></h3>
         <h3>Description <input type="text" name="descriptions" placeholder="Description" class="form-control" th:value="${hall.description}"></h3>
-        <h3>Schema <input type="file" name="schema" class="form-control gallery-input" placeholder="Schema"></h3>
-        <h3>Head Banner <input type="file" name="head_banner" class="form-control gallery-input" placeholder="Head Banner"></h3>
+        <h3>Schema
+            <input type="file" name="schema" class="form-control gallery-input" placeholder="Schema" id="schemaInput" onchange="displayImage(this, 'schemaImage')">
+        </h3>
+        <div id="schemaContainer">
+            <img th:src="${hall.schema_image_path != null ? '/upload/' + hall.schema_image_path : '/static/img/download.jpg'}" id="schemaImage" style="width: 100px; height: 100px;" />
+        </div>
+
+        <h3>Head Banner
+            <input type="file" name="head_banner" class="form-control gallery-input" placeholder="Head Banner" id="headBannerInput" onchange="displayImage(this, 'headBannerImage')">
+        </h3>
+        <div id="headBannerContainer">
+            <img th:src="${hall.top_banner_image_path != null ? '/upload/' + hall.top_banner_image_path : '/static/img/download.jpg'}" id="headBannerImage" style="width: 100px; height: 100px;" />
+        </div>
 
         <h3>Gallery Photos</h3>
         <div class="gallery-row">
-            <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Gallery Photo 1">
-            <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Gallery Photo 2">
-            <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Gallery Photo 3">
-            <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Gallery Photo 4">
-            <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Gallery Photo 5">
+            <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Gallery Photo 1" onchange="displayImage(this, 'galleryImage1')">
+            <img th:src="${hall.gallery.imagePath1 != null ? '/upload/' + hall.gallery.imagePath1 : '/static/img/download.jpg'}" id="galleryImage1" style="width: 100px; height: 100px;" />
+
+            <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Gallery Photo 2" onchange="displayImage(this, 'galleryImage2')">
+            <img th:src="${hall.gallery.imagePath2 != null ? '/upload/' + hall.gallery.imagePath2 : '/static/img/download.jpg'}" id="galleryImage2" style="width: 100px; height: 100px;" />
+
+            <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Gallery Photo 3" onchange="displayImage(this, 'galleryImage3')">
+            <img th:src="${hall.gallery.imagePath3 != null ? '/upload/' + hall.gallery.imagePath3 : '/static/img/download.jpg'}" id="galleryImage3" style="width: 100px; height: 100px;" />
+
+            <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Gallery Photo 4" onchange="displayImage(this, 'galleryImage4')">
+            <img th:src="${hall.gallery.imagePath4 != null ? '/upload/' + hall.gallery.imagePath4 : '/static/img/download.jpg'}" id="galleryImage4" style="width: 100px; height: 100px;" />
+
+            <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Gallery Photo 5" onchange="displayImage(this, 'galleryImage5')">
+            <img th:src="${hall.gallery.imagePath5 != null ? '/upload/' + hall.gallery.imagePath5 : '/static/img/download.jpg'}" id="galleryImage5" style="width: 100px; height: 100px;" />
         </div>
+        <script>
+            function displayImage(input, imgId) {
+                var thumbnailContainer = document.getElementById(imgId);
+                thumbnailContainer.src = ""; // Очистить предыдущую миниатюру
+
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        thumbnailContainer.src = e.target.result;
+                    };
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+        </script>
 
         <h3>SEO Block</h3>
         <h3>URL <input type="text" name="url" placeholder="URL" class="form-control" th:value="${hall.seoBlocks.url}"></h3>

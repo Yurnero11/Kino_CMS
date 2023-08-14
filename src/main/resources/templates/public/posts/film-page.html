@@ -186,6 +186,11 @@
 
         /*====================================================*/
 
+        .film-details {
+            border: 2px solid #ccc;
+            padding: 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
 <body>
@@ -286,20 +291,34 @@
         </div>
     </div>
 </div>
-
-
 <div class="main-container">
-    <div class="image-container">
-        <img style="width: 400px;" th:src="${'/upload/' + movies.information_about_film}" alt="img">
-    </div>
-    <div class="slider-container">
-        <div class="mini-slider">
-            <div class="wrapper">
-                <i id="left" class="fa-solid fa-angle-left"></i>
-                <div class="carousel">
-                    <img style="height: 300px; width: 300px;" th:each="imagePath : ${galleryPaths}" th:src="'/upload/' + ${imagePath}" alt="Slide" draggable="false">
+    <div class="film-container">
+        <div class="film-info">
+            <div class="film-details">
+                <h3>Інформація про фільм</h3>
+                <div class="film-property">
+                    <p><strong>Year:</strong> <span th:text="${movies.aboutMovie.year}"></span></p>
+                    <p><strong>Composer:</strong> <span th:text="${movies.aboutMovie.composer}"></span></p>
+                    <p><strong>Producer:</strong> <span th:text="${movies.aboutMovie.producer}"></span></p>
+                    <p><strong>Director:</strong> <span th:text="${movies.aboutMovie.director}"></span></p>
+                    <p><strong>Screenwriter:</strong> <span th:text="${movies.aboutMovie.screenwriter}"></span></p>
+                    <p><strong>Cinematographer:</strong> <span th:text="${movies.aboutMovie.cinematographer}"></span></p>
+                    <p><strong>Genre:</strong> <span th:text="${movies.aboutMovie.genre}"></span></p>
+                    <p><strong>Budget:</strong> <span th:text="${movies.aboutMovie.budget}"></span></p>
+                    <p><strong>Age Rating:</strong> <span th:text="${movies.aboutMovie.age_rating}"></span></p>
+                    <p><strong>Duration:</strong> <span th:text="${movies.aboutMovie.duration}"></span></p>
                 </div>
-                <i id="right" class="fa-solid fa-angle-right"></i>
+            </div>
+        </div>
+        <div class="slider-container">
+            <div class="mini-slider">
+                <div class="wrapper">
+                    <i id="left" class="fa-solid fa-angle-left"></i>
+                    <div class="carousel">
+                        <img style="height: 300px; width: 300px;" th:each="imagePath : ${galleryPaths}" th:src="'/upload/' + ${imagePath}" alt="Slide" draggable="false">
+                    </div>
+                    <i id="right" class="fa-solid fa-angle-right"></i>
+                </div>
             </div>
         </div>
     </div>

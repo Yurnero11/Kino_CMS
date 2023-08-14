@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class MainBannerServiceImpl implements MainBannerService {
     private static final Logger log = LogManager.getLogger(MainBannerServiceImpl.class);
@@ -25,6 +27,26 @@ public class MainBannerServiceImpl implements MainBannerService {
         } catch (Exception e) {
             log.error("Error while getting latest MainBanner", e);
             throw e;
+        }
+    }
+
+    @Override
+    public MainBanners getMainBanners() {
+        try {
+            // Попробуем получить существующий объект MainBanners из базы данных
+            Optional<MainBanners> existingMainBanners = mainBannerRepository.findById(27);
+
+            if (existingMainBanners.isPresent()) {
+                MainBanners mainBanners = existingMainBanners.get();
+                log.info("MainBanners retrieved successfully: {}", mainBanners);
+                return mainBanners;
+            } else {
+                log.info("MainBanners not found in the database, creating a new one.");
+                return new MainBanners();
+            }
+        } catch (Exception e) {
+            log.error("Error while retrieving MainBanners: {}", e.getMessage());
+            throw e; // Можно обработать иначе в зависимости от вашей логики
         }
     }
 

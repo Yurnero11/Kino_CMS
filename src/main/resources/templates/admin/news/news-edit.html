@@ -13,16 +13,48 @@
     <h3>Назва новини<input type="text" name="news_name" placeholder="Назва новини" class="form-control" th:value="${new_s.news_title}"></h3>
     <h3>Опис<input type="text" name="news_description" placeholder="Текст" class="form-control" th:value="${new_s.news_description}"></h3>
     <h3>Дата публікації<input type="date" name="publication_date" placeholder="Введіть дату публікації" class="form-control" th:value="${new_s.date_publication}"></h3>
-    <h3>Головне фото<input type="file" name="main_image_path" class="form-control gallery-input" placeholder="Фото"></h3>
+
+    <h3>Головне фото
+      <input type="file" name="main_image_path" class="form-control gallery-input" placeholder="Фото" id="mainImageInput" onchange="displayImage1(this, 'mainImage')">
+    </h3>
+    <div id="mainImageContainer">
+      <img th:src="${new_s.main_image_path != null ? '/upload/' + new_s.main_image_path : '/static/img/download.jpg'}" id="mainImage" style="width: 100px; height: 100px;" />
+    </div>
 
     <h3>Галерея картинок</h3>
     <div class="gallery-row">
-      <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1">
-      <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 2">
-      <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 3">
-      <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 4">
-      <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 5">
+      <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage1')">
+      <img th:src="${new_s.gallery.imagePath1 != null ? '/upload/' + new_s.gallery.imagePath1 : '/static/img/download.jpg'}" id="galleryImage1" style="width: 100px; height: 100px;" />
+
+      <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage2')">
+      <img th:src="${new_s.gallery.imagePath2 != null ? '/upload/' + new_s.gallery.imagePath2 : '/static/img/download.jpg'}" id="galleryImage2" style="width: 100px; height: 100px;" />
+
+      <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage3')">
+      <img th:src="${new_s.gallery.imagePath3 != null ? '/upload/' + new_s.gallery.imagePath3 : '/static/img/download.jpg'}" id="galleryImage3" style="width: 100px; height: 100px;" />
+
+      <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage4')">
+      <img th:src="${new_s.gallery.imagePath4 != null ? '/upload/' + new_s.gallery.imagePath4 : '/static/img/download.jpg'}" id="galleryImage4" style="width: 100px; height: 100px;" />
+
+      <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage5')">
+      <img th:src="${new_s.gallery.imagePath5 != null ? '/upload/' + new_s.gallery.imagePath5 : '/static/img/download.jpg'}" id="galleryImage5" style="width: 100px; height: 100px;" />
+
+      <!-- Добавьте аналогичный код для остальных полей галереи -->
     </div>
+
+    <script>
+      function displayImage1(input, imgId) {
+        var thumbnailContainer = document.getElementById(imgId);
+        thumbnailContainer.src = ""; // Очистить предыдущую миниатюру
+
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            thumbnailContainer.src = e.target.result;
+          };
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    </script>
 
     <h3>Посилання на трейлер<input type="text" name="url" placeholder="Посилання на трейлер в ютубі" class="form-control" th:value="${new_s.seoBlocks.url}"></h3>
 
