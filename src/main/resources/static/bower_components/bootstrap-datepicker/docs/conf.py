@@ -95,7 +95,7 @@ highlight_language = 'javascript'
 
 # -- Options for HTML output ---------------------------------------------------
 
-# The theme to use for HTML and HTML Help pages.  See the documentation for
+# The theme to use for HTML and HTML Help page.  See the documentation for
 # a list of builtin themes.
 html_theme = 'sphinx_rtd_theme'
 
@@ -140,7 +140,7 @@ html_static_path = ['_static']
 # Custom sidebar templates, maps document names to template names.
 #html_sidebars = {}
 
-# Additional templates that should be rendered to pages, maps page names to
+# Additional templates that should be rendered to page, maps page names to
 # template names.
 #html_additional_pages = {}
 
@@ -150,10 +150,10 @@ html_static_path = ['_static']
 # If false, no index is generated.
 #html_use_index = True
 
-# If true, the index is split into individual pages for each letter.
+# If true, the index is split into individual page for each letter.
 #html_split_index = False
 
-# If true, links to the reST sources are added to the pages.
+# If true, links to the reST sources are added to the page.
 #html_show_sourcelink = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
@@ -162,7 +162,7 @@ html_static_path = ['_static']
 # If true, "(C) Copyright ..." is shown in the HTML footer. Default is True.
 #html_show_copyright = True
 
-# If true, an OpenSearch description file will be output, and all pages will
+# If true, an OpenSearch description file will be output, and all page will
 # contain a <link> tag referring to it.  The value of this option must be the
 # base URL from which the finished HTML is served.
 #html_use_opensearch = ''

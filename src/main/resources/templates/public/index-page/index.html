@@ -19,7 +19,7 @@
 
         /* Background image style */
         body {
-            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/static/img/112.jpg");
+            background-image: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)), url("/Kino_CMS-Yura_Dmytriv/static/img/112.jpg");
             background-repeat: no-repeat;
             background-size: cover;
             background-position: center center;
@@ -103,7 +103,7 @@
             margin-bottom: 10px;
         }
 
-        .movies-container {
+        .movie-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -129,7 +129,7 @@
             margin-bottom: 10px;
         }
 
-        .movies-container {
+        .movie-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -164,24 +164,25 @@
 <body>
 <!-- Включаем шаблон header.html -->
 <div th:replace="public/content/header :: header"></div>
+
 <div class="container-content">
-<div>
+    <div th:if="${mainBanner.status == 'on'}">
     <div class="swiper mySwiper">
         <div class="swiper-wrapper">
             <div class="swiper-slide">
-                <img th:src="'/upload/' + ${mainBanner.imagePath1}" style="width: 70%;" alt="Slide">
+                <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${mainBanner.imagePath1}" style="width: 70%;" alt="Slide">
             </div>
             <div class="swiper-slide">
-                <img th:src="'/upload/' + ${mainBanner.imagePath2}" style="width: 70%;" alt="Slide">
+                <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${mainBanner.imagePath2}" style="width: 70%;" alt="Slide">
             </div>
             <div class="swiper-slide">
-                <img th:src="'/upload/' + ${mainBanner.imagePath3}" style="width: 70%;" alt="Slide">
+                <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${mainBanner.imagePath3}" style="width: 70%;" alt="Slide">
             </div>
             <div class="swiper-slide">
-                <img th:src="'/upload/' + ${mainBanner.imagePath4}" style="width: 70%;" alt="Slide">
+                <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${mainBanner.imagePath4}" style="width: 70%;" alt="Slide">
             </div>
             <div class="swiper-slide">
-                <img th:src="'/upload/' + ${mainBanner.imagePath5}" style="width: 70%;" alt="Slide">
+                <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${mainBanner.imagePath5}" style="width: 70%;" alt="Slide">
             </div>
         </div>
     <div class="swiper-pagination"></div>
@@ -193,10 +194,10 @@
 <div>
     <div class="section-container">
         <h3 class="section-title" style="text-align: center">Вже на екрані</h3>
-        <div class="movies-container">
+        <div class="movie-container">
             <div th:each="movie, iterationStatus : ${movies}" th:if="${movie.movie_data == 'now' and iterationStatus.index < 6}" class="movie">
                 <img class="movie-image" th:src="@{'/upload/' + ${movie.main_page_path}}">
-                <a th:href="@{'/soon/' + ${movie.movie_id}}">
+                <a th:href="@{/posts/{movie_id}(movie_id=${movie.movie_id})}">
                     <h3 th:text="${movie.name}"></h3>
                 </a>
                 <form action="#" method="post" onsubmit="return false;">
@@ -205,10 +206,10 @@
             </div>
         </div>
         <h3 class="section-title" style="text-align: center">Скоро побачите</h3>
-        <div class="movies-container">
+        <div class="movie-container">
             <div th:each="movie, iterationStatus : ${movies}" th:if="${movie.movie_data == 'soon' and iterationStatus.index < 11}" class="movie">
                 <img class="movie-image" th:src="@{'/upload/' + ${movie.main_page_path}}">
-                <a th:href="@{'/soon/' + ${movie.movie_id}}">
+                <a th:href="@{/soon/{movie_id}(movie_id=${movie.movie_id})}">
                     <h3 th:text="${movie.name}"></h3>
                 </a>
                 <form action="#" method="post" onsubmit="return false;">
@@ -218,15 +219,40 @@
         </div>
     </div>
 </div>
-
-    <h3 style="text-align: center">Новости и акции</h3>
-<div style="display: flex; justify-content: center; align-items: center; height: 300px;">
-    <img style="width: 1000px; height: 300px;" src="/static/img/advertising.jpg" alt="logo">
+<h3 style="text-align: center">Новини и акції</h3>
 </div>
 
-<div th:each="main_pages : ${mainPages}" style="text-align: center;">
-    <h3>Seo text</h3>
-    <h4 th:text="${main_pages.seo_text}" style="max-width: 1000px; word-wrap: break-word; text-align: center; margin: 0 auto;"></h4>
+<div class="container-content">
+    <div th:if="${lastBanners.status == 'on'}">
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${lastBanners.imagePath1}" style="width: 70%;" alt="Slide">
+                </div>
+                <div class="swiper-slide">
+                    <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${lastBanners.imagePath2}" style="width: 70%;" alt="Slide">
+                </div>
+                <div class="swiper-slide">
+                    <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${lastBanners.imagePath3}" style="width: 70%;" alt="Slide">
+                </div>
+                <div class="swiper-slide">
+                    <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${lastBanners.imagePath4}" style="width: 70%;" alt="Slide">
+                </div>
+                <div class="swiper-slide">
+                    <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${lastBanners.imagePath5}" style="width: 70%;" alt="Slide">
+                </div>
+            </div>
+            <div class="swiper-pagination"></div>
+        </div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+    </div>
+
+
+    <div th:each="main_pages : ${mainPages}" style="text-align: center;">
+        <h3>Seo text</h3>
+        <h4 th:text="${main_pages.seo_text}" style="max-width: 1000px; word-wrap: break-word; text-align: center; margin: 0 auto;"></h4>
+    </div>
 </div>
 </div>
 <!-- Включаем шаблон footer.html -->

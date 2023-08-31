@@ -75,16 +75,16 @@
 <body>
 <div th:replace="public/content/header :: header"></div>
 <div>
-    <img style="width: 100%; height: 600px" src="/static/img/promotion.jpg" alt="promotion">
+    <img style="width: 100%; height: 600px" src="/Kino_CMS-Yura_Dmytriv/static/img/promotion.jpg" alt="promotion">
 </div>
 
-<h3 style="text-align: center">Новости</h3>
+<h3 style="text-align: center">Новини</h3>
 
-<div class="left-content-wrapper" style="background-color: #0E2231">
+<div class="content-wrapper" style="background-color: #0E2231">
     <div class="left-content">
         <!-- Карточки акций -->
         <div th:each="newss : ${news}"  class="promotion-card" th:if="${newss.status == 'on'}">
-            <img class="promotion-image" th:src="${'/upload/' + newss.main_image_path}" alt="promotion">
+            <img class="promotion-image" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + newss.main_image_path}" alt="promotion">
             <a th:text="${newss.news_title} " style="color: blue" th:href="@{/news/{news_id}(news_id=${newss.news_id})}"></a>
             <div class="promotion-date" style="color: white; background-color: black; border: 1px; border-radius: 10px" th:text="|${newss.date_publication}|"></div>
             <div class="promotion-description" style="color: white" th:text="${newss.news_description}"></div>

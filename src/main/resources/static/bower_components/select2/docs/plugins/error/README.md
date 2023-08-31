@@ -2,7 +2,7 @@
 
 ![GPM Installation](assets/readme_1.png)
 
-`error` is a [Grav](http://github.com/getgrav/grav) Plugin and allows to redirect errors to nice output pages.
+`error` is a [Grav](http://github.com/getgrav/grav) Plugin and allows to redirect errors to nice output page.
 
 This plugin is required and you'll find it in any package distributed that contains Grav. If you decide to clone Grav from GitHub you will most likely want to install this.
 
@@ -46,17 +46,17 @@ You can now edit the override and tweak it however you prefer.
 
 ### Page
 
-Copy the page file [error.md](pages/error.md) into the `pages` folder of your user directory and that is it.
+Copy the page file [error.md](page/error.md) into the `page` folder of your user directory and that is it.
 
 ```
-/your/site/grav/user/pages/error/error.md
+/your/site/grav/user/page/error/error.md
 ```
 
 You can now edit the override and tweak it however you prefer.
 
-# Custom error pages
+# Custom error page
 
-The configuration allows to specify pages different than `/error` for specific error codes. By default, the `404` error leads to the `/error` page. If you change that, make sure the page you point to has a `error` template (which means, its markdown file is `error.md` or in the page frontmatter you specify `template: error`.
+The configuration allows to specify page different than `/error` for specific error codes. By default, the `404` error leads to the `/error` page. If you change that, make sure the page you point to has a `error` template (which means, its markdown file is `error.md` or in the page frontmatter you specify `template: error`.
 
 # CLI Usage
 The `error` plugin comes with a CLI command that outputs the `grav.log` in a beautified way, with possibility of limiting the amount of errors displayed, as well as include the trace in the output.

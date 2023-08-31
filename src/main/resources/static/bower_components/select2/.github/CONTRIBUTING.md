@@ -98,7 +98,7 @@ grunt test
 
 The documentation for Select2 is maintained in a [separate repository](https://github.com/select2/docs). Select2.org is built with the flat-file CMS [Grav](http://getgrav.org), using their [RTFM skeleton](https://github.com/getgrav/grav-skeleton-rtfm-site#rtfm-skeleton).
 
-The documentation files themselves are written in Markdown, and can be found in the `pages/` subdirectory. You can submit pull requests to the `develop` branch of the repo.
+The documentation files themselves are written in Markdown, and can be found in the `page/` subdirectory. You can submit pull requests to the `develop` branch of the repo.
 
 If you'd like to set up a local instance of the entire documentation website, you must first have a web server (Nginx, Apache, etc) and PHP installed locally. Then, follow these steps:
 

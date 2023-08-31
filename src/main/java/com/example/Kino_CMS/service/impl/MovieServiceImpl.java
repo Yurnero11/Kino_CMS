@@ -1,8 +1,7 @@
 package com.example.Kino_CMS.service.impl;
 
 import com.example.Kino_CMS.entity.Gallary;
-import com.example.Kino_CMS.entity.Halls;
-import com.example.Kino_CMS.entity.Movies;
+import com.example.Kino_CMS.entity.Movie;
 import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.MovieRepository;
 import com.example.Kino_CMS.service.MovieService;
@@ -11,7 +10,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -25,10 +23,10 @@ public class MovieServiceImpl implements MovieService {
     private GalleryRepository galleryRepository;
 
     @Override
-    public Iterable<Movies> getAllMovies() {
+    public Iterable<Movie> getAllMovies() {
         try {
             log.info("Getting all Movies");
-            Iterable<Movies> result = movieRepository.findAll();
+            Iterable<Movie> result = movieRepository.findAll();
             log.info("Successfully retrieved all Movies");
             return result;
         } catch (Exception e) {
@@ -37,10 +35,10 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
-    public Optional<Movies> getMovieById(Long movie_id) {
+    public Optional<Movie> getMovieById(Long movie_id) {
         try {
             log.info("Getting Movie by ID: {}", movie_id);
-            Optional<Movies> result = movieRepository.findById(movie_id);
+            Optional<Movie> result = movieRepository.findById(movie_id);
             if (result.isPresent()) {
                 log.info("Successfully retrieved Movie by ID: {}", movie_id);
             } else {
@@ -57,7 +55,7 @@ public class MovieServiceImpl implements MovieService {
     public Gallary getGalleryByMovieId(Long movieId) {
         try {
             log.info("Getting Gallery by Movie ID: {}", movieId);
-            Movies movie = movieRepository.findById(movieId).orElse(null);
+            Movie movie = movieRepository.findById(movieId).orElse(null);
             if (movie != null) {
                 Gallary gallery = movie.getGallery();
                 if (gallery != null) {
@@ -73,28 +71,16 @@ public class MovieServiceImpl implements MovieService {
         }
     }
 
-    @Override
-    public List<Gallary> getAllGalleries() {
-        try {
-            log.info("Getting all Galleries");
-            List<Gallary> result = galleryRepository.findAll();
-            log.info("Successfully retrieved all Galleries");
-            return result;
-        } catch (Exception e) {
-            log.error("Error while getting all Galleries", e);
-            throw e;
-        }
-    }
 
     @Override
-    public Movies saveMovies(Movies movies) {
+    public Movie saveMovies(Movie movie) {
         try {
-            log.info("Saving Movies: {}", movies);
-            Movies result = movieRepository.save(movies);
-            log.info("Successfully saved Movies: {}", movies);
+            log.info("Saving Movies: {}", movie);
+            Movie result = movieRepository.save(movie);
+            log.info("Successfully saved Movies: {}", movie);
             return result;
         } catch (Exception e) {
-            log.error("Error while saving Movies: {}", movies, e);
+            log.error("Error while saving Movies: {}", movie, e);
             throw e;
         }
     }

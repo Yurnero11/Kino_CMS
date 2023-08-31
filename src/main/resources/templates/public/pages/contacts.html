@@ -69,11 +69,11 @@
 </div>
 
 
-<h1 style="text-align: center">Контакты</h1>
-<div style="width: 70%; padding-left: 400px" th:each="contact : ${contactsList}" class="contact-card-container">
+<h1 style="text-align: center">Контакти</h1>
+<div style="width: 100%; padding-left: 400px" th:each="contact : ${contactsList}" class="contact-card-container">
     <div class="header">
         <h1 th:text="${contact.cinema_name}"></h1>
-        <img th:src="${'/upload/' + contact.logo_path}" alt="Логотип">
+        <img th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + contact.logo_path}" alt="Логотип">
         <ul class="contact-list">
             <li th:text="${contact.address}"></li>
             <li>Ширина: <p th:text="${contact.coordinates1}"></p></li>
@@ -84,7 +84,7 @@
 
     <div class="content">
         <div class="image-wrapper">
-            <img th:src="${'/upload/' + contact.logo_path}" alt="Изображение 2">
+            <img th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + contact.logo_path}" alt="Изображение 2">
         </div>
     </div>
 
@@ -116,10 +116,6 @@
 <div th:each="contact : ${contactsList}">
 
 </div>
-
-
-
-
 
 <!-- Вызов функции инициализации карт для каждого контакта после загрузки страницы -->
 

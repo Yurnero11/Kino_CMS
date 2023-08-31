@@ -7,6 +7,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -72,5 +73,15 @@ public class UserServiceImpl implements UserServiceInterface {
             log.error("Error while getting all Users with pagination", e);
             throw e;
         }
+    }
+
+    public Page<User> findAllPage(Integer pageNumber, Integer pageSize){
+        Pageable pageable = PageRequest.of(pageNumber, pageSize);
+        return userRepository.findAll(pageable);
+
+    }
+
+    public long countTotalUsers() {
+        return userRepository.count(); // userRepository - ваш репозиторий для сущности User
     }
 }

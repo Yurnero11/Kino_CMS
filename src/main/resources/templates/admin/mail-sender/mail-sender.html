@@ -219,22 +219,22 @@
                             </div>
                         </div>
                         <br>
-                        <div class="button-group" style="display: flex;">
-                            <label><input type="checkbox" name="selectAll" onclick="toggleSelectAll(this)"> Выбрать всех</label>
-                            <a href="/admin/email-users">Выбрать конкретных юзеров</a>
-                            <button type="button" onclick="sendEmail()">Отправить</button>
+                        <div class="button-group" style="display: flex;" id="buttonGroup">
+                            <label><input type="checkbox" name="selectAll" onclick="toggleSelectAll(this)"> Вибрати всіх</label>
+                            <a th:href="@{/admin/email-users}">Вибрати конкретних  юзерів</a>
+                            <button type="button" onclick="sendEmail()">Відправити</button>
                         </div>
                         <br>
                         <!-- Отображение таблицы с данными пользователей -->
                         <div id="recipientsTable" class="hidden">
-                            <label>Получатели:</label>
+                            <label>Одержувачі:</label>
                             <br>
                             <table>
                                 <thead>
                                 <tr>
-                                    <th>Имя пользователя</th>
-                                    <th>Email</th>
-                                    <th>Выбрать</th>
+                                    <th>Ім'я користувача</th>
+                                    <th>Емеіл</th>
+                                    <th>Вибрати</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -309,6 +309,8 @@
 
             // При выборе или снятии всех получателей сохраняем выбранных получателей в localStorage
             saveSelectedRecipients();
+
+
         }
 
         function toggleSelectIndividuals(checkbox) {
@@ -363,7 +365,7 @@
                 var formData = new FormData(document.getElementById('emailForm'));
 
                 $.ajax({
-                    url: '/admin/send-email',
+                    url: '/Kino_CMS-Yura_Dmytriv/admin/send-email',
                     type: 'POST',
                     data: formData,
                     processData: false,
@@ -385,6 +387,18 @@
                     }
                 });
             }, 500);
+
+            var buttonGroup = document.getElementById("buttonGroup");
+
+            // Отключение всего блока
+            buttonGroup.style.pointerEvents = "none";
+            buttonGroup.style.opacity = "0.5";
+
+            setTimeout(function() {
+                // Включение блока
+                buttonGroup.style.pointerEvents = "auto";
+                buttonGroup.style.opacity = "1";
+            }, 4000); // 4000 миллисекунд = 4 секунды
         }
 
         function updateProgressBar(progress) {

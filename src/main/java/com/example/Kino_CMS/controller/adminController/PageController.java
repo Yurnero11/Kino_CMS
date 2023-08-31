@@ -1,11 +1,9 @@
 package com.example.Kino_CMS.controller.adminController;
 
-import com.example.Kino_CMS.entity.Cinemas;
-import com.example.Kino_CMS.entity.Pages;
-import com.example.Kino_CMS.repository.PageRepository;
+import com.example.Kino_CMS.entity.Page;
 import com.example.Kino_CMS.service.impl.PageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -36,7 +34,7 @@ public class PageController {
     @PostMapping("/admin/pages/page-add")
     public String pageAdd(
             @RequestParam("name") String page_name,
-            @RequestParam("status") String status,
+            @RequestParam(value = "status", required = false, defaultValue = "off") String status,
             @RequestParam("description") String description,
             @RequestParam("mainImageFile") MultipartFile main_image_path,
             @RequestParam("gallery_photo_1") MultipartFile upload1,
@@ -50,56 +48,65 @@ public class PageController {
             @RequestParam("description_seo") String descriptionSeo,
             RedirectAttributes redirectAttributes
     ){
-        Pages pages = new Pages();
-        pages.setPage_name(page_name);
-        pages.setStatus(status);
-        pages.setDescription(description);
-        pages.setMain_image_path(saveImage(main_image_path));
-        pages.setImage_path_1(saveImage(upload1));
-        pages.setImage_path_2(saveImage(upload2));
-        pages.setImage_path_3(saveImage(upload3));
-        pages.setImage_path_4(saveImage(upload4));
-        pages.setImage_path_5(saveImage(upload5));
-        pages.setSeo_url(url);
-        pages.setSeo_title(title);
-        pages.setSeo_keywords(keywords);
-        pages.setSeo_description(descriptionSeo);
+        Page page = new Page();
+        page.setPage_name(page_name);
 
-        pageService.savePages(pages);
+        if ("on".equals(status)) {
+            // Обработка, когда статус включен
+            page.setStatus("on");
+        } else {
+            // Обработка, когда статус выключен или отсутствует
+            page.setStatus("off");
+        }
+
+
+        page.setDescription(description);
+        page.setMain_image_path(saveImage(main_image_path));
+        page.setImage_path_1(saveImage(upload1));
+        page.setImage_path_2(saveImage(upload2));
+        page.setImage_path_3(saveImage(upload3));
+        page.setImage_path_4(saveImage(upload4));
+        page.setImage_path_5(saveImage(upload5));
+        page.setSeo_url(url);
+        page.setSeo_title(title);
+        page.setSeo_keywords(keywords);
+        page.setSeo_description(descriptionSeo);
+
+        pageService.savePages(page);
 
         return "redirect:/admin/pages";
     }
 
     @PostMapping("/admin/pages/{page_id}/delete")
     public String deletePages(@PathVariable(value = "page_id") long id, Model model) {
-        Pages pages = pageService.findById(id).orElseThrow();
+        Page page = pageService.findById(id).orElseThrow();
 
         // Удаление изображений из папки, если пути к изображениям указаны в объекте Pages
-        if (pages.getMain_image_path() != null) {
-            deleteImage(pages.getMain_image_path());
+        if (page.getMain_image_path() != null) {
+            deleteImage(page.getMain_image_path());
         }
 
-        if (pages.getImage_path_1() != null) {
-            deleteImage(pages.getImage_path_1());
+        if (page.getImage_path_1() != null) {
+            deleteImage(page.getImage_path_1());
         }
 
-        if (pages.getImage_path_2() != null) {
-            deleteImage(pages.getImage_path_2());
+        if (page.getImage_path_2() != null) {
+            deleteImage(page.getImage_path_2());
         }
 
-        if (pages.getImage_path_3() != null) {
-            deleteImage(pages.getImage_path_3());
+        if (page.getImage_path_3() != null) {
+            deleteImage(page.getImage_path_3());
         }
 
-        if (pages.getImage_path_4() != null) {
-            deleteImage(pages.getImage_path_4());
+        if (page.getImage_path_4() != null) {
+            deleteImage(page.getImage_path_4());
         }
 
-        if (pages.getImage_path_5() != null) {
-            deleteImage(pages.getImage_path_5());
+        if (page.getImage_path_5() != null) {
+            deleteImage(page.getImage_path_5());
         }
 
-        pageService.delete(pages);
+        pageService.delete(page);
 
         return "redirect:/admin/pages";
     }
@@ -116,7 +123,8 @@ public class PageController {
         }
     }
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file) {
         if (file != null && !file.isEmpty()) {
@@ -125,7 +133,7 @@ public class PageController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

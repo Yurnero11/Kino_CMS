@@ -131,7 +131,6 @@
         /*====================================================*/
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
-
         .image-container,
         .slider-container {
             flex: 1; /* Оба блока займут равное пространство внутри .main-container */
@@ -231,23 +230,23 @@
 <div th:replace="public/content/header :: header"></div>
 
 <div class="section-container">
-    <!-- Left Image -->
+    <!-- Лівий зображення -->
     <div class="left-image">
-        <img style="width: 400px; height: 400px;" src="/static/img/112.jpg" alt="logo">
+        <img style="width: 400px; height: 400px;" src="/Kino_CMS-Yura_Dmytriv/static/img/112.jpg" alt="logo">
     </div>
 
-    <!-- Right Content -->
+    <!-- Правий контент -->
     <div class="right-content">
         <h4 th:text="${cinemas.name}"></h4>
-        <!-- Logo -->
-        <img th:src="'/upload/' + ${cinemas.logo_image_path}" alt="logo">
+        <!-- Логотип -->
+        <img th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${cinemas.logo_image_path}" alt="logo">
 
-        <!-- Button -->
-        <a href="/schedule">
-            <button>Расписание сеансов</button>
+        <!-- Кнопка -->
+        <a th:href="@{/schedule}">
+            <button>Розклад сеансів</button>
         </a>
 
-        <!-- Description -->
+        <!-- Опис -->
         <div style="padding: 20px;">
             <p th:text="${cinemas.description}"></p>
         </div>
@@ -255,15 +254,15 @@
 </div>
 
 <div class="main-container">
-    <!-- Left Content -->
+    <!-- Лівий контент -->
     <div class="left-content">
-        <!-- List of Halls -->
+        <!-- Список залів -->
         <div style="padding: 20px;">
-            <h3>Список залов:</h3>
+            <h3>Список залів:</h3>
             <ul th:each="hall : ${hallsList}">
                 <li>
                     <p>
-                        <a th:href="@{'/cinema/' + ${cinemas.cinema_id} + '/hall/' + ${hall.hall_id}}">
+                        <a th:href="@{/cinemas/{cinema_id}/hall/{hall_id}(cinema_id = ${cinemas.cinema_id}, hall_id = ${hall.hall_id})}">
                             <span th:text="'Зал ' + ${hall.number}"></span>
                         </a>
                     </p>
@@ -271,9 +270,9 @@
             </ul>
         </div>
 
-        <!-- List of Sessions (Dummy) -->
+        <!-- Список сеансів (заглушка) -->
         <div style="padding: 20px;">
-            <h3>Расписание сеансов:</h3>
+            <h3>Розклад сеансів:</h3>
             <ul>
                 <li>Сеанс 1</li>
                 <li>Сеанс 2</li>
@@ -285,29 +284,29 @@
         </div>
     </div>
 
-    <!-- Right Image -->
+    <!-- Праве зображення -->
     <div class="right-image" style="display: flex; flex-direction: column; align-items: center;">
         <p style="text-align: center; font-weight: bold; font-size: 18px;">Умова</p>
-        <img style="width: 1400px; height: 800px;" th:src="'/upload/' + ${cinemas.conditions}" alt="conditional_image">
+        <img style="width: 1400px; height: 800px;" th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${cinemas.conditions}" alt="conditional_image">
     </div>
 </div>
 
-
+<!-- Слайдер -->
 <div style="padding-left: 400px" class="slider-container">
+    <!-- Міні-слайдер -->
     <div class="mini-slider">
         <div class="wrapper">
             <i id="left" class="fa-solid fa-angle-left"></i>
             <div class="carousel">
-                <img style="height: 300px; width: 300px;" th:each="imagePath : ${galleryPaths}" th:src="'/upload/' + ${imagePath}" alt="Slide" draggable="false">
+                <img style="height: 300px; width: 300px;" th:each="imagePath : ${galleryPaths}" th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${imagePath}" alt="Slide" draggable="false">
             </div>
             <i id="right" class="fa-solid fa-angle-right"></i>
         </div>
     </div>
 </div>
 
-
+<!-- Футер -->
 <div class="footer" th:replace="public/content/footer :: footer"></div>
-
 </body>
 <script>
     const carousel = document.querySelector(".carousel"),

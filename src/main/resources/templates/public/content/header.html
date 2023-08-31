@@ -12,31 +12,31 @@
   <!-- Добавляем класс "header" к хедеру -->
   <!-- Здесь разместите маленький логотип -->
   <div style="background-color: transparent; margin-top: 60px" >
-    <img src="/static/img/video-camera.png" alt="Logo" style="height: 100px; width: 100px; object-fit: cover;">
+    <img th:src="@{/static/img/video-camera.png}" alt="Logo" style="height: 100px; width: 100px; object-fit: cover;">
   </div>
   <!-- Навигационное меню -->
   <nav style="margin-top: 60px;">
     <ul>
       <!-- Existing menu items -->
-      <li><a href="/home">Главная</a></li>
-      <li><a href="/posts">Афиша</a></li>
-      <li><a href="/schedule">Рассписание</a></li>
-      <li><a href="/soon">Скоро</a></li>
-      <li><a href="/cinemas">Кинотеатры</a></li>
-      <li><a href="/promotions">Акции</a></li>
-      <li><a href="/news">Новости</a></li>
+      <li><a th:href="@{/home}">Головна</a></li>
+      <li><a th:href="@{/posts}">Афіша</a></li>
+      <li><a th:href="@{/schedule}">Розклад</a></li>
+      <li><a th:href="@{/soon}">Скоро</a></li>
+      <li><a th:href="@{/cinemas}">Кінотеатри</a></li>
+      <li><a th:href="@{/promotions}">Акції</a></li>
+      <li><a th:href="@{/news}">Новини</a></li>
 
       <!-- Здесь добавляем класс "dropdown" к "Другие страницы" -->
       <li class="dropdown">
-        <a href="#">Другие страницы</a>
+        <a href="#">Інші сторінки</a>
         <!-- Здесь меняем класс "dropdown-menu__list" на "dropdown-menu" -->
         <ul class="dropdown-menu">
           <!-- Отображаем ссылки на остальные страницы с status == 'on' -->
           <li th:each="aboutCinema : ${about_cinema}" th:if="${aboutCinema.status == 'on'}">
-            <a th:href="@{/aboutCinema}" class="nav-link">О кинотеатре</a>
+            <a th:href="@{/aboutCinema}" class="nav-link">Про кінотеатр</a>
           </li>
           <li th:each="vipHall : ${vip_halls}" th:if="${vipHall.status == 'on'}">
-            <a th:href="@{/vipHall}" class="nav-link">Вип зал</a>
+            <a th:href="@{/vipHall}" class="nav-link">Віп зал</a>
           </li>
           <li th:each="cafe_bar : ${cafe_bar}" th:if="${cafe_bar.status == 'on'}">
             <a th:href="@{/cafeBar}" class="nav-link">Кафе бар</a>
@@ -45,16 +45,16 @@
             <a th:href="@{/advertising}" class="nav-link">Реклама</a>
           </li>
           <li th:each="kids_room : ${kidsroom}" th:if="${kids_room.status == 'on'}">
-            <a th:href="@{/kidsRoom}" class="nav-link">Детская комната</a>
+            <a th:href="@{/kidsRoom}" class="nav-link">Дитяча кімната</a>
           </li>
-          <li th:each="cinema_contacts : ${cinemaContactsForTable}" th:if="${cinema_contacts.status == 'on'}">
-            <a th:href="@{/contacts}" class="nav-link">Контакты</a>
+          <li th:each="seoblock : ${seoBlockContacts}" th:if="${seoblock.status == 'on'}">
+            <a th:href="@{/contacts}" class="nav-link">Контакти</a>
           </li>
           <li th:each="page : ${pages}" th:if="${page.status == 'on'}">
-            <a th:href="@{'/page/' + ${page.page_id}}"
+            <a th:href="@{/page/{page_id}(page_id = ${page.page_id})}"
                class="nav-link"
                th:text="${page.page_name}"
-               th:classappend="${currentPath.startsWith('/page/' + page.page_id)} ? 'active' : ''"></a>
+               th:classappend="${currentPath.startsWith('/pages/' + page.page_id)} ? 'active' : ''"></a>
           </li>
         </ul>
       </li>
@@ -65,9 +65,9 @@
   <form action="/search" method="get" style="margin-top: 60px;">
     <div class="link-image" style="display: flex; align-items: center;">
       <!-- Ссылки на социальные сети -->
-      <a href="https://instagram.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/upload/1.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
-      <a href="https://facebook.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/upload/facebook.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
-      <a href="https://twitter.com" style="text-decoration: none;"><img th:src="@{/upload/twitter.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+      <a href="https://instagram.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/static/img/1.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+      <a href="https://facebook.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/static/img/facebook.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+      <a href="https://twitter.com" style="text-decoration: none;"><img th:src="@{/static/img/twitter.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
     </div>
     <input type="text" name="query" placeholder="Поиск">
     <button type="submit">Найти</button>
@@ -77,12 +77,24 @@
 
   <!-- Имя пользователя -->
   <div class="user-info" style="margin-top: 60px;">
-    <a th:href="@{/user/profile/{id}(id=${id})}" class="user-link">
-      <i class="fas fa-user"></i>
-    </a>
-    <a href="/login" class="btn btn-primary logout-btn">
-      <i class="fas fa-sign-out"></i>
-    </a>
+    <!-- Если пользователь аутентифицирован -->
+    <div th:if="${#authorization.expression('isAuthenticated()')}">
+      <a th:href="@{/user/profile/{id}(id=${id})}" class="user-link">
+        <i class="fas fa-user"></i>
+      </a>
+      <a th:href="@{/logout}" class="btn btn-primary logout-btn">
+        <i class="fas fa-sign-out"></i>
+      </a>
+    </div>
+    <!-- Если пользователь не аутентифицирован -->
+    <div th:unless="${#authorization.expression('isAuthenticated()')}">
+      <a th:href="@{/login}" class="btn btn-primary login-btn">
+        <i class="fas fa-sign-in"></i> Войти
+      </a>
+      <a th:href="@{/register}" class="btn btn-secondary register-btn">
+        <i class="fas fa-user-plus"></i> Зарегистрироваться
+      </a>
+    </div>
   </div>
 
   <style>
@@ -117,7 +129,7 @@
     }
     /* Стили для хедера */
     header {
-      background-image: url('/static/img/111.png'), linear-gradient(to bottom, purple, purple );
+      background-image: url('/Kino_CMS-Yura_Dmytriv/static/img/111.png'), linear-gradient(to bottom, purple, purple );
       background-size: 100% 50%, 100% 50%;
       background-repeat: no-repeat;
       background-position: top, bottom;

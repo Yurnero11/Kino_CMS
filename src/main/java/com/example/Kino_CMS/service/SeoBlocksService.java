@@ -1,7 +1,7 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.SeoBlocks;
+import com.example.Kino_CMS.entity.SeoBlock;
 
 public interface SeoBlocksService {
-    SeoBlocks saveSeoBlock(SeoBlocks seoBlocks);
+    SeoBlock saveSeoBlock(SeoBlock seoBlock);
 }

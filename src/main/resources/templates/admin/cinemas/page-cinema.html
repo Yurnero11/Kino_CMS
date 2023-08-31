@@ -6,7 +6,7 @@
 <head>
     <title>Banners</title>
     <style>
-        .movies-container {
+        .movie-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -52,16 +52,19 @@
 <body>
 <div layout:fragment="content">
     <h1>Кінотеатри</h1>
-    <h2><a href="/admin/cinemas/cinema-add" class="add-movie-button">Додати кінотеатр</a></h2>
+    <h2><a th:href="@{/admin/cinemas/cinema-add}" class="add-movie-button">Додати кінотеатр</a></h2>
     <div class="section-container">
-        <div class="movies-container">
+        <div class="movie-container">
             <div th:each="cinema : ${cinemas}" class="cinema">
-                <img class="movie-image" th:src="@{'/upload/' + ${cinema.getLogo_image_path()}}">
+                <img class="movie-image" th:src="@{'/Kino_CMS-Yura_Dmytriv/upload/' + ${cinema.getLogo_image_path()}}">
                 <h3 th:text="${cinema.name}"></h3>
-                <td><a th:href="'/admin/cinemas/' + ${cinema.cinema_id} + '/edit'"  class="btn btn-info">Редагувати</a></td>
-                <td><form th:action="'/admin/cinemas/' + ${cinema.cinema_id} + '/remove'" method="post">
-                    <button class="btn btn-warning">Delete</button>
-                </form></td>
+                <td><a th:href="@{/admin/cinemas/{cinema_id}/edit(cinema_id=${cinema.cinema_id})}" class="btn btn-info">Редагувати</a></td>
+                <td>
+                    <form th:action="@{/admin/cinemas/{cinema_id}/remove(cinema_id = ${cinema.cinema_id})}" method="post">
+                        <button class="btn btn-warning" th:if="${cinema.cinema_id != 25}">Видалити</button>
+                        <span th:if="${cinema.cinema_id == 25}" class="text-muted">Не удалять</span>
+                    </form>
+                </td>
             </div>
         </div>
     </div>

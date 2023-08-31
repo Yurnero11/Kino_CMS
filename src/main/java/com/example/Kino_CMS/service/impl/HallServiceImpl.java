@@ -1,7 +1,7 @@
 package com.example.Kino_CMS.service.impl;
 
 import com.example.Kino_CMS.entity.Gallary;
-import com.example.Kino_CMS.entity.Halls;
+import com.example.Kino_CMS.entity.Hall;
 import com.example.Kino_CMS.repository.HallRepository;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,9 +24,9 @@ public class HallServiceImpl {
     public Gallary getGalleryByHallId(Long hallId) {
         try {
             log.info("Getting Gallery by Hall ID: {}", hallId);
-            Halls halls = hallRepository.findById(hallId).orElse(null);
-            if (halls != null) {
-                Gallary gallery = halls.getGallery();
+            Hall hall = hallRepository.findById(hallId).orElse(null);
+            if (hall != null) {
+                Gallary gallery = hall.getGallery();
                 if (gallery != null) {
                     log.info("Successfully retrieved Gallery by Hall ID: {}", hallId);
                     return gallery;
@@ -40,10 +40,10 @@ public class HallServiceImpl {
         }
     }
 
-    public Optional<Halls> getHallById(Long hall_id) {
+    public Optional<Hall> getHallById(Long hall_id) {
         try {
             log.info("Getting Hall by ID: {}", hall_id);
-            Optional<Halls> result = hallRepository.findById(hall_id);
+            Optional<Hall> result = hallRepository.findById(hall_id);
             if (result.isPresent()) {
                 log.info("Successfully retrieved Hall by ID: {}", hall_id);
             } else {

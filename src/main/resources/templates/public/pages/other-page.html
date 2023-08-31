@@ -128,35 +128,35 @@
 <div th:replace="public/content/header :: header"></div>
 
 <div style="width: 100%; height: 600px; overflow: hidden;">
-  <img style="width: 100%; height: 100%; object-fit: cover;" th:src="${'/upload/' + pages.main_image_path}" alt="logo">
+  <img style="width: 100%; height: 100%; object-fit: cover;" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + pages.main_image_path}" alt="logo">
 </div>
 
-<div style="width: 70%;">
+<div style="width: 100%;">
   <h3 style="text-align: center" th:text="${pages.page_name}"></h3>
   <p style="text-align: justify;" th:text="${pages.description}"></p>
 </div>
 
-<div class="image-container" style="width: 70%;">
-  <img style="width: 400px; height: 400px; padding-right: 20px; padding-top: -30px" th:src="${'/upload/' + pages.image_path_1}" alt="logo">
-  <img style="width: 400px; height: 400px; padding-right: 20px;padding-top: -30px" th:src="${'/upload/' + pages.image_path_2}" alt="logo">
-  <img style="width: 400px; height: 400px; padding-right: 20px;padding-top: -30px" th:src="${'/upload/' + pages.image_path_3}" alt="logo">
+<div class="image-container" style="width: 100%;">
+  <img style="width: 400px; height: 400px; padding-right: 20px; padding-top: -30px" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + pages.image_path_1}" alt="logo">
+  <img style="width: 400px; height: 400px; padding-right: 20px;padding-top: -30px" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + pages.image_path_2}" alt="logo">
+  <img style="width: 400px; height: 400px; padding-right: 20px;padding-top: -30px" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + pages.image_path_3}" alt="logo">
   <!-- Добавьте здесь дополнительные фотографии, если необходимо -->
 </div>
 
 <div>
-  <p style="width: 70%; text-align: justify" th:text="${pages.description}"></p>
+  <p style="width: 100%; text-align: justify" th:text="${pages.description}"></p>
 </div>
 
-<div style="padding-left: 400px; width: 43%;" class="slider-container">
+<div style="padding-left: 700px; width: 63%; text-align: center" class="slider-container">
   <div class="mini-slider">
     <div class="wrapper">
       <i id="left" class="fa-solid fa-angle-left"></i>
       <div class="carousel">
-        <img style="height: 500px; width: 500px;" th:src="${'/upload/' +pages.image_path_1}" alt="Slide" draggable="false">
-        <img style="height: 500px; width: 500px;" th:src="${'/upload/' +pages.image_path_2}" alt="Slide" draggable="false">
-        <img style="height: 500px; width: 500px;" th:src="${'/upload/' +pages.image_path_3}" alt="Slide" draggable="false">
-        <img style="height: 500px; width: 500px;" th:src="${'/upload/' +pages.image_path_4}" alt="Slide" draggable="false">
-        <img style="height: 500px; width: 500px;" th:src="${'/upload/' +pages.image_path_5}" alt="Slide" draggable="false">
+        <img style="height: 500px; width: 500px;" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' +pages.image_path_1}" alt="Slide" draggable="false">
+        <img style="height: 500px; width: 500px;" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' +pages.image_path_2}" alt="Slide" draggable="false">
+        <img style="height: 500px; width: 500px;" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' +pages.image_path_3}" alt="Slide" draggable="false">
+        <img style="height: 500px; width: 500px;" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' +pages.image_path_4}" alt="Slide" draggable="false">
+        <img style="height: 500px; width: 500px;" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' +pages.image_path_5}" alt="Slide" draggable="false">
       </div>
       <i id="right" class="fa-solid fa-angle-right"></i>
     </div>

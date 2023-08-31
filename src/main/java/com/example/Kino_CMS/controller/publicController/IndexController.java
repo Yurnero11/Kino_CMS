@@ -7,11 +7,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class IndexController {
@@ -37,29 +39,37 @@ public class IndexController {
     private MainBannerServiceImpl mainBannersService;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private LastBannerServiceImpl lastBannerService;
+    @Autowired
+    private SeoBlockCinemaContactServiceImpl seoBlockCinemaContactService;
+    @Autowired
+    private SeoBlockCinemaContactRepository seoBlockCinemaContactRepository;
 
 
-
-
-
-
-
-
-
-
+    @GetMapping("/")
+    public String redirectToHome() {
+        return "redirect:/home";
+    }
 
     @GetMapping("/home")
     public String index(Model model, HttpServletRequest request){
-        MainBanners latestMainBanner = mainBannersService.getLatestMainBanner();
+        List<SeoBlockCinemaContact> seoBlockContacts = seoBlockCinemaContactRepository.findAll();
+        model.addAttribute("seoBlockContacts", seoBlockContacts);
+
+        MainBanner latestMainBanner = mainBannersService.getLatestMainBanner();
         model.addAttribute("mainBanner", latestMainBanner);
 
-        Iterable<Movies> movies = movieServiceImpl.getAllMovies();
+        LastBanner lastBanners = lastBannerService.getLastBanner();
+        model.addAttribute("lastBanners", lastBanners);
+
+        Iterable<Movie> movies = movieServiceImpl.getAllMovies();
         model.addAttribute("movies", movies);
 
         Iterable<AboutCinema> aboutCinemas = aboutCinemaService.getAllAboutCinema();
         model.addAttribute("about_cinema", aboutCinemas);
 
-        Iterable<Pages> pages = pageService.getAllPages();
+        Iterable<Page> pages = pageService.getAllPages();
         String currentPath = request.getRequestURI();
         model.addAttribute("currentPath", currentPath);
         model.addAttribute("pages", pages);
@@ -86,8 +96,7 @@ public class IndexController {
     }
 
     @GetMapping("/header")
-    public String header(Model model, HttpServletRequest request){
-
+    public String header(Model model, HttpServletRequest request, Authentication authentication1){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         if (authentication != null && authentication.isAuthenticated()) {
             String username = authentication.getName();
@@ -103,10 +112,15 @@ public class IndexController {
                 // Обработка случая, когда пользователя с таким именем нет в базе данных
             }
         }
+
+        List<SeoBlockCinemaContact> seoBlockContacts = seoBlockCinemaContactRepository.findAll();
+        model.addAttribute("seoBlockContacts", seoBlockContacts);
+
+
         Iterable<AboutCinema> aboutCinemas = aboutCinemaService.getAllAboutCinema();
         model.addAttribute("about_cinema", aboutCinemas);
 
-        Iterable<Pages> pages = pageService.getAllPages();
+        Iterable<Page> pages = pageService.getAllPages();
         String currentPath = request.getRequestURI();
         model.addAttribute("currentPath", currentPath);
         model.addAttribute("pages", pages);
@@ -137,7 +151,10 @@ public class IndexController {
         Iterable<AboutCinema> aboutCinemas = aboutCinemaService.getAllAboutCinema();
         model.addAttribute("about_cinema", aboutCinemas);
 
-        Iterable<Pages> pages = pageService.getAllPages();
+        List<SeoBlockCinemaContact> seoBlockContacts = seoBlockCinemaContactRepository.findAll();
+        model.addAttribute("seoBlockContacts", seoBlockContacts);
+
+        Iterable<Page> pages = pageService.getAllPages();
         String currentPath = request.getRequestURI();
         model.addAttribute("currentPath", currentPath);
         model.addAttribute("pages", pages);
@@ -159,6 +176,8 @@ public class IndexController {
 
         Iterable<Contact_for_table> contactForTables = contactForTableService.getAllContacts();
         model.addAttribute("cinemaContactsForTable", contactForTables);
+
+
 
         return "public/content/footer";
     }

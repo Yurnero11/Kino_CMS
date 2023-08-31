@@ -7,7 +7,7 @@ Thumbs.db
 /node_modules/
 /bower_components/
 /nbproject/
-/gh-pages/
+/gh-page/
 /package-lock.json
 Gruntfile.js
 /build

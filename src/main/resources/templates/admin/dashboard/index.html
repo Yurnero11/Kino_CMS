@@ -34,10 +34,18 @@
 
         .centered-charts {
             display: flex;
-            flex-direction: row;
-            justify-content: center;
-            align-items: flex-start;
-            margin-top: 20px;
+            justify-content: space-around; /* Добавьте нужное выравнивание */
+            align-items: center; /* Добавьте нужное выравнивание */
+        }
+
+        .fixed-chart-container {
+            width: 400px; /* Укажите нужную ширину */
+            height: 400px; /* Укажите нужную высоту */
+        }
+
+        .fixed-canvas {
+            width: 100%;
+            height: 100%;
         }
 
         .centered-charts > .col-lg-3 {
@@ -63,7 +71,7 @@
                 <div class="icon" >
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a style="border-radius: 20px" href="/admin/users" class="small-box-footer">More info</a>
+                <a style="border-radius: 20px" th:href="@{/admin/users}" class="small-box-footer">More info</a>
             </div>
         </div>
 
@@ -77,22 +85,80 @@
                 <div class="icon" >
                     <i class="ion ion-stats-bars"></i>
                 </div>
-                <a style="border-radius: 20px" href="/admin/films" class="small-box-footer">More info</a>
+                <a style="border-radius: 20px" th:href="@{/admin/films}" class="small-box-footer">More info</a>
             </div>
         </div>
     </div>
 
     <div class="centered-charts">
-        <div class="col-lg-3 col-6 d-flex justify-content-center">
-            <canvas id="chartContainer"></canvas>
+        <div class="fixed-chart-container">
+            <canvas id="movieChartContainer" class="fixed-canvas"></canvas>
         </div>
 
-        <div class="col-lg-3 col-6 d-flex justify-content-center">
-            <canvas id="movieChartContainer"></canvas>
+        <div class="fixed-chart-container">
+            <canvas id="chartContainer" class="fixed-canvas"></canvas>
         </div>
     </div>
 
-    <div id="calendar"></div>
+
+    <!--<div th:each="currentSession : ${sessions}">
+        <p th:text="${currentSession.day}"></p>
+        <p th:text="${currentSession.visits}"></p>
+    </div>-->
+
+    <!--<h1>Табличка сессий</h1>
+
+    <table border="1">
+        <thead>
+        <tr>
+            <th>День</th>
+            <th>Посещения</th>
+        </tr>
+        </thead>
+        <tbody>
+        <th:block th:each="currentSession : ${sessions}">
+            <tr>
+                <td th:text="${currentSession.day}"></td>
+                <td th:text="${currentSession.visits}"></td>
+            </tr>
+        </th:block>
+        </tbody>
+    </table>-->
+
+    <script th:inline="javascript">
+        var sessions = [[${sessions}]];  // sessions должны быть преобразованы в JSON
+    </script>
+
+    <canvas id="myChart"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        var days = sessions.map(session => session.day);
+        var visits = sessions.map(session => session.visits);
+
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: days,
+                datasets: [{
+                    label: 'Посещения',
+                    data: visits,
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    </script>
+
+
+
 
     <script th:inline="javascript">
         var maleCount = /*[[${maleCount}]]*/ 0;
@@ -185,27 +251,6 @@
         });
     </script>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var calendarEl = document.getElementById('calendar');
-            var calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                height: 'auto',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay'
-                },
-                events: [
-                    // Можно добавить события календаря сюда, если необходимо
-                ]
-            });
-
-            // Показать календарь
-            calendar.render();
-        });
-
-    </script>
 </div>
 
 </body>

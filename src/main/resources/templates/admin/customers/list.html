@@ -47,15 +47,15 @@
     <div class="box">
         <table style="border-collapse: collapse;">
             <tr>
-                <th style="padding: 10px;">UserID</th>
-                <th style="padding: 10px;">Username</th>
-                <th style="padding: 10px;">Email</th>
-                <th style="padding: 10px;">Birthday</th>
-                <th style="padding: 10px;">First name</th>
-                <th style="padding: 10px;">Last name</th>
-                <th style="padding: 10px;">City</th>
-                <th style="padding: 10px;">Address</th>
-                <th style="padding: 10px;">Gender</th>
+                <th style="padding: 10px;">Id юзера</th>
+                <th style="padding: 10px;">Юзернейм</th>
+                <th style="padding: 10px;">Емейл</th>
+                <th style="padding: 10px;">День народження</th>
+                <th style="padding: 10px;">Ім'я</th>
+                <th style="padding: 10px;">Прізвище</th>
+                <th style="padding: 10px;">Місто</th>
+                <th style="padding: 10px;">Адреса</th>
+                <th style="padding: 10px;">Гендер</th>
                 <!-- Добавьте другие необходимые поля -->
             </tr>
             <!-- Итерация по списку пользователей и отображение данных -->
@@ -69,30 +69,43 @@
                 <td th:text="${user.city}" style="text-align: left; padding: 10px;"></td>
                 <td th:text="${user.address}" style="text-align: left; padding: 10px;"></td>
                 <td th:text="${user.gender}" style="text-align: left; padding: 10px;"></td>
-                <td><a th:href="'/admin/user/' + ${user.id} + '/edit'" class="btn btn-info">Редагувати</a></td>
-                <td><form th:action="'/admin/user/' + ${user.id} + '/remove'" method="post">
-                    <button class="btn btn-warning">Delete</button>
-                </form></td>
+                <td><a th:href="@{/admin/user/{id}/edit(id = ${user.id})}" class="btn btn-info">Редагувати</a></td>
+                <td>
+                    <form th:action="@{/admin/user/{id}/remove(id = ${user.id})}" method="post"
+                          th:unless="${user.id == currentUser.id}">
+                        <button class="btn btn-warning">Видалити</button>
+                    </form>
+                </td>
                 <!-- Добавьте другие необходимые поля -->
             </tr>
         </table>
     </div>
 
-    <div class="pagination">
-    <span class="page-item" th:class="${currentPage == 0 ? 'disabled' : ''}">
-        <a th:if="${currentPage > 0}" th:href="@{'/admin/users?page=' + ${currentPage - 1}}" aria-label="Previous" class="page-link">
-            <span aria-hidden="true">&lsaquo;</span>
-        </a>
-    </span>
-        <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNum == currentPage ? 'active' : ''}">
-        <a th:href="@{'/admin/users?page=' + ${pageNum}}" th:text="${pageNum + 1}" class="page-link"></a>
-    </span>
-        <span class="page-item" th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
-        <a th:if="${currentPage < totalPages - 1}" th:href="@{'/admin/users?page=' + ${currentPage + 1}}" aria-label="Next" class="page-link">
-            <span aria-hidden="true">&rsaquo;</span>
-        </a>
-    </span>
-    </div>
+    <th:block th:if="${showPagination}">
+    <form method="POST" >
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Previous" disabled="0"
+                       th:href="@{/admin/users(page=0)}">
+                        <span aria-hidden="true">&lt;</span>
+                    </a>
+                </li>
+                <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
+                    <a class="page-link" href="#" th:href="@{/admin/users(page=${pageNumber})}"
+                       th:text="${pageNumber + 1}"></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="#" aria-label="Next"
+                       th:disabled="${currentPage == totalPages - 1}"
+                       th:href="@{/admin/users(page=${nextPage})}">
+                        <span aria-hidden="true">&gt;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </form>
+    </th:block>
 
 </div>
 </body>

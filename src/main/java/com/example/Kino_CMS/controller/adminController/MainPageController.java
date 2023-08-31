@@ -43,7 +43,7 @@ public class MainPageController {
     public String mainPageEdit(@ModelAttribute("phone_number_1") String phone_number_1,
                                @ModelAttribute("phone_number_2") String phone_number_2,
                                @RequestParam("seo_text") String seo_text,
-                               @RequestParam("status") String status,
+                               @RequestParam(value = "status", required = false, defaultValue = "off") String status,
                                @RequestParam("url") String url,
                                @RequestParam("title") String title,
                                @RequestParam("keywords") String keywords,
@@ -65,7 +65,15 @@ public class MainPageController {
             currentPage.setPhone_number_1(phone_number_1);
             currentPage.setPhone_number_2(phone_number_2);
             currentPage.setSeo_text(seo_text);
-            currentPage.setStatus(status);
+
+            if ("on".equals(status)) {
+                // Обработка, когда статус включен
+                currentPage.setStatus("on");
+            } else {
+                // Обработка, когда статус выключен или отсутствует
+                currentPage.setStatus("off");
+            }
+
             currentPage.setSeo_url(url);
             currentPage.setSeo_title(title);
             currentPage.setSeo_keywords(keywords);

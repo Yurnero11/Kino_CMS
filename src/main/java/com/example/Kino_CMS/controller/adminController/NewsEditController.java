@@ -1,11 +1,10 @@
 package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.News;
-import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.NewsRepository;
-import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.NewsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,7 +57,7 @@ public class NewsEditController {
     public String newsEdit(
             @PathVariable(value = "news_id") long id,
             @RequestParam("news_name") String news_name,
-            @RequestParam("status") String status,
+            @RequestParam(value = "status", required = false, defaultValue = "off") String status,
             @RequestParam("news_description") String news_description,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate publication_date,
             @RequestParam("main_image_path") MultipartFile main_image_path,
@@ -81,17 +80,27 @@ public class NewsEditController {
         news.setNews_title(news_name);
         news.setNews_description(news_description);
         news.setDate_publication(publication_date);
-        news.setStatus(status);
+
+
+        if ("on".equals(status)) {
+            // Обработка, когда статус включен
+            news.setStatus("on");
+        } else {
+            // Обработка, когда статус выключен или отсутствует
+            news.setStatus("off");
+        }
+
+
         news.setMain_image_path(saveImage(main_image_path, news.getMain_image_path()));
         news.getGallery().setImagePath1(saveImage(upload1, news.getGallery().getImagePath1()));
         news.getGallery().setImagePath2(saveImage(upload2, news.getGallery().getImagePath2()));
         news.getGallery().setImagePath3(saveImage(upload3, news.getGallery().getImagePath3()));
         news.getGallery().setImagePath4(saveImage(upload4, news.getGallery().getImagePath4()));
         news.getGallery().setImagePath5(saveImage(upload5, news.getGallery().getImagePath5()));
-        news.getSeoBlocks().setUrl(url);
-        news.getSeoBlocks().setTitle(title);
-        news.getSeoBlocks().setKeywords(keywords);
-        news.getSeoBlocks().setDescription(descriptionSeo);
+        news.getSeoBlock().setUrl(url);
+        news.getSeoBlock().setTitle(title);
+        news.getSeoBlock().setKeywords(keywords);
+        news.getSeoBlock().setDescription(descriptionSeo);
 
         if (main_image_path != null && !main_image_path.isEmpty()) {
             news.setMain_image_path(saveImage(main_image_path, news.getMain_image_path()));
@@ -137,7 +146,8 @@ public class NewsEditController {
     }
 
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file, String currentImagePath) {
         if (file != null && !file.isEmpty()) {
@@ -146,7 +156,7 @@ public class NewsEditController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

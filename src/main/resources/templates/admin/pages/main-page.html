@@ -5,6 +5,63 @@
       layout:decorate="admin/layout/layout">
 <head>
     <title>Update user</title>
+    <style>
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {display:none;}
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: green;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px green;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+    </style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -14,24 +71,12 @@
         <h3><input type="text" name="phone_number_2" placeholder="000 00 0" class="form-control" th:value="${main_page.phone_number_2}"></h3>
         <h3>Seo текст<input type="text" name="seo_text" placeholder="Seo_text" class="form-control" th:value="${main_page.seo_text}"></h3>
         <h3>Статус</h3>
-        <div>
-            <label>
-                <input type="radio" name="status" value="on" th:checked="${main_page.status == 'on'}"> Вмк
-            </label>
-            <label>
-                <input type="radio" name="status" value="off" th:checked="${main_page.status == 'off'}"> Вимк
-            </label>
-            <script>
-                function checkBox(checkboxId) {
-                    const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-                    checkboxes.forEach((checkbox) => {
-                        if (checkbox.id !== checkboxId) {
-                            checkbox.checked = false;
-                        }
-                    });
-                }
-            </script>
-        </div>
+        <label class="switch">
+            <input name="status" type="checkbox"
+                   th:checked="${main_page.status == 'on'}"
+                   th:value="on">
+            <span class="slider round"></span>
+        </label>
 
         <h3>Seo block</h3>
         <h3>URL<input type="text" name="url" placeholder="URL" class="form-control" th:value="${main_page.seo_url}"></h3>

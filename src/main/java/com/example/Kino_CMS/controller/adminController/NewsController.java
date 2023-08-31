@@ -2,15 +2,12 @@ package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.Gallary;
 import com.example.Kino_CMS.entity.News;
-import com.example.Kino_CMS.entity.SeoBlocks;
-import com.example.Kino_CMS.repository.GalleryRepository;
-import com.example.Kino_CMS.repository.NewsRepository;
-import com.example.Kino_CMS.repository.SeoBlocksRepository;
-import com.example.Kino_CMS.service.GallaryService;
+import com.example.Kino_CMS.entity.SeoBlock;
 import com.example.Kino_CMS.service.impl.GallaryServiceImpl;
 import com.example.Kino_CMS.service.impl.NewsServiceImpl;
 import com.example.Kino_CMS.service.impl.SeoBlocksServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -58,20 +55,20 @@ public class NewsController {
             @RequestParam("news_name") String news_name,
             @RequestParam("description") String description,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate publication_date,
-            @RequestParam("main_photo") MultipartFile main_photo,
+            @RequestParam("main_image_path") MultipartFile main_photo,
             @RequestParam("gallery_photo_1") MultipartFile upload1,
             @RequestParam("gallery_photo_2") MultipartFile upload2,
             @RequestParam("gallery_photo_3") MultipartFile upload3,
             @RequestParam("gallery_photo_4") MultipartFile upload4,
             @RequestParam("gallery_photo_5") MultipartFile upload5,
-            @RequestParam("status") String status,
+            @RequestParam(value = "status", required = false, defaultValue = "off") String status,
             @RequestParam("url") String url,
             @RequestParam("title") String title,
             @RequestParam("keywords") String keywords,
             @RequestParam("description_seo") String descriptionSeo,
             RedirectAttributes redirectAttributes
     ) {
-        SeoBlocks seoBlocks = new SeoBlocks();
+        SeoBlock seoBlock = new SeoBlock();
         Gallary gallary = new Gallary();
         News news = new News();
 
@@ -80,23 +77,33 @@ public class NewsController {
         news.setNews_description(description);
         news.setDate_publication(publication_date);
         news.setMain_image_path(saveImage(main_photo));
-        news.setStatus(status);
+
+
+        if ("on".equals(status)) {
+            // Обработка, когда статус включен
+            news.setStatus("on");
+        } else {
+            // Обработка, когда статус выключен или отсутствует
+            news.setStatus("off");
+        }
+
+
         gallary.setImagePath1(saveImage(upload1));
         gallary.setImagePath2(saveImage(upload2));
         gallary.setImagePath3(saveImage(upload3));
         gallary.setImagePath4(saveImage(upload4));
         gallary.setImagePath5(saveImage(upload5));
-        seoBlocks.setUrl(url);
-        seoBlocks.setTitle(title);
-        seoBlocks.setKeywords(keywords);
-        seoBlocks.setDescription(descriptionSeo);
+        seoBlock.setUrl(url);
+        seoBlock.setTitle(title);
+        seoBlock.setKeywords(keywords);
+        seoBlock.setDescription(descriptionSeo);
 
         news.setGallery(gallary);
-        news.setSeoBlocks(seoBlocks);
+        news.setSeoBlock(seoBlock);
 
         newsServiceImpl.saveNews(news);
         gallaryService.saveGallary(gallary);
-        seoBlocksService.saveSeoBlock(seoBlocks);
+        seoBlocksService.saveSeoBlock(seoBlock);
 
         return "redirect:/admin/news";
     }
@@ -114,7 +121,8 @@ public class NewsController {
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file) {
         if (file != null && !file.isEmpty()) {
@@ -123,7 +131,7 @@ public class NewsController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

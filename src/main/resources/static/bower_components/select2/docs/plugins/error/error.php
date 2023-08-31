@@ -29,16 +29,16 @@ class ErrorPlugin extends Plugin
      */
     public function onPageNotFound(Event $event)
     {
-        /** @var Pages $pages */
-        $pages = $this->grav['pages'];
+        /** @var Pages $page */
+        $page = $this->grav['page'];
 
         // Try to load user error page.
-        $page = $pages->dispatch($this->config->get('plugins.error.routes.404', '/error'), true);
+        $page = $page->dispatch($this->config->get('plugins.error.routes.404', '/error'), true);
 
         if (!$page) {
             // If none provided use built in error page.
             $page = new Page;
-            $page->init(new \SplFileInfo(__DIR__ . '/pages/error.md'));
+            $page->init(new \SplFileInfo(__DIR__ . '/page/error.md'));
         }
 
         $event->page = $page;

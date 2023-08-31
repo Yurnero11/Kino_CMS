@@ -15,13 +15,13 @@
   </ol>
 </section>
 <div layout:fragment="content">
-  <h1>Remove Hall</h1>
-  <p>Are you sure you want to remove this hall?</p>
-  <p>Cinema ID: <span th:text="${cinema.cinema_id}"></span></p>
-  <p>Hall ID: <span th:text="${hall.hall_id}"></span></p>
+  <h1>Видалити зал</h1>
+  <p>Ви впевнені?</p>
+  <p>Кінотеатр ID: <span th:text="${cinema.cinema_id}"></span></p>
+  <p>Залл ID: <span th:text="${hall.hall_id}"></span></p>
   <form method="post" th:action="@{/admin/cinemas/{cinema_id}/edit/{hall_id}/remove(cinema_id=${cinema.cinema_id}, hall_id=${hall.hall_id})}">
-    <button type="submit" class="btn btn-danger">Remove</button>
-    <a href="/cinemas" class="btn btn-primary">Cancel</a>
+    <button type="submit" class="btn btn-danger">Видали</button>
+    <a th:href="@{/admin/cinema}" class="btn btn-primary">Cancel</a>
   </form>
 </div>
 </body>

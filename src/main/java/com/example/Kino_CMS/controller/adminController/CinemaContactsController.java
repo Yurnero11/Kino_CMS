@@ -1,15 +1,11 @@
 package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.*;
-import com.example.Kino_CMS.repository.CinemaContactsRepository;
-import com.example.Kino_CMS.repository.ContactForTableRepository;
-import com.example.Kino_CMS.repository.SeoBlockCinemaContactRepository;
-import com.example.Kino_CMS.repository.SeoBlocksRepository;
-import com.example.Kino_CMS.service.CinemaContactService;
 import com.example.Kino_CMS.service.impl.CinemaContactsServiceImpl;
 import com.example.Kino_CMS.service.impl.ContactForTableServiceImpl;
 import com.example.Kino_CMS.service.impl.SeoBlockCinemaContactServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -22,7 +18,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,7 +35,7 @@ public class CinemaContactsController {
 
     @GetMapping("/admin/pages/contacts")
     public String showContactsPage(Model model) {
-        Iterable<CinemaContacts> contactsList = cinemaContactsService.getAllCinemaContact();
+        Iterable<CinemaContact> contactsList = cinemaContactsService.getAllCinemaContact();
         model.addAttribute("contactsList", contactsList);
 
         Iterable<Contact_for_table> contactForTables = contactForTableService.getAllContacts();
@@ -50,7 +45,7 @@ public class CinemaContactsController {
         model.addAttribute("seoBlock", seoBlockCinemaContact);
 
         // Создаем пустой объект для формы контакта
-        CinemaContacts contact = new CinemaContacts();
+        CinemaContact contact = new CinemaContact();
         model.addAttribute("contact", contact);
 
         return "admin/pages/contacts";
@@ -59,11 +54,11 @@ public class CinemaContactsController {
     @PostMapping("/admin/pages/contacts/{cinema_id}/remove")
     public String deleteContact(@PathVariable("cinema_id") Long id) {
         // Find the contact by id
-        Optional<CinemaContacts> contactToDeleteOptional = cinemaContactsService.getCinemaContactById(id);
+        Optional<CinemaContact> contactToDeleteOptional = cinemaContactsService.getCinemaContactById(id);
 
         // Check if the contact exists
         if (contactToDeleteOptional.isPresent()) {
-            CinemaContacts contactToDelete = contactToDeleteOptional.get();
+            CinemaContact contactToDelete = contactToDeleteOptional.get();
 
             // Delete the associated photo
             String photoFilename = contactToDelete.getLogo_path();
@@ -88,7 +83,7 @@ public class CinemaContactsController {
     }
 
     @PostMapping("/admin/pages/contacts/add")
-    public String addContact(@ModelAttribute("contact") CinemaContacts newContact,
+    public String addContact(@ModelAttribute("contact") CinemaContact newContact,
                              @RequestParam("logo") MultipartFile logoFile) {
 
         // Сохраняем логотип и получаем путь к сохраненному файлу
@@ -105,6 +100,7 @@ public class CinemaContactsController {
 
     @PostMapping("/admin/pages/contacts/updateSeo")
     public String editSeo(@RequestParam("url") String url,
+                          @RequestParam(value = "status", required = false, defaultValue = "off") String status,
                                  @RequestParam("title") String title,
                                  @RequestParam("keywords") String keywords,
                                  @RequestParam("description_seo") String descriptionSeo,
@@ -114,6 +110,14 @@ public class CinemaContactsController {
 
         if (existingMainPage.isPresent()) {
             SeoBlockCinemaContact currentPage = existingMainPage.get();
+
+            if ("on".equals(status)) {
+                // Обработка, когда статус включен
+                currentPage.setStatus("on");
+            } else {
+                // Обработка, когда статус выключен или отсутствует
+                currentPage.setStatus("off");
+            }
 
             // Обновите поля существующего объекта MainPage данными из формы.
             currentPage.setUrl(url);
@@ -152,7 +156,8 @@ public class CinemaContactsController {
     }
 
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file) {
         if (file != null && !file.isEmpty()) {
@@ -161,7 +166,7 @@ public class CinemaContactsController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

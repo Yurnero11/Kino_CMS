@@ -1,8 +1,7 @@
 package com.example.Kino_CMS.controller.publicController;
 
 import com.example.Kino_CMS.entity.Gallary;
-import com.example.Kino_CMS.entity.Movies;
-import com.example.Kino_CMS.repository.MovieRepository;
+import com.example.Kino_CMS.entity.Movie;
 import com.example.Kino_CMS.service.impl.MovieServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -21,20 +20,20 @@ public class PostsController {
 
     @GetMapping("/posts")
     public String posts(Model model){
-        Iterable<Movies> movies = movieServiceImpl.getAllMovies();
+        Iterable<Movie> movies = movieServiceImpl.getAllMovies();
         model.addAttribute("movies", movies);
         return "/public/posts/post-page";
     }
 
     @GetMapping("/posts/{movie_id}")
     public String postFilm(@PathVariable(value = "movie_id") long id, Model model){
-        Optional<Movies> optionalMovies = movieServiceImpl.getMovieById(id);
+        Optional<Movie> optionalMovies = movieServiceImpl.getMovieById(id);
         if (optionalMovies.isEmpty()) {
             return "redirect:/posts";
         }
-        Movies movies = optionalMovies.get();
+        Movie movie = optionalMovies.get();
 
-        Gallary gallery = movieServiceImpl.getGalleryByMovieId((long) movies.getMovie_id());
+        Gallary gallery = movieServiceImpl.getGalleryByMovieId((long) movie.getMovie_id());
         if (gallery != null) {
             List<String> galleryPaths = new ArrayList<>();
             galleryPaths.add(gallery.getImagePath1());
@@ -46,7 +45,7 @@ public class PostsController {
         }
 
         // Добавление объекта cinema в модель
-        model.addAttribute("movies", movies);
+        model.addAttribute("movies", movie);
         return "/public/posts/film-page";
     }
 }

@@ -1,6 +1,6 @@
 package com.example.Kino_CMS.service.impl;
 
-import com.example.Kino_CMS.entity.FileUploads;
+import com.example.Kino_CMS.entity.FileUpload;
 import com.example.Kino_CMS.repository.FileUploadsRepository;
 import com.example.Kino_CMS.service.FileUploadsService;
 import org.apache.logging.log4j.LogManager;
@@ -8,7 +8,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -19,10 +18,10 @@ public class FileUploadsServiceImpl implements FileUploadsService {
     private FileUploadsRepository fileUploadsRepository;
 
     @Override
-    public Iterable<FileUploads> getAllFiles() {
+    public Iterable<FileUpload> getAllFiles() {
         try {
             log.info("Getting all FileUploads");
-            Iterable<FileUploads> result = fileUploadsRepository.findAll();
+            Iterable<FileUpload> result = fileUploadsRepository.findAll();
             log.info("Successfully retrieved all FileUploads");
             return result;
         } catch (Exception e) {
@@ -32,21 +31,21 @@ public class FileUploadsServiceImpl implements FileUploadsService {
     }
 
     @Override
-    public void saveFile(FileUploads fileUploads) {
+    public void saveFile(FileUpload fileUpload) {
         try {
-            log.info("Saving FileUploads: {}", fileUploads);
-            fileUploadsRepository.save(fileUploads);
-            log.info("Successfully saved FileUploads: {}", fileUploads);
+            log.info("Saving FileUploads: {}", fileUpload);
+            fileUploadsRepository.save(fileUpload);
+            log.info("Successfully saved FileUploads: {}", fileUpload);
         } catch (Exception e) {
-            log.error("Error while saving FileUploads: {}", fileUploads, e);
+            log.error("Error while saving FileUploads: {}", fileUpload, e);
             throw e;
         }
     }
 
-    public FileUploads getFileById(Long id) {
+    public FileUpload getFileById(Long id) {
         try {
             log.info("Getting FileUploads by ID: {}", id);
-            Optional<FileUploads> fileOptional = fileUploadsRepository.findById(id);
+            Optional<FileUpload> fileOptional = fileUploadsRepository.findById(id);
             if (fileOptional.isPresent()) {
                 log.info("Successfully retrieved FileUploads by ID: {}", id);
                 return fileOptional.get();
@@ -60,10 +59,10 @@ public class FileUploadsServiceImpl implements FileUploadsService {
         }
     }
 
-    public FileUploads getFileByOriginalFileName(String originalFileName) {
+    public FileUpload getFileByOriginalFileName(String originalFileName) {
         try {
             log.info("Getting FileUploads by originalFileName: {}", originalFileName);
-            FileUploads result = fileUploadsRepository.findByOriginalFileName(originalFileName);
+            FileUpload result = fileUploadsRepository.findByOriginalFileName(originalFileName);
             if (result != null) {
                 log.info("Successfully retrieved FileUploads by originalFileName: {}", originalFileName);
             } else {

@@ -54,14 +54,14 @@
 <body>
 <div layout:fragment="content">
   <h1>Сторінки</h1>
-  <h2><a href="/admin/pages/page-add" class="btn btn-primary add-movie-button">Додати сторінку</a></h2>
+  <h2><a th:href="@{/admin/pages/page-add}" class="btn btn-primary add-movie-button">Додати сторінку</a></h2>
   <table class="table table-bordered table-striped">
     <thead>
     <tr>
-      <th>Имя</th>
-      <th>Дата создания</th>
+      <th>Ім'я</th>
+      <th>Дата створення</th>
       <th>Статус</th>
-      <th>Действия</th>
+      <th>Дії</th>
     </tr>
     </thead>
     <tbody>
@@ -70,56 +70,56 @@
       <td>Головна сторінка</td>
       <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
       <td th:text="${page.status}"></td>
-      <td><a href="/admin/pages/main-page" class="btn btn-primary">Редактировать</a></td>
+      <td><a th:href="@{/admin/pages/main-page}" class="btn btn-primary">Редагувати</a></td>
     </tr>
     <tr th:each="page : ${about_cinema}">
       <td>Про кінотеатр</td>
       <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
       <td th:text="${page.status}"></td>
-      <td><a href="/admin/pages/about-cinema" class="btn btn-primary">Редактировать</a></td>
+      <td><a th:href="@{/admin/pages/about-cinema}" class="btn btn-primary">Редагувати</a></td>
     </tr>
     <tr th:each="page : ${cafe_bar}">
       <td>Кафе бар</td>
       <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
       <td th:text="${page.status}"></td>
-      <td><a href="/admin/pages/cafe-bar" class="btn btn-primary">Редактировать</a></td>
+      <td><a th:href="@{/admin/pages/cafe-bar}" class="btn btn-primary">Редагувати</a></td>
     </tr>
     <tr th:each="page : ${vip_halls}">
       <td>Vip зал</td>
       <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
       <td th:text="${page.status}"></td>
-      <td><a href="/admin/pages/vip-hall" class="btn btn-primary">Редактировать</a></td>
+      <td><a th:href="@{/admin/pages/vip-hall}" class="btn btn-primary">Редагувати</a></td>
     </tr>
     <tr th:each="page : ${advertising}">
       <td>Реклама</td>
       <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
       <td th:text="${page.status}"></td>
-      <td><a href="/admin/pages/advertising-page" class="btn btn-primary">Редактировать</a></td>
+      <td><a th:href="@{/admin/pages/advertising-page}" class="btn btn-primary">Редагувати</a></td>
     </tr>
     <tr th:each="page : ${kidsroom}">
       <td>Дитяча кімната</td>
       <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
       <td th:text="${page.status}"></td>
-      <td><a href="/admin/pages/kids-room" class="btn btn-primary">Редактировать</a></td>
+      <td><a th:href="@{/admin/pages/kids-room}" class="btn btn-primary">Редагувати</a></td>
     </tr>
-    <tr th:each="page : ${cinemaContactsForTable}">
+    <tr th:each="page : ${seoBlockContacts}">
       <td>Контакти</td>
-      <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
+      <td th:text="18.07.2023"></td>
       <td th:text="${page.status}"></td>
-      <td><a href="/admin/pages/contacts" class="btn btn-primary">Редактировать</a></td>
+      <td><a th:href="@{/admin/pages/contacts}" class="btn btn-primary">Редагувати</a></td>
     </tr>
     <!-- Добавьте аналогичные строки для остальных предустановленных страниц -->
 
-    <!-- Вывод пользовательских страниц из таблицы "pages" -->
+    <!-- Вывод пользовательских страниц из таблицы "page" -->
     <tr th:each="page : ${pages}">
       <td th:text="${page.page_name}"></td>
       <td th:text="${#dates.format(page.creation_date, 'dd.MM.yyyy')}"></td>
       <td>
-        <span th:if="${page.status}">Вкл</span>
-        <span th:unless="${page.status}">Выкл</span>
+        <span th:if="${page.status}">on</span>
+        <span th:unless="${page.status}">off</span>
       </td>
       <td>
-        <a th:href="@{/admin/pages/{id}/edit(id=${page.page_id})}" class="btn btn-primary">Редактировать</a>
+        <a th:href="@{/admin/pages/{id}/edit(id=${page.page_id})}" class="btn btn-primary">Редагувати</a>
         <span th:if="${!#strings.equals(page.page_name, 'Головна сторінка') && !#strings.equals(page.page_name, 'Про кінотеатр') && !#strings.equals(page.page_name, 'Кафе бар') && !#strings.equals(page.page_name, 'Віп зал') && !#strings.equals(page.page_name, 'Реклама') && !#strings.equals(page.page_name, 'Дитяча кімната') && !#strings.equals(page.page_name, 'Контакти')}">
             <form method="post" th:action="@{/admin/pages/{id}/delete(id=${page.page_id})}" style="display: inline;">
               <button type="submit" class="btn btn-danger">Удалить</button>

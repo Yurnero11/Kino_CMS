@@ -1,6 +1,6 @@
 package com.example.Kino_CMS.service.impl;
 
-import com.example.Kino_CMS.entity.SeoBlocks;
+import com.example.Kino_CMS.entity.SeoBlock;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.SeoBlocksService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +13,7 @@ public class SeoBlocksServiceImpl implements SeoBlocksService {
 
 
     @Override
-    public SeoBlocks saveSeoBlock(SeoBlocks seoBlocks) {
-        return seoBlocksRepository.save(seoBlocks);
+    public SeoBlock saveSeoBlock(SeoBlock seoBlock) {
+        return seoBlocksRepository.save(seoBlock);
     }
 }

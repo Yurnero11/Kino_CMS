@@ -56,7 +56,7 @@ class Breadcrumbs
         }
 
         if ($this->config['include_home']) {
-            $home = $grav['pages']->dispatch('/');
+            $home = $grav['page']->dispatch('/');
             if ($home && !array_key_exists($home->url(), $hierarchy)) {
                 $hierarchy[] = $home;
             }

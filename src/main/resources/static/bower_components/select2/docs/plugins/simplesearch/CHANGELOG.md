@@ -51,7 +51,7 @@
     * Removed jQuery dependency, fixes issue when jQuery is loaded in the footer [#57](https://github.com/getgrav/grav-plugin-simplesearch/pull/57)
     * Added option to ignore accents when searching [#89](https://github.com/getgrav/grav-plugin-simplesearch/pull/89)
 1. [](#bugfix)
-    * Remove unpublished and un-routable pages from the result set
+    * Remove unpublished and un-routable page from the result set
     * Fixed issue when using @self as route
     * Fix overloaded property issue when searching on a page with simplesearch header [#80](https://github.com/getgrav/grav-plugin-simplesearch/issues/80)
     * Fix issue with empty string and leading commas [#71](https://github.com/getgrav/grav-plugin-simplesearch/issues/71)
@@ -113,7 +113,7 @@
 ## 01/06/2016
 
 1. [](#improved)
-    * Improved the README instructions on how to save all pages
+    * Improved the README instructions on how to save all page
 
 # v1.6.1
 ## 11/11/2015
@@ -125,7 +125,7 @@
 ## 11/11/2015
 
 1. [](#new)
-    * Removing `filter:` from configuration will search **ALL** pages
+    * Removing `filter:` from configuration will search **ALL** page
 
 # v1.5.1
 ## 10/15/2015
@@ -159,7 +159,7 @@
 ## 07/21/2015
 
 1. [](#new)
-    * Added support for modular pages in results
+    * Added support for modular page in results
 
 # v1.2.7
 ## 07/17/2015

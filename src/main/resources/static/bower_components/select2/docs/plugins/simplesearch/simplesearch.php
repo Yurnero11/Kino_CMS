@@ -134,9 +134,9 @@ class SimplesearchPlugin extends Plugin
         }
 
         if (!$should_process || !$filters || $query === false || (count($filters) == 1 && !reset($filters))) {
-            /** @var \Grav\Common\Page\Pages $pages */
-            $pages = $this->grav['pages'];
-            $this->collection = $pages->all();
+            /** @var \Grav\Common\Page\Pages $page */
+            $page = $this->grav['page'];
+            $this->collection = $page->all();
         } else {
 
             foreach ($filters as $key => $filter) {
@@ -170,7 +170,7 @@ class SimplesearchPlugin extends Plugin
             }
         }
 
-        //Drop unpublished and unroutable pages
+        //Drop unpublished and unroutable page
         $this->collection->published()->routable();
 
         //Check if user has permission to view page
@@ -215,7 +215,7 @@ class SimplesearchPlugin extends Plugin
         if (!isset($page->header()->simplesearch)) {
             // create the search page
             $page = new Page;
-            $page->init(new \SplFileInfo(__DIR__ . '/pages/simplesearch.md'));
+            $page->init(new \SplFileInfo(__DIR__ . '/page/simplesearch.md'));
 
             // override the template is set in the config
             $template_override = $this->config->get('plugins.simplesearch.template');
@@ -231,7 +231,7 @@ class SimplesearchPlugin extends Plugin
     }
 
     /**
-     * Filter the pages, and return only the pages the user has access to.
+     * Filter the page, and return only the page the user has access to.
      * Implementation based on Login Plugin authorizePage() function.
      */
     public function checkForPermissions($collection)

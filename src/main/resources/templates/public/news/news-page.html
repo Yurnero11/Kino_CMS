@@ -19,7 +19,7 @@
             display: flex;
             padding: 20px;
             justify-content: center;
-            width: 60%;
+            width: 100%;
         }
 
         /* Стили для контейнера акции */
@@ -57,13 +57,13 @@
 <body>
 <div th:replace="public/content/header :: header"></div>
 <div>
-    <img style="width: 100%; height: 600px" src="/static/img/promotion.jpg" alt="promotion">
+    <img style="width: 100%; height: 600px" src="/Kino_CMS-Yura_Dmytriv/static/img/promotion.jpg" alt="promotion">
 </div>
 
 <div class="main-content" style="background-color: #0E2231;">
     <!-- Карточка акции -->
     <div class="promotion-container">
-        <img class="promotion-image" th:src="${'/upload/' + news.main_image_path}" alt="promotion">
+        <img class="promotion-image" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + news.main_image_path}" alt="promotion">
         <div class="promotion-details">
             <div class="promotion-title" style="color: white" th:text="${news.news_title}"></div>
             <div class="promotion-description" style="color: white" th:text="${news.news_description}"></div>

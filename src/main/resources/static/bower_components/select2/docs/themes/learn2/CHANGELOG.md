@@ -3,7 +3,7 @@
 
 1. [](#improved)
     * Added default page template.
-    * Added blueprints for docs and chapter pages
+    * Added blueprints for docs and chapter page
 
 # v1.6.3
 ## 01/31/2017
@@ -65,7 +65,7 @@
     * Added German translations
     * Configurable root page
 1. [](#improved)
-    * Wrapped topbar to remove it from error pages
+    * Wrapped topbar to remove it from error page
 1. [](#bugfix)
     * Fix for bad YAML
     * Fix for bad HTML in github note

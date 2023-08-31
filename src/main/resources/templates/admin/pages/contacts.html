@@ -60,6 +60,94 @@
                 margin-top: auto; /* Push the button to the bottom of the card */
                 text-align: center; /* Center the button */
             }
+
+            .toggle-switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 30px;
+                background-color: #ccc;
+                border-radius: 15px;
+                transition: background-color 0.3s;
+                cursor: pointer;
+            }
+
+            .toggle-switch input[type="checkbox"] {
+                display: none;
+            }
+
+            .toggle-switch label {
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                width: 30px;
+                height: 30px;
+                background-color: #fff;
+                border-radius: 50%;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+                transition: left 0.3s;
+                cursor: pointer;
+            }
+
+            .toggle-switch input[type="checkbox"]:checked + label {
+                left: calc(100% - 30px);
+            }
+
+            .switch {
+                position: relative;
+                display: inline-block;
+                width: 60px;
+                height: 34px;
+            }
+
+            .switch input {display:none;}
+
+            .slider {
+                position: absolute;
+                cursor: pointer;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background-color: #ccc;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            .slider:before {
+                position: absolute;
+                content: "";
+                height: 26px;
+                width: 26px;
+                left: 4px;
+                bottom: 4px;
+                background-color: white;
+                -webkit-transition: .4s;
+                transition: .4s;
+            }
+
+            input:checked + .slider {
+                background-color: green;
+            }
+
+            input:focus + .slider {
+                box-shadow: 0 0 1px green;
+            }
+
+            input:checked + .slider:before {
+                -webkit-transform: translateX(26px);
+                -ms-transform: translateX(26px);
+                transform: translateX(26px);
+            }
+
+            /* Rounded sliders */
+            .slider.round {
+                border-radius: 34px;
+            }
+
+            .slider.round:before {
+                border-radius: 50%;
+            }
         </style>
         <script>
             // Функция для отображения формы при клике на кнопку "Добавить контакт"
@@ -80,7 +168,7 @@
         <!-- Отображение списка контактов в виде карточек -->
         <div th:each="contact : ${contactsList}" class="contact-card-container">
             <div class="contact-card">
-                <img th:src="@{'/upload/' + ${contact.logo_path}}" alt="Логотип" class="logo-img">
+                <img th:src="@{'/Kino_CMS-Yura_Dmytriv/upload/' + ${contact.logo_path}}" alt="Логотип" class="logo-img">
                 <div>
                     <h3>Имя кинотеатра: <span th:text="${contact.cinema_name}"></span></h3>
                     <p>Адрес: <span th:text="${contact.address}"></span></p>
@@ -108,24 +196,38 @@
 
                 <!-- Поле для загрузки файла логотипа -->
                 <label for="logo">Логотип (jpeg, jpg, png):</label>
-                <input type="file" id="logo" name="logo" accept=".jpeg, .jpg, .png" required onchange="displayImage(this, 'logoImage', 'logoThumbnailContainer')"/><br>
+                <input  type="file" id="logo" name="logo" accept=".jpeg, .jpg, .png" required onchange="validateAndDisplayImage(this, 'logoImage', 'logoThumbnailContainer', 'logoError')"/><br>
                 <div id="logoThumbnailContainer"></div>
+                <p id="logoError" style="color: red;"></p>
 
                 <script>
-                    function displayImage(input, imgId, thumbnailContainerId) {
+                    function validateAndDisplayImage(input, imgId, thumbnailContainerId, errorMsgId) {
+                        var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+                        var file = input.files[0];
                         var thumbnailContainer = document.getElementById(thumbnailContainerId);
-                        thumbnailContainer.innerHTML = ""; // Очистить предыдущие миниатюры
+                        var errorMessage = document.getElementById(errorMsgId);
 
-                        if (input.files && input.files[0]) {
+                        if (!allowedExtensions.exec(file.name)) {
+                            errorMessage.textContent = 'Дозволені лише файли з розширеннями .jpg, .jpeg та .png';
+                            input.value = ''; // Очистити інпут файлу
+                            thumbnailContainer.innerHTML = ''; // Очистити попередню мініатюру
+                            return;
+                        } else {
+                            errorMessage.textContent = ''; // Очистити повідомлення про помилку
+                        }
+
+                        thumbnailContainer.innerHTML = ''; // Очистити попередню мініатюру
+
+                        if (file) {
                             var reader = new FileReader();
                             reader.onload = function (e) {
                                 var thumbnail = document.createElement("img");
                                 thumbnail.src = e.target.result;
-                                thumbnail.style.width = "100px"; // Устанавливаем размеры миниатюры
+                                thumbnail.style.width = "100px"; // Установити розміри мініатюри
                                 thumbnail.style.height = "100px";
                                 thumbnailContainer.appendChild(thumbnail);
                             };
-                            reader.readAsDataURL(input.files[0]);
+                            reader.readAsDataURL(file);
                         }
                     }
                 </script>
@@ -133,21 +235,26 @@
             </form>
         </div>
 
-        <form class="yura" th:action="@{/admin/pages/contacts/updateStatus}" method="post">
-            <h3>Статус</h3>
-            <div>
-                <label>
-                    <input type="radio" name="status" value="on" th:checked="${cinemaContactsForTable[0].status == 'on'}"> Включить
-                </label>
-                <label>
-                    <input type="radio" name="status" value="off" th:checked="${cinemaContactsForTable[0].status == 'off'}"> Выключить
-                </label>
-            </div>
-            <button>Обновить</button>
-        </form>
+        <script>
+            const form = document.getElementById('status-form');
+            const toggle = document.getElementById('status-toggle');
 
-        <h1>Seo block</h1>
+            toggle.addEventListener('change', () => {
+                form.submit();
+            });
+        </script>
+
+
         <form th:action="@{/admin/pages/contacts/updateSeo}" method="post">
+            <h3>Статус</h3>
+            <label class="switch">
+                <input name="status" type="checkbox"
+                       th:checked="${seoBlock.status == 'on'}"
+                       th:value="on">
+                <span class="slider round"></span>
+            </label>
+
+            <h1>Seo block</h1>
             <!-- Ваши поля для SEO блока -->
             <h3>URL<input type="text" name="url" placeholder="URL" class="form-control" th:value="${seoBlock.url}"></h3>
             <h3>Title<input type="text" name="title" placeholder="Title" class="form-control" th:value="${seoBlock.title}"></h3>

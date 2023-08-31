@@ -2,8 +2,8 @@ package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.AboutMovie;
 import com.example.Kino_CMS.entity.Gallary;
-import com.example.Kino_CMS.entity.Movies;
-import com.example.Kino_CMS.entity.SeoBlocks;
+import com.example.Kino_CMS.entity.Movie;
+import com.example.Kino_CMS.entity.SeoBlock;
 import com.example.Kino_CMS.repository.AboutMovieRepository;
 import com.example.Kino_CMS.repository.GalleryRepository;
 import com.example.Kino_CMS.repository.MovieRepository;
@@ -11,7 +11,7 @@ import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.MovieServiceImpl;
 import jakarta.servlet.ServletContext;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,10 +30,10 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
+import java.util.List;
 import java.util.UUID;
 
 import java.sql.Time;
-import java.time.LocalTime;
 
 @Controller
 public class FilmController {
@@ -51,7 +51,7 @@ public class FilmController {
 
     @GetMapping("/admin/films")
     public String film(Model model){
-        Iterable<Movies> movies = movieServiceImpl.getAllMovies();
+        Iterable<Movie> movies = movieServiceImpl.getAllMovies();
         model.addAttribute("movies", movies);
         return "/admin/films/page-films";
     }
@@ -86,29 +86,30 @@ public class FilmController {
 
             @RequestParam("link") String trailer_url,
             @RequestParam("movie_data") String movie_data,
-            @RequestParam(value = "movie_type", required = false) String movie_type,
+            @RequestParam(name = "movie_type", required = false) List<String> movieTypes,
             @RequestParam("url") String url,
             @RequestParam("title") String title,
             @RequestParam("keywords") String keywords,
             @RequestParam("description_seo") String description_seo,
             ServletContext servletContext,
-            RedirectAttributes redirectAttributes
+            RedirectAttributes redirectAttributes,
+            Model model
     ) {
-        Movies movies = new Movies();
-        SeoBlocks seoBlocks = new SeoBlocks();
+        Movie movie = new Movie();
+        SeoBlock seoBlock = new SeoBlock();
         Gallary gallary = new Gallary();
         AboutMovie aboutMovie = new AboutMovie();
 
-        movies.setName(name);
-        movies.setTitle(description);
-        movies.setMain_page_path(saveImage(upload));
+        movie.setName(name);
+        movie.setTitle(description);
+        movie.setMain_page_path(saveImage(upload));
         gallary.setImagePath1(saveImage(upload1));
         gallary.setImagePath2(saveImage(upload2));
         gallary.setImagePath3(saveImage(upload3));
         gallary.setImagePath4(saveImage(upload4));
         gallary.setImagePath5(saveImage(upload5));
-        movies.setMovie_data(movie_data);
-        movies.setTrailer_url(trailer_url);
+        movie.setMovie_data(movie_data);
+        movie.setTrailer_url(trailer_url);
 
         aboutMovie.setYear(year);
         aboutMovie.setComposer(composer);
@@ -123,23 +124,22 @@ public class FilmController {
         Time sqlTime = Time.valueOf(duration.toLocalTime());
         aboutMovie.setDuration(sqlTime);
 
+        seoBlock.setUrl(url);
+        seoBlock.setTitle(title);
+        seoBlock.setKeywords(keywords);
+        seoBlock.setDescription(description_seo);
 
-        seoBlocks.setUrl(url);
-        seoBlocks.setTitle(title);
-        seoBlocks.setKeywords(keywords);
-        seoBlocks.setDescription(description_seo);
+        String movieTypeStr = String.join(", ", movieTypes);
+        movie.setMovieType(movieTypeStr);
 
-        if (movie_type != null) {
-            movies.setMovieType(movie_type);
-        }
 
-        movies.setGallery(gallary);
-        movies.setSeoBlocks(seoBlocks);
-        movies.setAboutMovie(aboutMovie);
+        movie.setGallery(gallary);
+        movie.setSeoBlock(seoBlock);
+        movie.setAboutMovie(aboutMovie);
 
-        movieRepository.save(movies);
+        movieRepository.save(movie);
         galleryRepository.save(gallary);
-        seoBlocksRepository.save(seoBlocks);
+        seoBlocksRepository.save(seoBlock);
         aboutMovieRepository.save(aboutMovie);
 
         return "redirect:/admin/films";
@@ -148,10 +148,10 @@ public class FilmController {
     @PostMapping("/admin/films/{id}/remove")
     @PreAuthorize("hasRole('ADMIN')")
     public String removeFilm(@PathVariable(value = "id") long id, Model model) {
-        Movies movies = movieRepository.findById(id).orElseThrow();
+        Movie movie = movieRepository.findById(id).orElseThrow();
 
         // Получите имена файлов изображений из базы данных
-        String mainImageFilename = movies.getMain_page_path();
+        String mainImageFilename = movie.getMain_page_path();
 
         // Если есть имена файлов изображений, удаляем файлы
         if (mainImageFilename != null && !mainImageFilename.isEmpty()) {
@@ -159,7 +159,7 @@ public class FilmController {
         }
 
         // Удаляем фильм из базы данных
-        movieRepository.delete(movies);
+        movieRepository.delete(movie);
 
         return "redirect:/admin/films";
     }
@@ -176,7 +176,8 @@ public class FilmController {
         }
     }
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file) {
         if (file != null && !file.isEmpty()) {
@@ -185,7 +186,7 @@ public class FilmController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

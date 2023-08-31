@@ -1,6 +1,6 @@
 package com.example.Kino_CMS.config;
 
-import com.example.Kino_CMS.service.impl.SessionServiceImpl;
+import com.example.Kino_CMS.session.Sessions;
 import org.springframework.context.ApplicationListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.stereotype.Component;
@@ -8,14 +8,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuthenticationSuccessListener implements ApplicationListener<AuthenticationSuccessEvent> {
 
-    private final SessionServiceImpl sessionServiceImpl;
+    private final Sessions sessions;
 
-    public AuthenticationSuccessListener(SessionServiceImpl sessionServiceImpl) {
-        this.sessionServiceImpl = sessionServiceImpl;
+    public AuthenticationSuccessListener(Sessions sessions) {
+        this.sessions = sessions;
     }
 
     @Override
     public void onApplicationEvent(AuthenticationSuccessEvent event) {
-        sessionServiceImpl.setUserIdInSession();
+        sessions.setUserIdInSession();
     }
 }

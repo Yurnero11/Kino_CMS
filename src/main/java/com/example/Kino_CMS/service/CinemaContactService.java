@@ -1,14 +1,14 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.CinemaContacts;
+import com.example.Kino_CMS.entity.CinemaContact;
 
 import java.util.Optional;
 
 public interface CinemaContactService {
-    CinemaContacts saveCinemaContact(CinemaContacts cinemaContacts);
-    Iterable<CinemaContacts> getAllCinemaContact();
+    CinemaContact saveCinemaContact(CinemaContact cinemaContact);
+    Iterable<CinemaContact> getAllCinemaContact();
 
-    Optional<CinemaContacts> getCinemaContactById(Long contact_id);
+    Optional<CinemaContact> getCinemaContactById(Long contact_id);
 
-    void delete(CinemaContacts cinemaContacts);
+    void delete(CinemaContact cinemaContact);
 }

@@ -5,6 +5,63 @@
       layout:decorate="admin/layout/layout">
 <head>
   <title>Редагувати новину</title>
+  <style>
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 60px;
+      height: 34px;
+    }
+
+    .switch input {display:none;}
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 26px;
+      width: 26px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      -webkit-transition: .4s;
+      transition: .4s;
+    }
+
+    input:checked + .slider {
+      background-color: green;
+    }
+
+    input:focus + .slider {
+      box-shadow: 0 0 1px green;
+    }
+
+    input:checked + .slider:before {
+      -webkit-transform: translateX(26px);
+      -ms-transform: translateX(26px);
+      transform: translateX(26px);
+    }
+
+    /* Rounded sliders */
+    .slider.round {
+      border-radius: 34px;
+    }
+
+    .slider.round:before {
+      border-radius: 50%;
+    }
+  </style>
 </head>
 <body>
 <div layout:fragment="content">
@@ -14,75 +71,101 @@
     <h3>Опис<input type="text" name="news_description" placeholder="Текст" class="form-control" th:value="${new_s.news_description}"></h3>
     <h3>Дата публікації<input type="date" name="publication_date" placeholder="Введіть дату публікації" class="form-control" th:value="${new_s.date_publication}"></h3>
 
-    <h3>Головне фото
-      <input type="file" name="main_image_path" class="form-control gallery-input" placeholder="Фото" id="mainImageInput" onchange="displayImage1(this, 'mainImage')">
-    </h3>
+    <h3>Головне фото</h3>
     <div id="mainImageContainer">
-      <img th:src="${new_s.main_image_path != null ? '/upload/' + new_s.main_image_path : '/static/img/download.jpg'}" id="mainImage" style="width: 100px; height: 100px;" />
+      <img th:src="${new_s.main_image_path != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + new_s.main_image_path : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="mainImage" style="width: 100px; height: 100px;" />
+      <p id="error" style="color: red;"></p>
     </div>
+    <input accept=".jpeg, .jpg, .png" type="file" name="main_image_path" class="form-control gallery-input" placeholder="Фото" id="mainImageInput" onchange="displayImageWithValidation(this, 'mainImage', 'error')">
+
 
     <h3>Галерея картинок</h3>
     <div class="gallery-row">
-      <input type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage1')">
-      <img th:src="${new_s.gallery.imagePath1 != null ? '/upload/' + new_s.gallery.imagePath1 : '/static/img/download.jpg'}" id="galleryImage1" style="width: 100px; height: 100px;" />
+      <img th:src="${new_s.gallery.imagePath1 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath1 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage1" style="width: 100px; height: 100px;" />
+      <p id="error1" style="color: red;"></p>
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImageWithValidation(this, 'galleryImage1', 'error1')">
 
-      <input type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage2')">
-      <img th:src="${new_s.gallery.imagePath2 != null ? '/upload/' + new_s.gallery.imagePath2 : '/static/img/download.jpg'}" id="galleryImage2" style="width: 100px; height: 100px;" />
+      <img th:src="${new_s.gallery.imagePath2 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath2 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage2" style="width: 100px; height: 100px;" />
+      <p id="error2" style="color: red;"></p>
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImageWithValidation(this, 'galleryImage2', 'error2')">
 
-      <input type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage3')">
-      <img th:src="${new_s.gallery.imagePath3 != null ? '/upload/' + new_s.gallery.imagePath3 : '/static/img/download.jpg'}" id="galleryImage3" style="width: 100px; height: 100px;" />
+      <img th:src="${new_s.gallery.imagePath3 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath3 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage3" style="width: 100px; height: 100px;" />
+      <p id="error3" style="color: red;"></p>
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImageWithValidation(this, 'galleryImage3', 'error3')">
 
-      <input type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage4')">
-      <img th:src="${new_s.gallery.imagePath4 != null ? '/upload/' + new_s.gallery.imagePath4 : '/static/img/download.jpg'}" id="galleryImage4" style="width: 100px; height: 100px;" />
+      <img th:src="${new_s.gallery.imagePath4 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath4 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage4" style="width: 100px; height: 100px;" />
+      <p id="error4" style="color: red;"></p>
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImageWithValidation(this, 'galleryImage4', 'error4')">
 
-      <input type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImage1(this, 'galleryImage5')">
-      <img th:src="${new_s.gallery.imagePath5 != null ? '/upload/' + new_s.gallery.imagePath5 : '/static/img/download.jpg'}" id="galleryImage5" style="width: 100px; height: 100px;" />
+
+      <img th:src="${new_s.gallery.imagePath5 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath5 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage5" style="width: 100px; height: 100px;" />
+      <p id="error5" style="color: red;"></p>
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImageWithValidation(this, 'galleryImage5', 'error5')">
 
       <!-- Добавьте аналогичный код для остальных полей галереи -->
     </div>
 
-    <script>
-      function displayImage1(input, imgId) {
-        var thumbnailContainer = document.getElementById(imgId);
-        thumbnailContainer.src = ""; // Очистить предыдущую миниатюру
+    <div id="data"
+         th:data-image="${'/Kino_CMS-Yura_Dmytriv/upload/' + new_s.main_image_path}"
+         th:data-image2="${'/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath1}"
+         th:data-image3="${'/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath2}"
+         th:data-image4="${'/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath3}"
+         th:data-image5="${'/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath4}"
+         th:data-image6="${'/Kino_CMS-Yura_Dmytriv/upload/' + new_s.gallery.imagePath5}">
+    </div>
 
-        if (input.files && input.files[0]) {
+    <script th:inline="javascript">
+      function displayImageWithValidation(input, imgId, errorMsgId) {
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        var file = input.files[0];
+        var thumbnailContainer = document.getElementById(imgId);
+        var errorMessage = document.getElementById(errorMsgId);
+
+        // Перевірити розширення файлу
+        if (!allowedExtensions.exec(file.name)) {
+          errorMessage.textContent = 'Дозволені лише файли з розширеннями .jpg, .jpeg та .png';
+          input.value = ''; // Очистити інпут файлу
+          if (previousImageUrls[imgId] === '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg') {
+            previousImageUrls[imgId] = null;
+          }
+          thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'; // Відновити попередню фотографію
+          return false;
+        }
+
+        errorMessage.textContent = ''; // Очистити повідомлення про помилку
+
+        thumbnailContainer.src = ''; // Очистити попередню мініатюру
+
+        if (file) {
           var reader = new FileReader();
           reader.onload = function (e) {
             thumbnailContainer.src = e.target.result;
           };
-          reader.readAsDataURL(input.files[0]);
+          reader.readAsDataURL(file);
+        } else {
+          if (previousImageUrls[imgId] === '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg') {
+            previousImageUrls[imgId] = null;
+          }
+          thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'; // Відновити попередню фотографію у разі відсутності нового файлу
         }
       }
     </script>
 
-    <h3>Посилання на трейлер<input type="text" name="url" placeholder="Посилання на трейлер в ютубі" class="form-control" th:value="${new_s.seoBlocks.url}"></h3>
+    <h3>Посилання на трейлер<input type="text" name="url" placeholder="Посилання на трейлер в ютубі" class="form-control" th:value="${new_s.seoBlock.url}"></h3>
 
     <h3>Статус</h3>
-    <div>
-      <label>
-        <input type="checkbox" name="status" id="soonCheckbox" value="on" onclick="checkBox('soonCheckbox')" th:checked="${new_s.status == 'on'}"> Вмк
-      </label>
-      <label>
-        <input type="checkbox" name="status" id="nowCheckbox" value="off" onclick="checkBox('nowCheckbox')" th:checked="${new_s.status == 'off'}"> Вимк
-      </label>
-      <script>
-        function checkBox(checkboxId) {
-          const checkboxes = document.querySelectorAll('input[type="checkbox"]');
-          checkboxes.forEach((checkbox) => {
-            if (checkbox.id !== checkboxId) {
-              checkbox.checked = false;
-            }
-          });
-        }
-      </script>
-    </div>
+    <label class="switch">
+      <input name="status" type="checkbox"
+             th:checked="${new_s.status == 'on'}"
+             th:value="on">
+      <span class="slider round"></span>
+    </label>
 
     <h3>Seo block</h3>
-    <h3>URL<input type="text" name="url" placeholder="URL" class="form-control" th:value="${new_s.seoBlocks.url}"></h3>
-    <h3>Title<input type="text" name="title" placeholder="Title" class="form-control" th:value="${new_s.seoBlocks.title}"></h3>
-    <h3>Keywords<input type="text" name="keywords" placeholder="word" class="form-control" th:value="${new_s.seoBlocks.keywords}"></h3>
-    <h3>Description<input type="text" name="description_seo" placeholder="Description" class="form-control" th:value="${new_s.seoBlocks.description}"></h3>
+    <h3>URL<input type="text" name="url" placeholder="URL" class="form-control" th:value="${new_s.seoBlock.url}"></h3>
+    <h3>Title<input type="text" name="title" placeholder="Title" class="form-control" th:value="${new_s.seoBlock.title}"></h3>
+    <h3>Keywords<input type="text" name="keywords" placeholder="word" class="form-control" th:value="${new_s.seoBlock.keywords}"></h3>
+    <h3>Description<input type="text" name="description_seo" placeholder="Description" class="form-control" th:value="${new_s.seoBlock.description}"></h3>
     <button type="submit" class="btn btn-success">Оновити новину</button>
   </form>
 </div>

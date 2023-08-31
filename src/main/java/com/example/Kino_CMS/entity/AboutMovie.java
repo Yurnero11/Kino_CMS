@@ -18,7 +18,7 @@ public class AboutMovie {
     private int id;
 
     @Column(name = "year")
-    private int year;
+    private Integer year;
 
     @Column(name = "composer")
     private String composer;
@@ -48,5 +48,7 @@ public class AboutMovie {
     private Time duration;
 
     @OneToOne(mappedBy = "aboutMovie")
-    private Movies movies;
+    private Movie movie;
+
+    // Конструктори, геттери, сеттери та інше
 }

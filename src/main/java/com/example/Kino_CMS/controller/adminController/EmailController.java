@@ -3,16 +3,20 @@ package com.example.Kino_CMS.controller.adminController;
 import com.example.Kino_CMS.entity.*;
 import com.example.Kino_CMS.repository.EmailCountRepository;
 import com.example.Kino_CMS.repository.FileUploadsRepository;
+import com.example.Kino_CMS.repository.UserRepository;
 import com.example.Kino_CMS.service.impl.UserServiceImpl;
 import com.example.Kino_CMS.service.impl.FileUploadsServiceImpl;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -48,6 +52,9 @@ public class EmailController {
     private UserServiceImpl userServiceImpl;
 
     @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
     private FileUploadsServiceImpl fileUploadsService;
 
     @Autowired
@@ -58,10 +65,10 @@ public class EmailController {
     public String deleteFile(@PathVariable("fileId") Long fileId) {
         try {
             // Получите информацию о файле по его ID
-            FileUploads fileUploads = fileUploadsService.getFileById(fileId);
-            if (fileUploads != null) {
+            FileUpload fileUpload = fileUploadsService.getFileById(fileId);
+            if (fileUpload != null) {
                 // Удалите файл из папки
-                deleteFileFromFolder(fileUploads.getOriginalFileName());
+                deleteFileFromFolder(fileUpload.getOriginalFileName());
 
                 // Удалите запись о файле из базы данных
                 fileUploadsService.deleteFile(fileId);
@@ -101,24 +108,39 @@ public class EmailController {
     @GetMapping("/admin/email-users")
     public String emailUsers(@RequestParam(name = "page", defaultValue = "0") int page,
                              @RequestParam(name = "query", required = false) String query,
-                             Model model) {
+                             Model model,
+                             Authentication authentication) {
 
-        Pageable pageable = PageRequest.of(page, pageSize, Sort.by("id").ascending());
-        Page<User> userPage;
-        if (query != null && !query.isEmpty()) {
-            userPage = userServiceImpl.searchUsers(query, pageable);
-        } else {
-            userPage = userServiceImpl.getAllUsers(pageable);
-        }
+        int pageSize = 6;
+        Page<User> userPage = userServiceImpl.findAllPage(page, pageSize);
+        List<User> users = userPage.getContent();
 
-        int nextPage = page + 1;
-        model.addAttribute("nextPage", nextPage);
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        String currentUserEmail = userDetails.getUsername();
 
-        model.addAttribute("users", userPage.getContent());
+        User currentUser = userRepository.findByEmail(currentUserEmail); // Здесь предполагается, что у вас есть метод для поиска пользователя по email
+
+        model.addAttribute("currentUser", currentUser);
+
+        model.addAttribute("users", users);
         model.addAttribute("currentPage", page);
         model.addAttribute("totalPages", userPage.getTotalPages());
 
+        int nextPage = page + 1;
+        int totalPages = userPage.getTotalPages();
+        model.addAttribute("nextPage", nextPage);
+        model.addAttribute("totalPages", totalPages);
+
+        long totalUsers = userServiceImpl.countTotalUsers();
+        boolean showPagination = totalUsers > 6;
+        model.addAttribute("showPagination", showPagination);
+
         return "admin/mail-sender/email-users"; // Исправленный путь к представлению
+    }
+
+    @PostMapping("/admin/email-users")
+    public String nextPageUsers(@RequestParam("page") int page) {
+        return "redirect:/admin/email-users?page=" + page;
     }
 
     @GetMapping("/admin/email-form")
@@ -127,7 +149,7 @@ public class EmailController {
         Iterable<User> userIterable = userServiceImpl.getAllUsers();
 
         // Получить список файлов из базы данных
-        Iterable<FileUploads> fileIterable = fileUploadsService.getAllFiles();
+        Iterable<FileUpload> fileIterable = fileUploadsService.getAllFiles();
 
         // Преобразование Iterable в List
         List<User> users = new ArrayList<>();
@@ -135,7 +157,7 @@ public class EmailController {
 
         int limit = 5; // Ваше значение лимита
 
-        List<FileUploads> fileList = new ArrayList<>();
+        List<FileUpload> fileList = new ArrayList<>();
         fileIterable.forEach(fileList::add);
         Collections.reverse(fileList); // Обратить порядок списка файлов
 
@@ -174,14 +196,14 @@ public class EmailController {
         try {
             if (selectedFileId != null) {
                 // Получить информацию о выбранном файле из базы данных
-                FileUploads fileUploads = fileUploadsService.getFileById(selectedFileId);
-                if (fileUploads == null) {
+                FileUpload fileUpload = fileUploadsService.getFileById(selectedFileId);
+                if (fileUpload == null) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EmailResponse("File not found", 0));
                 }
-                filePath = fileUploads.getFile_path();
+                filePath = fileUpload.getFile_path();
 
                 // TODO: Добавьте соответствующий код для получения оригинального имени файла из объекта fileUploads
-                String originalFileName = fileUploads.getOriginalFileName();
+                String originalFileName = fileUpload.getOriginalFileName();
 
                 for (String recipient : recipients) {
                     try {
@@ -197,10 +219,10 @@ public class EmailController {
                 filePath = saveFile(file);
 
                 // Создать объект FileUploads и сохранить его в базе данных только один раз
-                FileUploads fileUploads = new FileUploads();
-                fileUploads.setFile_path(filePath);
-                fileUploads.setOriginalFileName(file.getOriginalFilename());
-                fileUploadsRepository.save(fileUploads);
+                FileUpload fileUpload = new FileUpload();
+                fileUpload.setFile_path(filePath);
+                fileUpload.setOriginalFileName(file.getOriginalFilename());
+                fileUploadsRepository.save(fileUpload);
 
                 for (String recipient : recipients) {
                     try {
@@ -246,17 +268,17 @@ public class EmailController {
                 filePath = saveFile(file);
 
                 // Создать объект FileUploads и сохранить его в базе данных только один раз
-                FileUploads fileUploads = new FileUploads();
-                fileUploads.setFile_path(filePath);
-                fileUploads.setOriginalFileName(file.getOriginalFilename());
-                fileUploadsRepository.save(fileUploads);
+                FileUpload fileUpload = new FileUpload();
+                fileUpload.setFile_path(filePath);
+                fileUpload.setOriginalFileName(file.getOriginalFilename());
+                fileUploadsRepository.save(fileUpload);
             } else {
                 // Файл не загружен, получить информацию о файле из базы данных
-                FileUploads fileUploads = fileUploadsService.getFileByOriginalFileName(file.getOriginalFilename());
-                if (fileUploads == null) {
+                FileUpload fileUpload = fileUploadsService.getFileByOriginalFileName(file.getOriginalFilename());
+                if (fileUpload == null) {
                     return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new EmailResponse("File not found", 0));
                 }
-                filePath = fileUploads.getFile_path();
+                filePath = fileUpload.getFile_path();
             }
 
             if (recipients.isEmpty()) {
@@ -305,13 +327,16 @@ public class EmailController {
         return emails;
     }
 
-    private final String uploadDir = "upload/email_upload";
+    @Value("${spring.pathFiles}")
+    String pathFiles;
+
+    //private final String uploadDir = "upload/email_upload";
 
     private String saveFile(MultipartFile file) throws IOException {
         if (file != null && !file.isEmpty()) {
             String originalFileName = StringUtils.cleanPath(file.getOriginalFilename());
             String uniqueFileName = generateUniqueFileName(originalFileName);
-            String filePath = uploadDir + "/" + uniqueFileName;
+            String filePath = pathFiles + "/" + uniqueFileName;
 
             // Проверяем, существует ли файл с таким путем
             if (!Files.exists(Paths.get(filePath))) {
@@ -361,7 +386,7 @@ public class EmailController {
 
     private boolean checkFileExistsInDB(String originalFileName) {
         // Выполнить запрос в базу данных для проверки наличия файла по его имени
-        FileUploads file = fileUploadsRepository.findByOriginalFileName(originalFileName);
+        FileUpload file = fileUploadsRepository.findByOriginalFileName(originalFileName);
 
         // Если файл найден, возвращаем true, иначе false
         return file != null;

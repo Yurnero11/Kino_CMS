@@ -10,7 +10,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            text-align: center;
+            justify-content: center;
+            padding: 20px;
+            /* Добавьте другие стили по вашему усмотрению */
         }
 
         form {
@@ -26,6 +28,62 @@
             margin-right: 10px;
         }
 
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {display:none;}
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            -webkit-transition: .4s;
+            transition: .4s;
+        }
+
+        input:checked + .slider {
+            background-color: green;
+        }
+
+        input:focus + .slider {
+            box-shadow: 0 0 1px green;
+        }
+
+        input:checked + .slider:before {
+            -webkit-transform: translateX(26px);
+            -ms-transform: translateX(26px);
+            transform: translateX(26px);
+        }
+
+        /* Rounded sliders */
+        .slider.round {
+            border-radius: 34px;
+        }
+
+        .slider.round:before {
+            border-radius: 50%;
+        }
+
     </style>
 </head>
 <body>
@@ -34,118 +92,237 @@
     <div style="color: green; padding: 20px" th:if="${successMessage}">
         <p th:text="${successMessage}"></p>
     </div>
-    <div class="form-container">
-        <h3>На главной вверх</h3>
+    <div class="form-container" th:each="mainBanner : ${mainBannersList}">
+        <h3>На головній вверх</h3>
         <form class="form_yura" enctype="multipart/form-data" th:action="@{/admin/banners/main-banner}" method="post">
             <div class="image-container">
                 <label for="upload1">Фото 1:</label>
-                <input type="file" id="upload1" name="upload1" class="form-control-file" onchange="updateImage(this, 'image1')">
-                <img id="image1" src="/static/img/download.jpg" alt="Фото 1" style="width: 100px; height: 100px;">
+                <img id="image1" th:src="${mainBanner.imagePath1 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath1 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 1" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload1" name="upload1" class="form-control-file" onchange="displayImageWithValidation(this, 'image1', 'error1')">
+                <p id="error1" style="color: red;"></p>
                 <br><label for="url1">URL 1:</label>
-                <input type="text" id="url1" name="url1" class="form-control">
+                <input type="text" id="url1" name="url1" class="form-control" th:value="${mainBanner.url1}">
                 <label for="caption1">Текст 1:</label>
-                <input type="text" id="caption1" name="caption1" class="form-control">
+                <input type="text" id="caption1" name="caption1" class="form-control" th:value="${mainBanner.text1}">
             </div>
 
             <div class="image-container">
                 <label for="upload2">Фото 2:</label>
-                <input type="file" id="upload2" name="upload2" class="form-control-file" onchange="updateImage(this, 'image2')">
-                <img id="image2" src="/static/img/download.jpg" alt="Фото 2" style="width: 100px; height: 100px;">
+                <img id="image2" th:src="${mainBanner.imagePath2 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath2 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 2" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload2" name="upload2" class="form-control-file" onchange="displayImageWithValidation(this, 'image2', 'error2')">
+                <p id="error2" style="color: red;"></p>
                 <br><label for="url2">URL 2:</label>
-                <input type="text" id="url2" name="url2" class="form-control">
+                <input type="text" id="url2" name="url2" class="form-control" th:value="${mainBanner.url2}">
                 <label for="caption2">Текст 2:</label>
-                <input type="text" id="caption2" name="caption2" class="form-control">
+                <input type="text" id="caption2" name="caption2" class="form-control" th:value="${mainBanner.text2}">
             </div>
 
             <div class="image-container">
                 <label for="upload3">Фото 3:</label>
-                <input type="file" id="upload3" name="upload3" class="form-control-file" onchange="updateImage(this, 'image3')">
-                <img id="image3" src="/static/img/download.jpg" alt="Фото 3" style="width: 100px; height: 100px;">
+                <img id="image3" th:src="${mainBanner.imagePath3 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath3 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 3" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload3" name="upload3" class="form-control-file" onchange="displayImageWithValidation(this, 'image3', 'error3')">
+                <p id="error3" style="color: red;"></p>
                 <br><label for="url3">URL 3:</label>
-                <input type="text" id="url3" name="url3" class="form-control">
+                <input type="text" id="url3" name="url3" class="form-control" th:value="${mainBanner.url3}">
                 <label for="caption3">Текст 3:</label>
-                <input type="text" id="caption3" name="caption3" class="form-control">
+                <input type="text" id="caption3" name="caption3" class="form-control" th:value="${mainBanner.text3}">
             </div>
 
             <div class="image-container">
                 <label for="upload4">Фото 4:</label>
-                <input type="file" id="upload4" name="upload4" class="form-control-file" onchange="updateImage(this, 'image4')">
-                <img id="image4" src="/static/img/download.jpg" alt="Фото 4" style="width: 100px; height: 100px;">
+                <img id="image4" th:src="${mainBanner.imagePath4 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath4 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 4" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload4" name="upload4" class="form-control-file" onchange="displayImageWithValidation(this, 'image4', 'error4')">
+                <p id="error4" style="color: red;"></p>
                 <br><label for="url4">URL 4:</label>
-                <input type="text" id="url4" name="url4" class="form-control">
+                <input type="text" id="url4" name="url4" class="form-control" th:value="${mainBanner.url4}">
                 <label for="caption4">Текст 4:</label>
-                <input type="text" id="caption4" name="caption4" class="form-control">
+                <input type="text" id="caption4" name="caption4" class="form-control" th:value="${mainBanner.text4}">
             </div>
 
             <div class="image-container">
                 <label for="upload5">Фото 5:</label>
-                <input type="file" id="upload5" name="upload5" class="form-control-file" onchange="updateImage(this, 'image5')">
-                <img id="image5" src="/static/img/download.jpg" alt="Фото 4" style="width: 100px; height: 100px;">
+                <img id="image5" th:src="${mainBanner.imagePath5 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath5 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 5" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload5" name="upload5" class="form-control-file" onchange="displayImageWithValidation(this, 'image5', 'error5')">
+                <p id="error5" style="color: red;"></p>
                 <br><label for="url5">URL 5:</label>
-                <input type="text" id="url5" name="url5" class="form-control">
+                <input type="text" id="url5" name="url5" class="form-control" th:value="${mainBanner.url5}">
                 <label for="caption5">Текст 5:</label>
-                <input type="text" id="caption5" name="caption5" class="form-control">
+                <input type="text" id="caption5" name="caption5" class="form-control" th:value="${mainBanner.text5}">
             </div>
 
             <div class="form-group">
                 <label for="rotation_speed">Скорость вращения:</label>
                 <select id="rotation_speed" name="rotation_speed" class="form-control">
-                    <option value="1">1 сек</option>
-                    <option value="2">2 сек</option>
-                    <option value="3">3 сек</option>
-                    <option value="4">4 сек</option>
-                    <option value="5">5 сек</option>
+                    <option value="1" th:selected="${mainBanner.speed == 1}">1 сек</option>
+                    <option value="2" th:selected="${mainBanner.speed == 2}">2 сек</option>
+                    <option value="3" th:selected="${mainBanner.speed == 3}">3 сек</option>
+                    <option value="4" th:selected="${mainBanner.speed == 4}">4 сек</option>
+                    <option value="5" th:selected="${mainBanner.speed == 5}">5 сек</option>
                 </select>
             </div>
 
-            <script>
-                function updateImage(input, imageId) {
-                    var image = document.getElementById(imageId);
-                    if (input.files && input.files[0]) {
+            <label class="switch">
+                <input name="status" type="checkbox"
+                       th:checked="${mainBanner.status == 'on'}"
+                       th:value="on">
+                <span class="slider round"></span>
+            </label>
+
+            <div id="data"
+                 th:data-image="${'/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath1}"
+                 th:data-image1="${'/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath2}"
+                 th:data-image2="${'/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath3}"
+                 th:data-image3="${'/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath4}"
+                 th:data-image4="${'/Kino_CMS-Yura_Dmytriv/upload/' + mainBanner.imagePath5}">
+            </div>
+
+            <script th:inline="javascript">
+                var dataElement = document.getElementById("data");
+
+                var previousImageUrls = {
+                    'galleryImage1': dataElement.getAttribute("data-image1"),
+                    'galleryImage2': dataElement.getAttribute("data-image2"),
+                    'galleryImage3': dataElement.getAttribute("data-image3"),
+                    'galleryImage4': dataElement.getAttribute("data-image4"),
+                    'galleryImage5': dataElement.getAttribute("data-image5"),
+                    // Додайте сюди інші URL попередніх фотографій
+                };
+
+
+                function displayImageWithValidation(input, imgId, errorMsgId) {
+                    var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+                    var file = input.files[0];
+                    var thumbnailContainer = document.getElementById(imgId);
+                    var errorMessage = document.getElementById(errorMsgId);
+
+                    // Перевірити розширення файлу
+                    if (!allowedExtensions.exec(file.name)) {
+                        errorMessage.textContent = 'Дозволені лише файли з розширеннями .jpg, .jpeg та .png';
+                        input.value = ''; // Очистити інпут файлу
+                        if (previousImageUrls[imgId] === '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg') {
+                            previousImageUrls[imgId] = null;
+                        }
+                        thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'; // Відновити попередню фотографію
+                        return false;
+                    }
+
+                    errorMessage.textContent = ''; // Очистити повідомлення про помилку
+
+                    thumbnailContainer.src = ''; // Очистити попередню мініатюру
+
+                    if (file) {
                         var reader = new FileReader();
                         reader.onload = function (e) {
-                            image.src = e.target.result;
+                            thumbnailContainer.src = e.target.result;
                         };
-                        reader.readAsDataURL(input.files[0]);
+                        reader.readAsDataURL(file);
+                    } else {
+                        if (previousImageUrls[imgId] === '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg') {
+                            previousImageUrls[imgId] = null;
+                        }
+                        thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'; // Відновити попередню фотографію у разі відсутності нового файлу
                     }
                 }
             </script>
 
 
-            <input type="submit" value="Отправить" class="btn btn-info" style="display: block; margin-left: 10px;">
+            <input type="submit" value="Добавити банер" class="btn btn-info" style="display: block; margin-left: 10px;">
         </form>
 
     </div>
 
 
     <div class="form-container">
-        <h3 class="text-center">Сквозной баннер на заднем фоне</h3>
+        <h3 class="text-center">Наскрізний банер на задньому фоні</h3>
         <form class="form_yura" enctype="multipart/form-data" th:action="@{/admin/banners/back-banner}" method="post">
             <div class="form-group">
-                <label for="upload6">Выберите файл:</label>
-                <input type="file" id="upload6" name="upload6" class="form-control-file" onchange="updateImage(this, 'image6')">
-                <img id="image6" src="/static/img/download.jpg" alt="Фото 6" style="width: 100px; height: 100px;">
+                <label for="upload6">Виберіть файл:</label>
+                <img id="image6" th:src="${backgroundBanner.image_path != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + backgroundBanner.image_path : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 5" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload6" name="upload6" class="form-control-file" onchange="displayImageWithValidation(this, 'image6', 'error6')">
+                <p id="error6" style="color: red;"></p>
             </div>
 
             <div class="form-group">
                 <div class="form-check">
-                    <input type="checkbox" id="photo_type_background" name="photo_type" value="background" onchange="handleCheckboxChange(this)" class="form-check-input">
-                    <label for="photo_type_background" class="form-check-label">Фото на фон</label>
+                    <label class="form-check-label">
+                        <input type="checkbox" id="photo_type_background" name="photo_type" value="background"
+                               onchange="handleCheckboxChange(this)" class="form-check-input"
+                               th:checked="${backgroundBanner.background_type == 'background'}">
+                        Фото на фон
+                    </label>
                 </div>
             </div>
             <div class="form-group">
                 <div class="form-check">
-                    <input type="checkbox" id="photo_type_simple" name="photo_type" value="simple" onchange="handleCheckboxChange(this)" class="form-check-input">
-                    <label for="photo_type_simple" class="form-check-label">Просто фото</label>
+                    <label class="form-check-label">
+                        <input type="checkbox" id="photo_type_simple" name="photo_type" value="simple"
+                               onchange="handleCheckboxChange(this)" class="form-check-input"
+                               th:checked="${backgroundBanner.background_type == 'simple'}">
+                        Просто фото
+                    </label>
                 </div>
             </div>
+            <div style="color: red;">
+                <p th:text="${errorMessage}"></p>
+            </div>
+            <div style="color: green;">
+                <p th:text="${successMessage}"></p>
+            </div>
             <div class="form-group">
-                <input type="submit" value="Отправить" class="btn btn-info">
+                <input type="submit" value="Добавити банер" class="btn btn-info">
             </div>
         </form>
 
-        <script>
-            function handleCheckboxChange(checkbox) {
+        <div id="data1"
+             th:data-image="${'/upload/' + backgroundBanner.image_path}">
+        </div>
+
+    <script th:inline="javascript">
+        /*var dataElement = document.getElementById("data1");
+
+        var previousImageUrls = {
+            'galleryImage1': dataElement.getAttribute("data-image"),
+            // Додайте сюди інші URL попередніх фотографій
+        };
+
+        var previousMainImageUrl = dataElement.getAttribute("data-image");
+
+        function displayImageWithValidation(input, imgId, errorMsgId) {
+            var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+            var file = input.files[0];
+            var thumbnailContainer = document.getElementById(imgId);
+            var errorMessage = document.getElementById(errorMsgId);
+
+            // Перевірити розширення файлу
+            if (!allowedExtensions.exec(file.name)) {
+                errorMessage.textContent = 'Дозволені лише файли з розширеннями .jpg, .jpeg та .png';
+                input.value = ''; // Очистити інпут файлу
+                thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/static/img/download.jpg'; // Відновити попередню фотографію
+                return false;
+            }
+
+            errorMessage.textContent = ''; // Очистити повідомлення про помилку
+
+            thumbnailContainer.src = ''; // Очистити попередню мініатюру
+
+            if (file) {
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    thumbnailContainer.src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            } else {
+                thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/static/img/download.jpg'; // Відновити попередню фотографію у разі відсутності нового файлу
+            }
+        }*/
+
+        function handleCheckboxChange(checkbox) {
                 const checkboxes = document.getElementsByName("photo_type");
                 if (checkbox.checked) {
                     for (let i = 0; i < checkboxes.length; i++) {
@@ -159,72 +336,132 @@
     </div>
 
     <div class="form-container">
-        <h3 class="text-center">На главной новости акции</h3>
+        <h3 class="text-center">На головній новини акції</h3>
         <form class="form_yura" enctype="multipart/form-data" th:action="@{/admin/banners/stocks-banner}" method="post">
             <div class="image-container">
                 <label for="upload7">Фото 1:</label>
-                <input type="file" id="upload7" name="upload1" class="form-control-file" onchange="updateImage(this, 'image7')">
-                <img id="image7" src="/static/img/download.jpg" alt="Фото 1" style="width: 100px; height: 100px;">
+                <img id="image7" th:src="${lastBanner.imagePath1 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath1 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 1" style="width: 100px; height: 100px;">
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload7" name="upload1" class="form-control-file" onchange="displayImageWithValidation(this, 'image7', 'error7')">
+                <p id="error7" style="color: red;"></p>
                 <br>
                 <label for="url6">URL 1:</label>
-                <input type="text" id="url6" name="url1" class="form-control">
+                <input type="text" id="url6" name="url1" class="form-control" th:value="${lastBanner.url1}">
 
             </div>
 
             <div class="image-container">
                 <label for="upload8">Фото 2:</label>
-                <input type="file" id="upload8" name="upload2" class="form-control-file" onchange="updateImage(this, 'image8')">
-                <img id="image8" src="/static/img/download.jpg" alt="Фото 1" style="width: 100px; height: 100px;">
+                <img id="image8" th:src="${lastBanner.imagePath2 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath2 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 1" style="width: 100px; height: 100px;">
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload8" name="upload2" class="form-control-file" onchange="displayImageWithValidation(this, 'image8', 'error8')">
+                <p id="error8" style="color: red;"></p>
                 <br>
                 <label for="url7">URL 2:</label>
-                <input type="text" id="url7" name="url2" class="form-control">
+                <input type="text" id="url7" name="url2" class="form-control" th:value="${lastBanner.url2}">
 
             </div>
 
             <div class="image-container">
                 <label for="upload9">Фото 3:</label>
-                <input type="file" id="upload9" name="upload3" class="form-control-file" onchange="updateImage(this, 'image9')">
-                <img id="image9" src="/static/img/download.jpg" alt="Фото 1" style="width: 100px; height: 100px;">
+                <img id="image9" th:src="${lastBanner.imagePath3 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath3 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 1" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload9" name="upload3" class="form-control-file" onchange="displayImageWithValidation(this, 'image9', 'error9')">
+                <p id="error9" style="color: red;"></p>
                 <br>
                 <label for="url8">URL 3:</label>
-                <input type="text" id="url8" name="url3" class="form-control">
+                <input type="text" id="url8" name="url3" class="form-control" th:value="${lastBanner.url3}">
 
             </div>
 
             <div class="image-container">
                 <label for="upload10">Фото 4:</label>
-                <input type="file" id="upload10" name="upload4" class="form-control-file" onchange="updateImage(this, 'image10')">
-                <img id="image10" src="/static/img/download.jpg" alt="Фото 1" style="width: 100px; height: 100px;">
+                <img id="image10" th:src="${lastBanner.imagePath4 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath4 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 1" style="width: 100px; height: 100px;">
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload10" name="upload4" class="form-control-file" onchange="displayImageWithValidation(this, 'image10', 'error10')">
+                <p id="error10" style="color: red;"></p>
                 <br>
                 <label for="url9">URL 4:</label>
-                <input type="text" id="url9" name="url4" class="form-control">
+                <input type="text" id="url9" name="url4" class="form-control" th:value="${lastBanner.url4}">
 
             </div>
 
             <div class="image-container">
                 <label for="upload11">Фото 5:</label>
-                <input type="file" id="upload11" name="upload5" class="form-control-file" onchange="updateImage(this, 'image11')">
-                <img id="image11" src="/static/img/download.jpg" alt="Фото 1" style="width: 100px; height: 100px;">
+                <img id="image11" th:src="${lastBanner.imagePath5 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath5 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpeg'}" alt="Фото 1" style="width: 100px; height: 100px;">
+
+                <input accept=".jpeg, .jpg, .png" type="file" id="upload11" name="upload5" class="form-control-file" onchange="displayImageWithValidation(this, 'image11', 'error11')">
+                <p id="error11" style="color: red;"></p>
                 <br>
                 <label for="url10">URL 5:</label>
-                <input type="text" id="url10" name="url5" class="form-control">
+                <input type="text" id="url10" name="url5" class="form-control" th:value="${lastBanner.url5}">
             </div>
 
             <div class="form-group">
                 <label for="rotation_speed">Скорость вращения:</label>
                 <select id="rotation_speed1" name="rotation_speed" class="form-control">
-                    <option value="1">1 сек</option>
-                    <option value="2">2 сек</option>
-                    <option value="3">3 сек</option>
-                    <option value="4">4 сек</option>
-                    <option value="5">5 сек</option>
+                    <option value="1" th:selected="${lastBanner.speed == 1}">1 сек</option>
+                    <option value="2" th:selected="${lastBanner.speed == 2}">2 сек</option>
+                    <option value="3" th:selected="${lastBanner.speed == 3}">3 сек</option>
+                    <option value="4" th:selected="${lastBanner.speed == 4}">4 сек</option>
+                    <option value="5" th:selected="${lastBanner.speed == 5}">5 сек</option>
                 </select>
             </div>
 
-            <input type="submit" value="Отправить" class="btn btn-info" style="margin-left: 10px">
+            <label class="switch">
+                <input name="status" type="checkbox"
+                       th:checked="${lastBanner.status == 'on'}"
+                       th:value="on">
+                <span class="slider round"></span>
+            </label>
+
+            <div id="data3"
+                 th:data-image="${'/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath1}"
+                 th:data-image1="${'/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath2}"
+                 th:data-image2="${'/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath3}"
+                 th:data-image3="${'/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath4}"
+                 th:data-image4="${'/Kino_CMS-Yura_Dmytriv/upload/' + lastBanner.imagePath5}">
+            </div>
+
+            <!--<script th:inline="javascript">
+                var dataElement = document.getElementById("data3");
+
+                var previousImageUrls = {
+                    'galleryImage1': dataElement.getAttribute("data-image"),
+                    // Додайте сюди інші URL попередніх фотографій
+                };
+
+                var previousMainImageUrl = dataElement.getAttribute("data-image");
+
+                function displayImageWithValidation(input, imgId, errorMsgId) {
+                    var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+                    var file = input.files[0];
+                    var thumbnailContainer = document.getElementById(imgId);
+                    var errorMessage = document.getElementById(errorMsgId);
+
+                    // Перевірити розширення файлу
+                    if (!allowedExtensions.exec(file.name)) {
+                        errorMessage.textContent = 'Дозволені лише файли з розширеннями .jpg, .jpeg та .png';
+                        input.value = ''; // Очистити інпут файлу
+                        thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/static/img/download.jpg'; // Відновити попередню фотографію
+                        return false;
+                    }
+
+                    errorMessage.textContent = ''; // Очистити повідомлення про помилку
+
+                    thumbnailContainer.src = ''; // Очистити попередню мініатюру
+
+                    if (file) {
+                        var reader = new FileReader();
+                        reader.onload = function (e) {
+                            thumbnailContainer.src = e.target.result;
+                        };
+                        reader.readAsDataURL(file);
+                    } else {
+                        thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/static/img/download.jpg'; // Відновити попередню фотографію у разі відсутності нового файлу
+                    }
+                }
+
+            </script>-->
+            <input type="submit" value="Добавити банер" class="btn btn-info" style="margin-left: 10px">
         </form>
-
-
     </div>
 </div>
 </body>

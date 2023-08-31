@@ -1,17 +1,13 @@
 package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.Gallary;
-import com.example.Kino_CMS.entity.Promotions;
-import com.example.Kino_CMS.entity.SeoBlocks;
-import com.example.Kino_CMS.repository.GalleryRepository;
-import com.example.Kino_CMS.repository.PromotionRepository;
-import com.example.Kino_CMS.repository.SeoBlocksRepository;
-import com.example.Kino_CMS.service.GallaryService;
-import com.example.Kino_CMS.service.SeoBlocksService;
+import com.example.Kino_CMS.entity.Promotion;
+import com.example.Kino_CMS.entity.SeoBlock;
 import com.example.Kino_CMS.service.impl.GallaryServiceImpl;
 import com.example.Kino_CMS.service.impl.PromotionServiceImpl;
 import com.example.Kino_CMS.service.impl.SeoBlocksServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -39,10 +35,9 @@ public class PromotionController {
     @Autowired
     private GallaryServiceImpl gallaryService;
 
-
     @GetMapping("/admin/promotions")
     public String promotions(Model model){
-        Iterable<Promotions> promotions = promotionServiceImpl.getAllPromotions(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
+        Iterable<Promotion> promotions = promotionServiceImpl.getAllPromotions(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
         model.addAttribute("promotion", promotions);
         return "admin/promotion/promotions-page";
     }
@@ -57,45 +52,51 @@ public class PromotionController {
             @RequestParam("promotion_name") String news_name,
             @RequestParam("description") String description,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate publication_date,
-            @RequestParam("main_photo") MultipartFile main_photo,
+            @RequestParam("main_image_path") MultipartFile main_photo,
             @RequestParam("gallery_photo_1") MultipartFile upload1,
             @RequestParam("gallery_photo_2") MultipartFile upload2,
             @RequestParam("gallery_photo_3") MultipartFile upload3,
             @RequestParam("gallery_photo_4") MultipartFile upload4,
             @RequestParam("gallery_photo_5") MultipartFile upload5,
-            @RequestParam("status") String status,
+            @RequestParam(value = "status", required = false, defaultValue = "off") String status,
             @RequestParam("url") String url,
             @RequestParam("title") String title,
             @RequestParam("keywords") String keywords,
             @RequestParam("description_seo") String descriptionSeo,
             RedirectAttributes redirectAttributes
     ) {
-        SeoBlocks seoBlocks = new SeoBlocks();
+        SeoBlock seoBlock = new SeoBlock();
         Gallary gallary = new Gallary();
-        Promotions promotions = new Promotions();
+        Promotion promotion = new Promotion();
 
 
-        promotions.setPromotion_title(news_name);
-        promotions.setPromotion_description(description);
-        promotions.setPublication_date(publication_date);
-        promotions.setMain_image_path(saveImage(main_photo));
-        promotions.setStatus(status);
+        promotion.setPromotion_title(news_name);
+        promotion.setPromotion_description(description);
+        promotion.setPublication_date(publication_date);
+        promotion.setMain_image_path(saveImage(main_photo));
+        if ("on".equals(status)) {
+            // Обработка, когда статус включен
+            promotion.setStatus("on");
+        } else {
+            // Обработка, когда статус выключен или отсутствует
+            promotion.setStatus("off");
+        }
         gallary.setImagePath1(saveImage(upload1));
         gallary.setImagePath2(saveImage(upload2));
         gallary.setImagePath3(saveImage(upload3));
         gallary.setImagePath4(saveImage(upload4));
         gallary.setImagePath5(saveImage(upload5));
-        seoBlocks.setUrl(url);
-        seoBlocks.setTitle(title);
-        seoBlocks.setKeywords(keywords);
-        seoBlocks.setDescription(descriptionSeo);
+        seoBlock.setUrl(url);
+        seoBlock.setTitle(title);
+        seoBlock.setKeywords(keywords);
+        seoBlock.setDescription(descriptionSeo);
 
-        promotions.setGallery(gallary);
-        promotions.setSeoBlocks(seoBlocks);
+        promotion.setGallery(gallary);
+        promotion.setSeoBlock(seoBlock);
 
-        promotionServiceImpl.savePromotions(promotions);
+        promotionServiceImpl.savePromotions(promotion);
         gallaryService.saveGallary(gallary);
-        seoBlocksService.saveSeoBlock(seoBlocks);
+        seoBlocksService.saveSeoBlock(seoBlock);
 
         return "redirect:/admin/promotions";
     }
@@ -103,7 +104,8 @@ public class PromotionController {
 
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file) {
         if (file != null && !file.isEmpty()) {
@@ -112,7 +114,7 @@ public class PromotionController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

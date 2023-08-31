@@ -5,6 +5,7 @@ import com.example.Kino_CMS.repository.CafeBarRepository;
 import com.example.Kino_CMS.service.CafeBarService;
 import com.example.Kino_CMS.service.impl.CafeBarServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -40,13 +41,13 @@ public class CafeBarController {
     public String cinemaPageEdit(@ModelAttribute("cafe-bar") CafeBar cafeBar,
                                  @RequestParam("name") String cafe_name,
                                  @RequestParam("description") String description,
-                                 @RequestParam("status") String status,
+                                 @RequestParam(value = "status", required = false, defaultValue = "off") String status,
                                  @RequestParam("mainImageFile") MultipartFile mainImageFile,
                                  @RequestParam("gallery_photo_1") MultipartFile imageFile1,
-                                 @RequestParam("gallery_photo_1") MultipartFile imageFile2,
-                                 @RequestParam("gallery_photo_1") MultipartFile imageFile3,
-                                 @RequestParam("gallery_photo_1") MultipartFile imageFile4,
-                                 @RequestParam("gallery_photo_1") MultipartFile imageFile5,
+                                 @RequestParam("gallery_photo_2") MultipartFile imageFile2,
+                                 @RequestParam("gallery_photo_3") MultipartFile imageFile3,
+                                 @RequestParam("gallery_photo_4") MultipartFile imageFile4,
+                                 @RequestParam("gallery_photo_5") MultipartFile imageFile5,
                                  @RequestParam("url") String url,
                                  @RequestParam("title") String title,
                                  @RequestParam("keywords") String keywords,
@@ -65,7 +66,16 @@ public class CafeBarController {
             // Обновите поля существующего объекта MainPage данными из формы.
             existingMainPage.setCafe_name(cafe_name);
             existingMainPage.setDescription(description);
-            existingMainPage.setStatus(status);
+
+            if ("on".equals(status)) {
+                // Обработка, когда статус включен
+                existingMainPage.setStatus("on");
+            } else {
+                // Обработка, когда статус выключен или отсутствует
+                existingMainPage.setStatus("off");
+            }
+
+
             existingMainPage.setSeo_url(url);
             existingMainPage.setSeo_keywords(keywords);
             existingMainPage.setSeo_title(title);
@@ -123,7 +133,8 @@ public class CafeBarController {
         return "redirect:/admin/pages";
     }
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file, String currentImagePath) {
         if (file != null && !file.isEmpty()) {
@@ -132,7 +143,7 @@ public class CafeBarController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

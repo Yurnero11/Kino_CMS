@@ -9,27 +9,28 @@
 <body>
 <div layout:fragment="content">
     <h1>Акції</h1>
-    <h2><a href="/admin/promotions/promotions-add" class="add-movie-button">Додати акцію</a></h2>
+    <p th:unless="${not #lists.isEmpty(promotion)}">Список новин пустий</p>
     <div class="box">
-        <table style="border-collapse: collapse;">
+        <table style="border-collapse: collapse;" th:if="${not #lists.isEmpty(promotion)}">
             <tr>
                 <th style="padding: 10px;">Id</th>
-                <th style="padding: 10px;">Name</th>
-                <th style="padding: 10px;">Status</th>
+                <th style="padding: 10px;">Ім'я</th>
+                <th style="padding: 10px;">Статус</th>
             </tr>
             <!-- Итерация по списку пользователей и отображение данных -->
-            <tr th:each="promotions : ${promotion}">
-                <td th:text="${promotions.promotion_id}" style="text-align: left; padding: 10px;"></td>
-                <td th:text="${promotions.promotion_title}" style="text-align: left; padding: 10px;"></td>
-                <td th:text="${promotions.status}" style="text-align: left; padding: 10px;"></td>
-                <td><a th:href="'/admin/promotions/' + ${promotions.promotion_id} + '/edit'"  class="btn btn-info">Редагувати</a></td>
-                <td><form th:action="'/admin/promotions/' + ${promotions.promotion_id} + '/remove'" method="post">
-                    <button class="btn btn-danger">Delete</button>
+            <tr th:each="promotion : ${promotion}">
+                <td th:text="${promotion.promotion_id}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${promotion.promotion_title}" style="text-align: left; padding: 10px;"></td>
+                <td th:text="${promotion.status}" style="text-align: left; padding: 10px;"></td>
+                <td><a th:href="@{/admin/promotions/{promotion_id}/edit(promotion_id = ${promotion.promotion_id})}"  class="btn btn-info">Редагувати</a></td>
+                <td><form th:action="@{/admin/promotions/{promotion_id}/remove(promotion_id = ${promotion.promotion_id})}" method="post">
+                    <button class="btn btn-danger">Видалити</button>
                 </form></td>
                 <!-- Добавьте другие необходимые поля -->
             </tr>
         </table>
     </div>
+    <h2><a th:href="@{/admin/promotions/promotions-add}" class="btn btn-info">Додати акцію</a></h2>
 </div>
 </body>
 </html>

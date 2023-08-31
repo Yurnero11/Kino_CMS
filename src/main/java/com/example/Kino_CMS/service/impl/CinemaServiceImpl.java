@@ -1,6 +1,6 @@
 package com.example.Kino_CMS.service.impl;
 
-import com.example.Kino_CMS.entity.Cinemas;
+import com.example.Kino_CMS.entity.Cinema;
 import com.example.Kino_CMS.entity.Gallary;
 import com.example.Kino_CMS.repository.CinemaRepository;
 import com.example.Kino_CMS.service.CinemaService;
@@ -20,10 +20,10 @@ public class CinemaServiceImpl implements CinemaService {
     private CinemaRepository cinemaRepository;
 
     @Override
-    public Iterable<Cinemas> getAllCinemas() {
+    public Iterable<Cinema> getAllCinemas() {
         try {
             log.info("Getting all Cinemas");
-            Iterable<Cinemas> result = cinemaRepository.findAll();
+            Iterable<Cinema> result = cinemaRepository.findAll();
             log.info("Successfully retrieved all Cinemas");
             return result;
         } catch (Exception e) {
@@ -36,9 +36,9 @@ public class CinemaServiceImpl implements CinemaService {
     public Gallary getGalleryByCinemaId(Long cinemaID) {
         try {
             log.info("Getting Gallery by Cinema ID: {}", cinemaID);
-            Cinemas cinemas = cinemaRepository.findById(cinemaID).orElse(null);
-            if (cinemas != null) {
-                Gallary gallery = cinemas.getGallery();
+            Cinema cinema = cinemaRepository.findById(cinemaID).orElse(null);
+            if (cinema != null) {
+                Gallary gallery = cinema.getGallery();
                 if (gallery != null) {
                     log.info("Successfully retrieved Gallery by Cinema ID: {}", cinemaID);
                     return gallery;
@@ -53,35 +53,35 @@ public class CinemaServiceImpl implements CinemaService {
     }
 
     @Override
-    public void delete(Cinemas cinemas) {
+    public void delete(Cinema cinema) {
         try {
-            log.info("Deleting Cinemas: {}", cinemas);
-            cinemaRepository.delete(cinemas);
-            log.info("Successfully deleted Cinemas: {}", cinemas);
+            log.info("Deleting Cinemas: {}", cinema);
+            cinemaRepository.delete(cinema);
+            log.info("Successfully deleted Cinemas: {}", cinema);
         } catch (Exception e) {
-            log.error("Error while deleting Cinemas: {}", cinemas, e);
+            log.error("Error while deleting Cinemas: {}", cinema, e);
             throw e;
         }
     }
 
     @Override
-    public Cinemas saveCinemas(Cinemas cinemas) {
+    public Cinema saveCinemas(Cinema cinema) {
         try {
-            log.info("Saving Cinemas: {}", cinemas);
-            Cinemas result = cinemaRepository.save(cinemas);
-            log.info("Successfully saved Cinemas: {}", cinemas);
+            log.info("Saving Cinemas: {}", cinema);
+            Cinema result = cinemaRepository.save(cinema);
+            log.info("Successfully saved Cinemas: {}", cinema);
             return result;
         } catch (Exception e) {
-            log.error("Error while saving Cinemas: {}", cinemas, e);
+            log.error("Error while saving Cinemas: {}", cinema, e);
             throw e;
         }
     }
 
     @Override
-    public Optional<Cinemas> getCinemaById(Long cinema_id) {
+    public Optional<Cinema> getCinemaById(Long cinema_id) {
         try {
             log.info("Getting Cinema by ID: {}", cinema_id);
-            Optional<Cinemas> result = cinemaRepository.findById(cinema_id);
+            Optional<Cinema> result = cinemaRepository.findById(cinema_id);
             if (result.isPresent()) {
                 log.info("Successfully retrieved Cinema by ID: {}", cinema_id);
             } else {

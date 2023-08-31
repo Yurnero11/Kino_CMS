@@ -1,12 +1,10 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.FileUploads;
-
-import java.util.List;
+import com.example.Kino_CMS.entity.FileUpload;
 
 public interface FileUploadsService {
-    Iterable<FileUploads> getAllFiles();
-    void saveFile(FileUploads fileUploads);
+    Iterable<FileUpload> getAllFiles();
+    void saveFile(FileUpload fileUpload);
     // Другие необходимые методы для работы с файлами
     public void deleteFile(Long fileId);
 }

@@ -1,12 +1,12 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.Promotions;
+import com.example.Kino_CMS.entity.Promotion;
 
 import java.util.Optional;
 
 public interface PromotionsService {
-    Iterable<Promotions> getAllPromotions();
-    Promotions savePromotions(Promotions promotions);
-    Optional<Promotions> getPromotionById(Long promotion_id);
-    void delete(Promotions promotions);
+    Iterable<Promotion> getAllPromotions();
+    Promotion savePromotions(Promotion promotion);
+    Optional<Promotion> getPromotionById(Long promotion_id);
+    void delete(Promotion promotion);
 }

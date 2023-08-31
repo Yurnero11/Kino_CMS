@@ -2,7 +2,7 @@ package com.example.Kino_CMS.controller.publicController;
 
 import com.example.Kino_CMS.entity.*;
 import com.example.Kino_CMS.repository.*;
-import com.example.Kino_CMS.service.impl.SessionServiceImpl;
+import com.example.Kino_CMS.session.Sessions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -18,12 +18,12 @@ import java.util.Optional;
 @Controller
 public class UserProfileController {
     private final UserRepository userRepository;
-    private final SessionServiceImpl sessionServiceImpl;
+    private final Sessions sessions;
 
     @Autowired
-    public UserProfileController(UserRepository userRepository, SessionServiceImpl sessionServiceImpl) {
+    public UserProfileController(UserRepository userRepository, Sessions sessions) {
         this.userRepository = userRepository;
-        this.sessionServiceImpl = sessionServiceImpl;
+        this.sessions = sessions;
     }
 
     @GetMapping("/user/profile/{id}")
@@ -135,7 +135,7 @@ public class UserProfileController {
         // Сохраняем обновленные данные пользователя в базе данных
         userRepository.save(existingUser);
         // Сохраняем userId в сессии после успешного обновления профиля
-        sessionServiceImpl.setUserIdInSession();
+        sessions.setUserIdInSession();
         redirectAttributes.addFlashAttribute("updateSuccess", true);
 
         return "redirect:/user/profile/{id}"; // Перенаправление на страницу профиля с обновленными данными

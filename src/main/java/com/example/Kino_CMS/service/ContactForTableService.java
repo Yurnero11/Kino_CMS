@@ -1,8 +1,6 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.Cinemas;
 import com.example.Kino_CMS.entity.Contact_for_table;
-import com.example.Kino_CMS.entity.SeoBlockCinemaContact;
 
 import java.util.Optional;
 

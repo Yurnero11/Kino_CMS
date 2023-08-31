@@ -1526,6 +1526,6 @@ slider.refresh({ useCurrentValue: true });
 			});
 		});
     </script>
-    <!-- Placed at the end of the document so the pages load faster -->
+    <!-- Placed at the end of the document so the page load faster -->
   </body>
 </html>

@@ -7,6 +7,7 @@ import com.example.Kino_CMS.repository.HallRepository;
 import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.CinemaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -45,15 +46,13 @@ public class CinemaController {
 
     @GetMapping("/admin/cinemas")
     public String cinemas(Model model){
-        Iterable<Cinemas> cinemas = service.getAllCinemas(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
+        Iterable<Cinema> cinemas = service.getAllCinemas(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
         model.addAttribute("cinemas", cinemas);
         return "admin/cinemas/page-cinema";
     }
 
     @GetMapping("/admin/cinemas/cinema-add")
     public String cinemas_add(Model model) {
-        // Создайте пустой объект Cinema и передайте его в модель
-        model.addAttribute("cinema", new Cinemas());
         return "admin/cinemas/cinema-add";
     }
 
@@ -61,7 +60,7 @@ public class CinemaController {
     public String cinema_add(
             @RequestParam("cinema_name") String cinemaName,
             @RequestParam("description") String description,
-            @RequestParam("conditions") MultipartFile conditions,
+            @RequestParam("conditions") String conditions,
             @RequestParam("logotype") MultipartFile logotype,
             @RequestParam("head_banner") MultipartFile headBanner,
             @RequestParam("gallery_photo_1") MultipartFile upload1,
@@ -75,14 +74,14 @@ public class CinemaController {
             @RequestParam("description_seo") String descriptionSeo,
             RedirectAttributes redirectAttributes
     ) {
-        SeoBlocks seoBlocks = new SeoBlocks();
+        SeoBlock seoBlock = new SeoBlock();
         Gallary gallary = new Gallary();
-        Cinemas cinema = new Cinemas();
+        Cinema cinema = new Cinema();
 
 
         cinema.setName(cinemaName);
         cinema.setDescription(description);
-        cinema.setConditions(saveImage(conditions));
+        cinema.setConditions(conditions);
         cinema.setLogo_image_path(saveImage(logotype));
         cinema.setTop_banner_image_path(saveImage(headBanner));
         gallary.setImagePath1(saveImage(upload1));
@@ -90,17 +89,17 @@ public class CinemaController {
         gallary.setImagePath3(saveImage(upload3));
         gallary.setImagePath4(saveImage(upload4));
         gallary.setImagePath5(saveImage(upload5));
-        seoBlocks.setUrl(url);
-        seoBlocks.setTitle(title);
-        seoBlocks.setKeywords(keywords);
-        seoBlocks.setDescription(descriptionSeo);
+        seoBlock.setUrl(url);
+        seoBlock.setTitle(title);
+        seoBlock.setKeywords(keywords);
+        seoBlock.setDescription(descriptionSeo);
 
         cinema.setGallery(gallary);
-        cinema.setSeoBlocks(seoBlocks);
+        cinema.setSeoBlock(seoBlock);
 
         cinemaRepository.save(cinema);
         galleryRepository.save(gallary);
-        seoBlocksRepository.save(seoBlocks);
+        seoBlocksRepository.save(seoBlock);
 
         return "redirect:/admin/cinemas";
     }
@@ -127,17 +126,17 @@ public class CinemaController {
                           @RequestParam("keywords") String keywords,
                           @RequestParam("description_seo") String descriptionSeo) {
 
-        Optional<Cinemas> optionalCinema = cinemaRepository.findById(cinemaId);
+        Optional<Cinema> optionalCinema = cinemaRepository.findById(cinemaId);
         if (optionalCinema.isEmpty()) {
             // Обработка ошибки - кинотеатр не найден
             return "redirect:/cinemas";
         }
 
-        Cinemas cinema = optionalCinema.get();
+        Cinema cinema = optionalCinema.get();
         Gallary gallary = new Gallary();
-        SeoBlocks seoBlocks = new SeoBlocks();
+        SeoBlock seoBlock = new SeoBlock();
 
-        Halls hall = new Halls();
+        Hall hall = new Hall();
         hall.setNumber(hallNumber);
         hall.setDescription(descriptions);
         hall.setSchema_image_path(saveImage(schema));
@@ -148,19 +147,19 @@ public class CinemaController {
         gallary.setImagePath4(saveImage(galleryPhoto4));
         gallary.setImagePath5(saveImage(galleryPhoto5));
 
-        seoBlocks.setUrl(url);
-        seoBlocks.setTitle(title);
-        seoBlocks.setKeywords(keywords);
-        seoBlocks.setDescription(descriptionSeo);
+        seoBlock.setUrl(url);
+        seoBlock.setTitle(title);
+        seoBlock.setKeywords(keywords);
+        seoBlock.setDescription(descriptionSeo);
 
         hall.setGallery(gallary);
-        hall.setSeoBlocks(seoBlocks);
+        hall.setSeoBlock(seoBlock);
 
         hall.setCinema(cinema); // Связывание зала с кинотеатром
 
         hallRepository.save(hall);
 
-        return "redirect:/admin/cinemas";
+        return "redirect:/admin/cinemas/{cinema_id}/edit";
     }
 
 
@@ -168,20 +167,20 @@ public class CinemaController {
     public String showEditHallForm(@PathVariable("cinema_id") long cinemaId,
                                    @PathVariable("hall_id") long hallId,
                                    Model model) {
-        Optional<Cinemas> optionalCinema = cinemaRepository.findById(cinemaId);
+        Optional<Cinema> optionalCinema = cinemaRepository.findById(cinemaId);
         if (optionalCinema.isEmpty()) {
             // Обработка ошибки - кинотеатр не найден
             return "redirect:/admin/cinemas";
         }
 
-        Optional<Halls> optionalHall = hallRepository.findById(hallId);
+        Optional<Hall> optionalHall = hallRepository.findById(hallId);
         if (optionalHall.isEmpty()) {
             // Обработка ошибки - зал не найден
             return "redirect:/admin/cinemas";
         }
 
-        Cinemas cinema = optionalCinema.get();
-        Halls hall = optionalHall.get();
+        Cinema cinema = optionalCinema.get();
+        Hall hall = optionalHall.get();
 
         model.addAttribute("cinemaId", cinemaId);
         model.addAttribute("hall", hall);
@@ -205,20 +204,20 @@ public class CinemaController {
                            @RequestParam("keywords") String keywords,
                            @RequestParam("description_seo") String descriptionSeo) {
 
-        Optional<Cinemas> optionalCinema = cinemaRepository.findById(cinemaId);
+        Optional<Cinema> optionalCinema = cinemaRepository.findById(cinemaId);
         if (optionalCinema.isEmpty()) {
             // Обработка ошибки - кинотеатр не найден
-            return "redirect:/admin/cinemas";
+            return "redirect:/admin/cinemas/{cinema_id}/edit\"";
         }
 
-        Cinemas cinema = optionalCinema.get();
-        Optional<Halls> optionalHall = hallRepository.findById(hallId);
+        Cinema cinema = optionalCinema.get();
+        Optional<Hall> optionalHall = hallRepository.findById(hallId);
         if (optionalHall.isEmpty()) {
             // Обработка ошибки - зал не найден
-            return "redirect:/admin/cinemas";
+            return "redirect:/admin/cinemas/{cinema_id}/edit\"";
         }
 
-        Halls hall = optionalHall.get();
+        Hall hall = optionalHall.get();
         hall.setNumber(hallNumber);
         hall.setDescription(descriptions);
 
@@ -249,35 +248,35 @@ public class CinemaController {
         }
 
         // Обновляем SEO-блок
-        SeoBlocks seoBlocks = hall.getSeoBlocks();
-        seoBlocks.setUrl(url);
-        seoBlocks.setTitle(title);
-        seoBlocks.setKeywords(keywords);
-        seoBlocks.setDescription(descriptionSeo);
+        SeoBlock seoBlock = hall.getSeoBlock();
+        seoBlock.setUrl(url);
+        seoBlock.setTitle(title);
+        seoBlock.setKeywords(keywords);
+        seoBlock.setDescription(descriptionSeo);
 
         hall.setCinema(cinema); // Связывание зала с кинотеатром
 
         hallRepository.save(hall);
 
-        return "redirect:/admin/cinemas";
+        return "redirect:/admin/cinemas/{cinema_id}/edit";
     }
 
     @PostMapping("/admin/cinemas/{cinema_id}/edit/{hall_id}/remove")
     public String removeHall(@PathVariable("cinema_id") long cinemaId,
                              @PathVariable("hall_id") long hallId) {
-        Optional<Cinemas> optionalCinema = cinemaRepository.findById(cinemaId);
+        Optional<Cinema> optionalCinema = cinemaRepository.findById(cinemaId);
         if (optionalCinema.isEmpty()) {
             // Обработка ошибки - кинотеатр не найден
             return "redirect:/cinemas";
         }
 
-        Optional<Halls> optionalHall = hallRepository.findById(hallId);
+        Optional<Hall> optionalHall = hallRepository.findById(hallId);
         if (optionalHall.isEmpty()) {
             // Обработка ошибки - зал не найден
             return "redirect:/cinemas";
         }
 
-        Halls hall = optionalHall.get();
+        Hall hall = optionalHall.get();
 
         // Получите имена файлов изображений зала из базы данных
         String schemaImageFilename = hall.getSchema_image_path();
@@ -294,30 +293,28 @@ public class CinemaController {
 
         hallRepository.delete(hall);
 
-        return "redirect:/admin/cinemas";
+        return "redirect:/admin/cinemas/{cinema_id}/edit";
     }
-
-
 
     @GetMapping("/admin/cinemas/{cinema_id}/edit/{hall_id}/remove")
     public String showRemoveHallForm(@PathVariable("cinema_id") long cinemaId,
                                      @PathVariable("hall_id") long hallId,
                                      Model model) {
         // Проверяем, существует ли кинотеатр с заданным идентификатором
-        Optional<Cinemas> optionalCinema = cinemaRepository.findById(cinemaId);
+        Optional<Cinema> optionalCinema = cinemaRepository.findById(cinemaId);
         if (optionalCinema.isEmpty()) {
             // Обработка ошибки - кинотеатр не найден
             return "redirect:/admin/cinemas";
         }
 
         // Получаем информацию о кинотеатре и его зале
-        Cinemas cinema = optionalCinema.get();
-        Optional<Halls> optionalHall = hallRepository.findById(hallId);
+        Cinema cinema = optionalCinema.get();
+        Optional<Hall> optionalHall = hallRepository.findById(hallId);
         if (optionalHall.isEmpty()) {
             // Обработка ошибки - зал не найден
             return "redirect:/admin/cinemas";
         }
-        Halls hall = optionalHall.get();
+        Hall hall = optionalHall.get();
 
         // Передаем информацию о кинотеатре и его зале в модель
         model.addAttribute("cinema", cinema);
@@ -329,11 +326,16 @@ public class CinemaController {
     @PostMapping("/admin/cinemas/{cinema_id}/remove")
     @PreAuthorize("hasRole('ADMIN')")
     public String removeCinema(@PathVariable(value = "cinema_id") long id, Model model) {
-        Cinemas cinemas = cinemaRepository.findById(id).orElseThrow();
+        if (id == 25) {
+            // Кинотеатр с id 25 не может быть удален
+            return "redirect:/admin/cinemas";
+        }
+
+        Cinema cinema = cinemaRepository.findById(id).orElseThrow();
 
         // Получите имена файлов изображений кинотеатра из базы данных
-        String logoImageFilename = cinemas.getLogo_image_path();
-        String topBannerImageFilename = cinemas.getTop_banner_image_path();
+        String logoImageFilename = cinema.getLogo_image_path();
+        String topBannerImageFilename = cinema.getTop_banner_image_path();
 
         // Если есть имена файлов изображений, удаляем файлы
         if (logoImageFilename != null && !logoImageFilename.isEmpty()) {
@@ -345,14 +347,14 @@ public class CinemaController {
         }
 
         // Удаляем кинотеатр из базы данных
-        cinemaRepository.delete(cinemas);
+        cinemaRepository.delete(cinema);
 
         return "redirect:/admin/cinemas";
     }
 
 
-
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file) {
         if (file != null && !file.isEmpty()) {
@@ -361,7 +363,7 @@ public class CinemaController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

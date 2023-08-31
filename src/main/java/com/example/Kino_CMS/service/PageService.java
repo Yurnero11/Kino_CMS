@@ -1,15 +1,15 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.Pages;
+import com.example.Kino_CMS.entity.Page;
 
 import java.util.Optional;
 
 public interface PageService {
-    Pages savePages(Pages pages);
+    Page savePages(Page page);
 
-    void delete(Pages pages);
+    void delete(Page page);
 
-    Optional<Pages> findById(Long page_id);
+    Optional<Page> findById(Long page_id);
 
-    Iterable<Pages> getAllPages();
+    Iterable<Page> getAllPages();
 }

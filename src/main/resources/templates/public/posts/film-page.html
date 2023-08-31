@@ -204,20 +204,20 @@
 <div style="text-align: center;">
     <label for="cities">Выберите город: </label>
     <select id="cities">
-        <option value="Киев">Киев</option>
-        <option value="Харьков">Харьков</option>
-        <option value="Одесса">Одесса</option>
-        <option value="Чернигов">Чернигов</option>
-        <option value="Львов">Львов</option>
-        <option value="Николаев">Николаев</option>
-        <option value="Кривой">Кривой Рог</option>
+        <option value="Київ">Київ</option>
+        <option value="Харків">Харків</option>
+        <option value="Одеса">Одеса</option>
+        <option value="Чернігів">Чернігів</option>
+        <option value="Львів">Львів</option>
+        <option value="Миколаїв">Миколаїв</option>
+        <option value="Кривий Ріг">Кривий Ріг</option>
         <option value="Полтава">Полтава</option>
-        <option value="Кропивницкий">Кропивницкий</option>
-        <option value="Краматорск">Краматорск</option>
-        <option value="Черновцы">Черновцы</option>
-        <option value="Запорожье">Запорожье</option>
-        <option value="Сумы">Сумы</option>
-        <!-- Добавьте другие города по необходимости -->
+        <option value="Кропивницький">Кропивницький</option>
+        <option value="Краматорськ">Краматорськ</option>
+        <option value="Чернівці">Чернівці</option>
+        <option value="Запоріжжя">Запоріжжя</option>
+        <option value="Суми">Суми</option>
+        <!-- Додайте інші міста за необхідності -->
     </select>
 </div>
 
@@ -245,43 +245,43 @@
     <div class="slot">
         <div><b>12:00</b></div>
         <div>Зал 1</div>
-        <div>28 Июля</div>
+        <div>28 Липня</div>
     </div>
     <div class="slot">
-        <div><b>14:00</b></div>
-        <div>Зал 2</div>
-        <div>28 Июля</div>
+        <div><b>12:00</b></div>
+        <div>Зал 1</div>
+        <div>28 Липня</div>
     </div>
     <div class="slot">
-        <div><b>16:00</b></div>
-        <div>Зал 3</div>
-        <div>28 Июля</div>
+        <div><b>12:00</b></div>
+        <div>Зал 1</div>
+        <div>28 Липня</div>
     </div>
     <div class="slot">
-        <div><b>18:00</b></div>
-        <div>Зал 3</div>
-        <div>28 Июля</div>
+        <div><b>12:00</b></div>
+        <div>Зал 1</div>
+        <div>28 Липня</div>
     </div>
     <div class="slot">
-        <div><b>20:00</b></div>
-        <div>Зал 3</div>
-        <div>28 Июля</div>
+        <div><b>12:00</b></div>
+        <div>Зал 1</div>
+        <div>28 Липня</div>
     </div>
     <div class="slot">
-        <div><b>22:00</b></div>
-        <div>Зал 3</div>
-        <div>28 Июля</div>
+        <div><b>12:00</b></div>
+        <div>Зал 1</div>
+        <div>28 Липня</div>
     </div>
     <div class="slot">
-        <div><b>00:00</b></div>
-        <div>Зал 3</div>
-        <div>28 Июля</div>
+        <div><b>12:00</b></div>
+        <div>Зал 1</div>
+        <div>28 Липня</div>
     </div>
 </div>
 
 <div class="container">
     <div class="movie-details">
-        <img style="height: 350px" class="movie-image" th:src="'/upload/' + ${movies.main_page_path}" alt="Фильм">
+        <img style="height: 350px" class="movie-image" th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${movies.main_page_path}" alt="Фильм">
         <div class="movie-description">
             <form action="#" method="post" onsubmit="return false;">
                 <button class="btn btn-warning" type="submit">Купити білет</button>
@@ -297,16 +297,16 @@
             <div class="film-details">
                 <h3>Інформація про фільм</h3>
                 <div class="film-property">
-                    <p><strong>Year:</strong> <span th:text="${movies.aboutMovie.year}"></span></p>
-                    <p><strong>Composer:</strong> <span th:text="${movies.aboutMovie.composer}"></span></p>
-                    <p><strong>Producer:</strong> <span th:text="${movies.aboutMovie.producer}"></span></p>
-                    <p><strong>Director:</strong> <span th:text="${movies.aboutMovie.director}"></span></p>
-                    <p><strong>Screenwriter:</strong> <span th:text="${movies.aboutMovie.screenwriter}"></span></p>
-                    <p><strong>Cinematographer:</strong> <span th:text="${movies.aboutMovie.cinematographer}"></span></p>
-                    <p><strong>Genre:</strong> <span th:text="${movies.aboutMovie.genre}"></span></p>
-                    <p><strong>Budget:</strong> <span th:text="${movies.aboutMovie.budget}"></span></p>
-                    <p><strong>Age Rating:</strong> <span th:text="${movies.aboutMovie.age_rating}"></span></p>
-                    <p><strong>Duration:</strong> <span th:text="${movies.aboutMovie.duration}"></span></p>
+                    <p><strong>Рік:</strong> <span th:text="${movies.aboutMovie.year}"></span></p>
+                    <p><strong>Композитор:</strong> <span th:text="${movies.aboutMovie.composer}"></span></p>
+                    <p><strong>Продюсер:</strong> <span th:text="${movies.aboutMovie.producer}"></span></p>
+                    <p><strong>Режисер:</strong> <span th:text="${movies.aboutMovie.director}"></span></p>
+                    <p><strong>Сценарист:</strong> <span th:text="${movies.aboutMovie.screenwriter}"></span></p>
+                    <p><strong>Оператор:</strong> <span th:text="${movies.aboutMovie.cinematographer}"></span></p>
+                    <p><strong>Жанр:</strong> <span th:text="${movies.aboutMovie.genre}"></span></p>
+                    <p><strong>Бюджет:</strong> <span th:text="${movies.aboutMovie.budget}"></span></p>
+                    <p><strong>Віковий рейтинг:</strong> <span th:text="${movies.aboutMovie.age_rating}"></span></p>
+                    <p><strong>Тривалість:</strong> <span th:text="${movies.aboutMovie.duration}"></span></p>
                 </div>
             </div>
         </div>
@@ -315,7 +315,7 @@
                 <div class="wrapper">
                     <i id="left" class="fa-solid fa-angle-left"></i>
                     <div class="carousel">
-                        <img style="height: 300px; width: 300px;" th:each="imagePath : ${galleryPaths}" th:src="'/upload/' + ${imagePath}" alt="Slide" draggable="false">
+                        <img style="height: 300px; width: 300px;" th:each="imagePath : ${galleryPaths}" th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${imagePath}" alt="Slide" draggable="false">
                     </div>
                     <i id="right" class="fa-solid fa-angle-right"></i>
                 </div>

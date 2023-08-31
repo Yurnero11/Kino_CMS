@@ -1,12 +1,10 @@
 package com.example.Kino_CMS.controller.adminController;
 
-import com.example.Kino_CMS.entity.Cinemas;
+import com.example.Kino_CMS.entity.Cinema;
 import com.example.Kino_CMS.repository.CinemaRepository;
-import com.example.Kino_CMS.repository.GalleryRepository;
-import com.example.Kino_CMS.repository.HallRepository;
-import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.CinemaServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -39,12 +37,12 @@ public class CinemaEditController {
             return "redirect:/admin/cinemas";
         }
 
-        Optional<Cinemas> optionalCinema = cinemaRepository.findById(id);
+        Optional<Cinema> optionalCinema = cinemaRepository.findById(id);
         if (optionalCinema.isEmpty()) {
             return "redirect:/admin/cinemas";
         }
 
-        Cinemas cinema = optionalCinema.get();
+        Cinema cinema = optionalCinema.get();
 
         // Добавление объекта cinema в модель
         model.addAttribute("cinema", cinema);
@@ -64,18 +62,18 @@ public class CinemaEditController {
                                    @RequestParam("gallery_photo_3") MultipartFile upload3,
                                    @RequestParam("gallery_photo_4") MultipartFile upload4,
                                    @RequestParam("gallery_photo_5") MultipartFile upload5,
-                                   @RequestParam("seoBlocks.url") String url,
-                                   @RequestParam("seoBlocks.title") String title,
-                                   @RequestParam("seoBlocks.keywords") String keywords,
-                                   @RequestParam("seoBlocks.description") String descriptionSeo,
+                                   @RequestParam("seoBlock.url") String url,
+                                   @RequestParam("seoBlock.title") String title,
+                                   @RequestParam("seoBlock.keywords") String keywords,
+                                   @RequestParam("seoBlock.description") String descriptionSeo,
                                    RedirectAttributes redirectAttributes) {
 
-        Optional<Cinemas> optionalCinema = service.getCinemaById(id);
+        Optional<Cinema> optionalCinema = service.getCinemaById(id);
         if (optionalCinema.isEmpty()) {
             return "redirect:/admin/cinemas";
         }
 
-        Cinemas cinema = optionalCinema.get();
+        Cinema cinema = optionalCinema.get();
         cinema.setName(cinemaName);
         cinema.setDescription(description);
         cinema.setConditions(conditions);
@@ -86,10 +84,10 @@ public class CinemaEditController {
         cinema.getGallery().setImagePath3(saveImage(upload3, cinema.getGallery().getImagePath3()));
         cinema.getGallery().setImagePath4(saveImage(upload4, cinema.getGallery().getImagePath4()));
         cinema.getGallery().setImagePath5(saveImage(upload5, cinema.getGallery().getImagePath5()));
-        cinema.getSeoBlocks().setUrl(url);
-        cinema.getSeoBlocks().setTitle(title);
-        cinema.getSeoBlocks().setKeywords(keywords);
-        cinema.getSeoBlocks().setDescription(descriptionSeo);
+        cinema.getSeoBlock().setUrl(url);
+        cinema.getSeoBlock().setTitle(title);
+        cinema.getSeoBlock().setKeywords(keywords);
+        cinema.getSeoBlock().setDescription(descriptionSeo);
 
         if (logotype != null && !logotype.isEmpty()) {
             cinema.setLogo_image_path(saveImage(logotype, cinema.getLogo_image_path()));
@@ -102,7 +100,8 @@ public class CinemaEditController {
         return "redirect:/admin/cinemas";
     }
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file, String currentImagePath) {
         if (file != null && !file.isEmpty()) {
@@ -111,7 +110,7 @@ public class CinemaEditController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

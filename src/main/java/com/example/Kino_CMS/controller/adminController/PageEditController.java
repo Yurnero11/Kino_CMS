@@ -1,14 +1,10 @@
 package com.example.Kino_CMS.controller.adminController;
 
-import com.example.Kino_CMS.entity.Cinemas;
-import com.example.Kino_CMS.entity.Pages;
-import com.example.Kino_CMS.entity.User;
+import com.example.Kino_CMS.entity.Page;
 import com.example.Kino_CMS.repository.PageRepository;
-import com.example.Kino_CMS.service.PageService;
 import com.example.Kino_CMS.service.impl.PageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,8 +21,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -45,9 +39,9 @@ public class PageEditController {
             return "redirect:/admin/pages";
         }
 
-        Optional<Pages> pagesOptional = pageService.findById(id);
+        Optional<Page> pagesOptional = pageService.findById(id);
         if (pagesOptional.isPresent()) {
-            Pages page = pagesOptional.get();
+            Page page = pagesOptional.get();
             model.addAttribute("pages", page);
             return "admin/pages/page-edit";
         } else {
@@ -59,7 +53,7 @@ public class PageEditController {
     @PreAuthorize("hasRole('ADMIN')")
     public String editUser(@PathVariable(value = "id") long id,
                            @RequestParam("name") String page_name,
-                           @RequestParam("status") String status,
+                           @RequestParam(value = "status", required = false, defaultValue = "off") String status,
                            @RequestParam("description") String description,
                            @RequestParam("mainImageFile") MultipartFile main_image_path,
                            @RequestParam("gallery_photo_1") MultipartFile upload1,
@@ -73,39 +67,46 @@ public class PageEditController {
                            @RequestParam("description_seo") String descriptionSeo,
                            RedirectAttributes redirectAttributes
     ){
-        Optional<Pages> optionalPages = pageService.findById(id);
+        Optional<Page> optionalPages = pageService.findById(id);
         if (optionalPages.isEmpty()) {
             return "redirect:/admin/pages";
         }
 
-        Pages pages = optionalPages.get();
-        pages.setPage_name(page_name);
-        pages.setDescription(description);
-        pages.setStatus(status);
-        pages.setMain_image_path(saveImage(main_image_path, pages.getMain_image_path()));
+        Page page = optionalPages.get();
+        page.setPage_name(page_name);
+        page.setDescription(description);
+        if ("on".equals(status)) {
+            // Обработка, когда статус включен
+            page.setStatus("on");
+        } else {
+            // Обработка, когда статус выключен или отсутствует
+            page.setStatus("off");
+        }
+        page.setMain_image_path(saveImage(main_image_path, page.getMain_image_path()));
 
-        pages.setImage_path_1(saveImage(upload1, pages.getImage_path_1()));
-        pages.setImage_path_2(saveImage(upload2, pages.getImage_path_2()));
-        pages.setImage_path_3(saveImage(upload3, pages.getImage_path_3()));
-        pages.setImage_path_4(saveImage(upload4, pages.getImage_path_4()));
-        pages.setImage_path_5(saveImage(upload5, pages.getImage_path_5()));
+        page.setImage_path_1(saveImage(upload1, page.getImage_path_1()));
+        page.setImage_path_2(saveImage(upload2, page.getImage_path_2()));
+        page.setImage_path_3(saveImage(upload3, page.getImage_path_3()));
+        page.setImage_path_4(saveImage(upload4, page.getImage_path_4()));
+        page.setImage_path_5(saveImage(upload5, page.getImage_path_5()));
 
-        pages.setSeo_url(url);
-        pages.setSeo_title(title);
-        pages.setSeo_keywords(keywords);
-        pages.setSeo_description(descriptionSeo);
+        page.setSeo_url(url);
+        page.setSeo_title(title);
+        page.setSeo_keywords(keywords);
+        page.setSeo_description(descriptionSeo);
 
         if (main_image_path != null && !main_image_path.isEmpty()) {
-            pages.setMain_image_path(saveImage(main_image_path, pages.getMain_image_path()));
+            page.setMain_image_path(saveImage(main_image_path, page.getMain_image_path()));
         } else {
-            pages.setMain_image_path(pages.getMain_image_path()); // Сохраняем старое значение
+            page.setMain_image_path(page.getMain_image_path()); // Сохраняем старое значение
         }
 
-        pageService.savePages(pages);
+        pageService.savePages(page);
         return "redirect:/admin/pages";
     }
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file, String currentImagePath) {
         if (file != null && !file.isEmpty()) {
@@ -114,7 +115,7 @@ public class PageEditController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

@@ -1,6 +1,5 @@
 package com.example.Kino_CMS.service.impl;
 
-import com.example.Kino_CMS.entity.CinemaContacts;
 import com.example.Kino_CMS.entity.SeoBlockCinemaContact;
 import com.example.Kino_CMS.repository.SeoBlockCinemaContactRepository;
 import com.example.Kino_CMS.service.SeoBlockCinemaContactService;

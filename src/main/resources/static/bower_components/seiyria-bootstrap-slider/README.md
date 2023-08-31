@@ -271,7 +271,7 @@ For versioning rules, we follow the [Semver convention](https://semver.org/).
 To do the following release tasks:
 * bump the version
 * publish a new version to NPM
-* update the `gh-pages` branch
+* update the `gh-page` branch
 * push a new `dist` bundle to the `master` branch on the remote `origin`
 * push new tags to the remote `origin`
 
@@ -285,9 +285,9 @@ Updating Github.io Page
 ===========================
 The Github.io page can be automatically updated by running the following command:
 
-`npm run update-gh-pages`
+`npm run update-gh-page`
 
-This command will handle generating the latest versions of the JS/CSS and index.html page, and push them to the `gh-pages` branch.
+This command will handle generating the latest versions of the JS/CSS and index.html page, and push them to the `gh-page` branch.
 
 Other Platforms & Libraries
 ===========================

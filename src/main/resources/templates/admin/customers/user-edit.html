@@ -15,9 +15,9 @@
   </ol>
 </section>
 <div layout:fragment="content">
-  <h1 th:each="user : ${users}">Update User by id# <span th:text="${user.id}"></span></h1>
+  <h1 th:each="user : ${users}">Оновлення юзера по id# <span th:text="${user.id}"></span></h1>
   <div th:each="user: ${users}">
-    <form method="post">
+    <form method="post" th:action="@{/admin/user/{id}/edit(id = ${user.id})}">
       <h3>Username<input type="text" th:value="${user.username}" name="username" placeholder="Введіть новий username" class="form-control"></h3>
       <h3>Email<input type="text" th:value="${user.email}" name="email" placeholder="Введіть новий email" class="form-control"></h3>
       <h3>Birthday<input type="date" th:value="${user.birthday}" name="birthday" placeholder="Введіть новий birthday" class="form-control"></h3>

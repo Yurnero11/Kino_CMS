@@ -95,29 +95,41 @@
       </tbody>
     </table>
     <br>
-    <button type="button" onclick="selectRecipients()">Выбрать всех</button>
-    <button type="button" onclick="deselectRecipients()">Снять выбор со всех</button>
+    <button type="button" onclick="selectRecipients()">Вибрати всіх</button>
+    <button type="button" onclick="deselectRecipients()">Зняти вибір</button>
     <!-- Добавим обработчик события для кнопки, чтобы сохранить выбранных получателей и перенаправить на страницу mail-form -->
-    <button type="button" onclick="saveAndRedirect()">Отправить почту</button>
+    <button type="button" onclick="saveAndRedirect()">Відправити пошту</button>
   </form>
   <div class="pagination">
-  <span class="page-item" th:class="${currentPage == 0 ? 'disabled' : ''}">
-    <a th:if="${currentPage > 0}" th:href="@{'/admin/email-users?page=' + ${currentPage - 1}}" aria-label="Previous" class="page-link">
-      <span aria-hidden="true">&lsaquo;</span>
-    </a>
-  </span>
-    <span th:each="pageNum : ${#numbers.sequence(0, totalPages - 1)}" th:class="${pageNum == currentPage ? 'active' : ''}">
-    <a th:href="@{'/admin/email-users?page=' + ${pageNum}}" th:text="${pageNum + 1}" class="page-link"></a>
-  </span>
-    <span class="page-item" th:class="${currentPage == totalPages - 1 ? 'disabled' : ''}">
-    <a th:if="${currentPage < totalPages - 1}" th:href="@{'/admin/email-users?page=' + ${currentPage + 1}}" aria-label="Next" class="page-link">
-      <span aria-hidden="true">&rsaquo;</span>
-    </a>
-  </span>
+    <th:block th:if="${showPagination}">
+      <form method="POST" >
+        <nav aria-label="Page navigation example">
+          <ul class="pagination">
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Previous" disabled="0"
+                 th:href="@{/admin/email-users(page=0)}">
+                <span aria-hidden="true">&lt;</span>
+              </a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
+              <a class="page-link" href="#" th:href="@{/admin/email-users(page=${pageNumber})}"
+                 th:text="${pageNumber + 1}"></a>
+            </li>
+            <li class="page-item">
+              <a class="page-link" href="#" aria-label="Next"
+                 th:disabled="${currentPage == totalPages - 1}"
+                 th:href="@{/admin/email-users(page=${nextPage})}">
+                <span aria-hidden="true">&gt;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </form>
+    </th:block>
     <script>
       function saveAndRedirect() {
         saveSelectedRecipients();
-        window.location.href = '/admin/email-form'; // Перенаправить на страницу mail-form
+        window.location.href = '/Kino_CMS-Yura_Dmytriv/admin/email-form'; // Перенаправить на страницу mail-form
       }
 
       document.addEventListener('DOMContentLoaded', function() {

@@ -1,0 +1,195 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="admin/layout/layout">
+<head>
+  <title>Update cinema</title>
+  <style>
+    #thumbnailContainer img {
+      display: block;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+<section layout:fragment="header">
+  <h1>Фільми</h1>
+  <ol class="breadcrumb">
+    <li><a href="/templates/public"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+    <li class="active">Кінотеатри</li>
+  </ol>
+</section>
+<div layout:fragment="content">
+  <h1>Оновлення фільму id# <span th:text="${movies.movie_id}"></span></h1>
+  <form method="post" enctype="multipart/form-data" th:object="${movies}">
+    <input type="hidden" th:field="*{movie_id}">
+    <h3>Назва кінотеатру<input name="name_film" type="text" th:field="*{name}" placeholder="Назва кінотеатру" class="form-control"></h3>
+    <h3>Опис<input type="text" name="description" th:field="*{description}" placeholder="Текст" class="form-control"></h3>
+
+    <h3>Головне фото</h3>
+    <div>
+      <div id="thumbnailContainer">
+        <img th:src="${movies.main_page_path != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + movies.main_page_path : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="logoImage" style="width: 100px; height: 100px;" />
+        <p id="error" style="color: red;"></p>
+      </div>
+      <input accept=".jpeg, .jpg, .png" type="file" name="main_photo" class="form-control gallery-input" placeholder="Фото" id="logotypeInput" onchange="displayImageWithValidation(this, 'logoImage', 'error')">
+    </div>
+
+
+    <div class="gallery-row">
+      <h3>Галерея картинок</h3>
+      <img th:src="${movies.gallery.imagePath1 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath1 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage1" style="width: 100px; height: 100px;" />
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_1" class="form-control gallery-input" placeholder="Фото 1" onchange="displayImageWithValidation(this, 'galleryImage1', 'error2')">
+      <p id="error2" style="color: red;"></p>
+
+      <img th:src="${movies.gallery.imagePath2 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath2 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage2" style="width: 100px; height: 100px;" />
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_2" class="form-control gallery-input" placeholder="Фото 2" onchange="displayImageWithValidation(this, 'galleryImage2', 'error3')">
+      <p id="error3" style="color: red;"></p>
+
+      <img th:src="${movies.gallery.imagePath3 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath3 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage3" style="width: 100px; height: 100px;" />
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_3" class="form-control gallery-input" placeholder="Фото 3" onchange="displayImageWithValidation(this, 'galleryImage3', 'error4')">
+      <p id="error4" style="color: red;"></p>
+
+      <img th:src="${movies.gallery.imagePath4 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath4 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage4" style="width: 100px; height: 100px;" />
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_4" class="form-control gallery-input" placeholder="Фото 4" onchange="displayImageWithValidation(this, 'galleryImage4', 'error5')">
+      <p id="error5" style="color: red;"></p>
+
+      <img th:src="${movies.gallery.imagePath5 != null ? '/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath5 : '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'}" id="galleryImage5" style="width: 100px; height: 100px;" />
+      <input accept=".jpeg, .jpg, .png" type="file" name="gallery_photo_5" class="form-control gallery-input" placeholder="Фото 5" onchange="displayImageWithValidation(this, 'galleryImage5', 'error6')">
+      <p id="error6" style="color: red;"></p>
+      <!-- Добавьте аналогичный код для остальных полей галереи -->
+    </div>
+
+    <div id="data"
+         th:data-image1="${'/Kino_CMS-Yura_Dmytriv/upload/' + movies.main_page_path}"
+         th:data-image2="${'/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath1}"
+         th:data-image3="${'/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath2}"
+         th:data-image4="${'/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath3}"
+         th:data-image5="${'/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath4}"
+         th:data-image6="${'/Kino_CMS-Yura_Dmytriv/upload/' + movies.gallery.imagePath5}">
+    </div>
+
+    <script th:inline="javascript">
+      function displayImageWithValidation(input, imgId, errorMsgId) {
+        var allowedExtensions = /(\.jpg|\.jpeg|\.png)$/i;
+        var file = input.files[0];
+        var thumbnailContainer = document.getElementById(imgId);
+        var errorMessage = document.getElementById(errorMsgId);
+
+        // Перевірити розширення файлу
+        if (!allowedExtensions.exec(file.name)) {
+          errorMessage.textContent = 'Дозволені лише файли з розширеннями .jpg, .jpeg та .png';
+          input.value = ''; // Очистити інпут файлу
+          if (previousImageUrls[imgId] === '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg') {
+            previousImageUrls[imgId] = null;
+          }
+          thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'; // Відновити попередню фотографію
+          return false;
+        }
+
+        errorMessage.textContent = ''; // Очистити повідомлення про помилку
+
+        thumbnailContainer.src = ''; // Очистити попередню мініатюру
+
+        if (file) {
+          var reader = new FileReader();
+          reader.onload = function (e) {
+            thumbnailContainer.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        } else {
+          if (previousImageUrls[imgId] === '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg') {
+            previousImageUrls[imgId] = null;
+          }
+          thumbnailContainer.src = previousImageUrls[imgId] || previousMainImageUrl || '/Kino_CMS-Yura_Dmytriv/static/img/download.jpg'; // Відновити попередню фотографію у разі відсутності нового файлу
+        }
+      }
+    </script>
+
+    <!-- тут список добавленых залов-->
+    <div>
+      <h3>Інформація про фільм</h3>
+      <label for="year">Год:</label><br>
+      <input th:value="${movies.aboutMovie.year}"  type="number" id="year" name="year"><br>
+
+      <label for="composer">Композитор:</label><br>
+      <input th:value="${movies.aboutMovie.composer}" type="text" id="composer" name="composer"><br>
+
+      <label for="producer">Продюсер:</label><br>
+      <input th:value="${movies.aboutMovie.producer}" type="text" id="producer" name="producer"><br>
+
+      <label for="director">Режиссер:</label><br>
+      <input th:value="${movies.aboutMovie.director}" type="text" id="director" name="director"><br>
+
+      <label for="screenwriter">Сценарист:</label><br>
+      <input th:value="${movies.aboutMovie.screenwriter}" type="text" id="screenwriter" name="screenwriter"><br>
+
+      <label for="cinematographer">Оператор:</label><br>
+      <input th:value="${movies.aboutMovie.cinematographer}" type="text" id="cinematographer" name="cinematographer"><br>
+
+      <label for="genre">Жанр:</label><br>
+      <input th:value="${movies.aboutMovie.genre}" type="text" id="genre" name="genre"><br>
+
+      <label for="budget">Бюджет:</label><br>
+      <input th:value="${movies.aboutMovie.budget}" type="number" step="0.01" id="budget" name="budget"><br>
+
+      <label for="ageRating">Возрастной рейтинг:</label><br>
+      <input th:value="${movies.aboutMovie.age_rating}" type="text" id="ageRating" name="ageRating"><br>
+
+      <label for="duration">Длительность (чч:мм:сс):</label><br>
+      <input th:value="${movies.aboutMovie.duration}" type="time" id="duration" name="duration" step="1"><br>
+    </div>
+    <!--  -->
+
+
+    <h3>Посилання на трейлер<input type="text" name="trailer_url" th:field="*{trailer_url}" placeholder="Посилання на трейлер в ютубі" class="form-control"></h3>
+
+    <h3>Коли вийде фільм?</h3>
+    <div>
+      <label>
+        <input type="checkbox" th:checked="${movies.movie_data == 'soon'}" name="movie_data" value="soon" onchange="checkBox(this)"> Скоро вийде
+      </label>
+      <label>
+        <input type="checkbox" th:checked="${movies.movie_data == 'now'}"  name="movie_data" value="now" onchange="checkBox(this)"> Вже вийшов
+      </label>
+      <script>
+        function checkBox(checkbox) {
+          const checkboxes = document.getElementsByName("movie_data");
+          if (checkbox.checked) {
+            for (let i = 0; i < checkboxes.length; i++) {
+              if (checkboxes[i] !== checkbox) {
+                checkboxes[i].checked = false;
+              }
+            }
+          }
+        }
+      </script>
+    </div>
+
+
+    <h3>Тип фільму</h3>
+    <div>
+      <label>
+        <input type="checkbox" name="movie_type" th:checked="${movies.movieType.contains('3D')}" value="3D" onchange="handleCheckboxChange(this)"> 3D
+      </label>
+      <label>
+        <input type="checkbox" name="movie_type" th:checked="${movies.movieType.contains('2D')}" value="2D" onchange="handleCheckboxChange(this)"> 2D
+      </label>
+      <label>
+        <input type="checkbox" name="movie_type" th:checked="${movies.movieType.contains('IMAX')}" value="IMAX" onchange="handleCheckboxChange(this)"> IMAX
+      </label>
+    </div>
+
+
+    <h3>Seo block</h3>
+    <h3>URL<input type="text" th:field="*{seoBlock.url}" placeholder="URL" class="form-control"></h3>
+    <h3>Title<input type="text" th:field="*{seoBlock.title}" placeholder="Title" class="form-control"></h3>
+    <h3>Keywords<input type="text" th:field="*{seoBlock.keywords}" placeholder="word" class="form-control"></h3>
+    <h3>Description<input type="text" th:field="*{seoBlock.description}" placeholder="Description" class="form-control"></h3>
+    <button type="submit" class="btn btn-success">Оновити фільм</button>
+  </form>
+</div>
+
+</body>
+</html>

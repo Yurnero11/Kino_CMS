@@ -2,7 +2,7 @@
 
 ![Breadcrumbs](assets/readme_1.png)
 
-`Breadcrumbs` is a [Grav](http://github.com/getgrav/grav) plugin that adds links to the previous pages (following the hierarchical structure).
+`Breadcrumbs` is a [Grav](http://github.com/getgrav/grav) plugin that adds links to the previous page (following the hierarchical structure).
 It is particularly useful if you are using Grav to run a blog.
 
 # Installation

@@ -78,13 +78,13 @@
     <img style="width: 100%; height: 600px" src="/static/img/promotion.jpg" alt="promotion">
 </div>
 
-<h3 style="text-align: center">Акции и скидки</h3>
+<h3 style="text-align: center">Акції и снижки</h3>
 
-<div class="left-content-wrapper" style="background-color: #0E2231">
+<div class="content-wrapper" style="background-color: #0E2231">
     <div class="left-content">
         <!-- Карточки акций -->
         <div th:each="promotion : ${promotions}" class="promotion-card" th:if="${promotion.status == 'on'}">
-            <img class="promotion-image" th:src="${'/upload/' + promotion.main_image_path}" alt="promotion">
+            <img class="promotion-image" th:src="${'/Kino_CMS-Yura_Dmytriv/upload/' + promotion.main_image_path}" alt="promotion">
             <a th:text="${promotion.promotion_title}" style="color: blue" th:href="@{/promotions/{promotion_id}(promotion_id=${promotion.promotion_id})}"></a>
             <div class="promotion-date" style="color: white; background-color: black; border: 1px; border-radius: 10px" th:text="|${promotion.publication_date}|"></div>
             <div class="promotion-description" style="color: white" th:text="${promotion.promotion_description}"></div>

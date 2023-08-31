@@ -26,7 +26,7 @@ function formatState (state) {
     return state.text;
   }
 
-  var baseUrl = "{{ url('user://pages/images/flags') }}";
+  var baseUrl = "{{ url('user://page/images/flags') }}";
   var $state = $(
     '<span><img class="img-flag" /> <span></span></span>'
   );

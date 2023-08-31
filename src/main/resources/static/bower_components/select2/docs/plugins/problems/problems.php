@@ -151,7 +151,7 @@ class ProblemsPlugin extends Plugin
             'assets' => true,
             'system' => false,
             'user/data' => true,
-            'user/pages' => false,
+            'user/page' => false,
             'user/config' => false,
             'user/plugins/error' => false,
             'user/plugins' => false,

@@ -1,7 +1,6 @@
 package com.example.Kino_CMS.service.impl;
 
-import com.example.Kino_CMS.entity.AboutCinema;
-import com.example.Kino_CMS.entity.Pages;
+import com.example.Kino_CMS.entity.Page;
 import com.example.Kino_CMS.repository.PageRepository;
 import com.example.Kino_CMS.service.PageService;
 import org.apache.logging.log4j.LogManager;
@@ -19,10 +18,10 @@ public class PageServiceImpl implements PageService {
     private PageRepository pageRepository;
 
     @Override
-    public Iterable<Pages> getAllPages() {
+    public Iterable<Page> getAllPages() {
         try {
             log.info("Getting all Pages");
-            Iterable<Pages> result = pageRepository.findAll();
+            Iterable<Page> result = pageRepository.findAll();
             log.info("Successfully retrieved all Pages");
             return result;
         } catch (Exception e) {
@@ -32,35 +31,35 @@ public class PageServiceImpl implements PageService {
     }
 
     @Override
-    public Pages savePages(Pages pages) {
+    public Page savePages(Page page) {
         try {
-            log.info("Saving Pages: {}", pages);
-            Pages result = pageRepository.save(pages);
-            log.info("Successfully saved Pages: {}", pages);
+            log.info("Saving Pages: {}", page);
+            Page result = pageRepository.save(page);
+            log.info("Successfully saved Pages: {}", page);
             return result;
         } catch (Exception e) {
-            log.error("Error while saving Pages: {}", pages, e);
+            log.error("Error while saving Pages: {}", page, e);
             throw e;
         }
     }
 
     @Override
-    public void delete(Pages pages) {
+    public void delete(Page page) {
         try {
-            log.info("Deleting Pages: {}", pages);
-            pageRepository.delete(pages);
-            log.info("Successfully deleted Pages: {}", pages);
+            log.info("Deleting Pages: {}", page);
+            pageRepository.delete(page);
+            log.info("Successfully deleted Pages: {}", page);
         } catch (Exception e) {
-            log.error("Error while deleting Pages: {}", pages, e);
+            log.error("Error while deleting Pages: {}", page, e);
             throw e;
         }
     }
 
     @Override
-    public Optional<Pages> findById(Long page_id) {
+    public Optional<Page> findById(Long page_id) {
         try {
             log.info("Getting Pages by ID: {}", page_id);
-            Optional<Pages> result = pageRepository.findById(page_id);
+            Optional<Page> result = pageRepository.findById(page_id);
             if (result.isPresent()) {
                 log.info("Successfully retrieved Pages by ID: {}", page_id);
             } else {

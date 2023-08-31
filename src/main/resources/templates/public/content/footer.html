@@ -2,8 +2,8 @@
     <div style="display: flex; align-items: center;">
         <!-- Надпись "Мобильное приложение" и маленькие картинки -->
         <span style="margin-right: 10px;">Мобильное приложение</span>
-        <img src="/static/img/123.png" alt="Mobile App Icon 1" style="height: 70px; width: 100px; margin-right: 5px;">
-        <img src="/static/img/1234.png" alt="Mobile App Icon 2" style="height: 70px; width: 100px;">
+        <img src="/Kino_CMS-Yura_Dmytriv/static/img/123.png" alt="Mobile App Icon 1" style="height: 70px; width: 100px; margin-right: 5px;">
+        <img src="/Kino_CMS-Yura_Dmytriv/static/img/1234.png" alt="Mobile App Icon 2" style="height: 70px; width: 100px;">
     </div>
 
     <div>
@@ -11,27 +11,27 @@
         <nav>
             <ul style="list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap;">
                 <!-- Existing menu items -->
-                <li style="margin-right: 10px; flex-basis: 20%;"><a href="/home" style="text-decoration: none; color: #333; display: block; padding: 5px;">Главная</a></li>
-                <li style="margin-right: 10px; flex-basis: 20%;"><a href="/posts" style="text-decoration: none; color: #333; display: block; padding: 5px;">Афиша</a></li>
-                <li style="margin-right: 10px; flex-basis: 20%;"><a href="/schedule" style="text-decoration: none; color: #333; display: block; padding: 5px;">Расписание</a></li>
-                <li style="margin-right: 10px; flex-basis: 20%;"><a href="/soon" style="text-decoration: none; color: #333; display: block; padding: 5px;">Скоро</a></li>
-                <li style="margin-right: 10px; flex-basis: 20%;"><a href="/cinemas" style="text-decoration: none; color: #333; display: block; padding: 5px;">Кинотеатры</a></li>
-                <li style="margin-right: 10px; flex-basis: 20%;"><a href="/promotions" style="text-decoration: none; color: #333; display: block; padding: 5px;">Акции</a></li>
+                <li style="margin-right: 10px; flex-basis: 20%;"><a th:href="@{/home}" style="text-decoration: none; color: #333; display: block; padding: 5px;">Головна</a></li>
+                <li style="margin-right: 10px; flex-basis: 20%;"><a th:href="@{/posts}" style="text-decoration: none; color: #333; display: block; padding: 5px;">Афіша</a></li>
+                <li style="margin-right: 10px; flex-basis: 20%;"><a th:href="@{/schedule}" style="text-decoration: none; color: #333; display: block; padding: 5px;">Розклад</a></li>
+                <li style="margin-right: 10px; flex-basis: 20%;"><a th:href="@{/soon}" style="text-decoration: none; color: #333; display: block; padding: 5px;">Скоро</a></li>
+                <li style="margin-right: 10px; flex-basis: 20%;"><a th:href="@{/cinemas}" style="text-decoration: none; color: #333; display: block; padding: 5px;">Кінотеатри</a></li>
+                <li style="margin-right: 10px; flex-basis: 20%;"><a th:href="@{/promotions}" style="text-decoration: none; color: #333; display: block; padding: 5px;">Акції</a></li>
                 <!-- Здесь добавляем класс "dropdown" к "Другие страницы" -->
                 <li th:each="aboutCinema : ${about_cinema}" th:if="${aboutCinema.status == 'on'}" style="margin-right: 10px; flex-basis: 20%;">
-                    <a th:href="@{/aboutCinema}" class="nav-link" style="color: #333; display: block; padding: 5px; text-decoration: none;">О кинотеатре</a>
+                    <a th:href="@{/aboutCinema}" class="nav-link" style="color: #333; display: block; padding: 5px; text-decoration: none;">Про кінотеатр</a>
                 </li>
                 <li th:each="vipHall : ${vip_halls}" th:if="${vipHall.status == 'on'}" style="margin-right: 10px; flex-basis: 20%;">
-                    <a th:href="@{/vipHall}" class="nav-link" style="color: #333; display: block; padding: 5px; text-decoration: none;">Вип зал</a>
+                    <a th:href="@{/vipHall}" class="nav-link" style="color: #333; display: block; padding: 5px; text-decoration: none;">Віп зал</a>
                 </li>
                 <li th:each="advertisings : ${advertising}" th:if="${advertisings.status == 'on'}" style="margin-right: 10px; flex-basis: 20%;">
                     <a th:href="@{/advertising}" class="nav-link" style="color: #333; display: block; padding: 5px; text-decoration: none;">Реклама</a>
                 </li>
                 <li th:each="kids_room : ${kidsroom}" th:if="${kids_room.status == 'on'}" style="margin-right: 10px; flex-basis: 20%;">
-                    <a th:href="@{/kidsRoom}" class="nav-link" style="color: #333; display: block; padding: 5px; text-decoration: none;">Детская комната</a>
+                    <a th:href="@{/kidsRoom}" class="nav-link" style="color: #333; display: block; padding: 5px; text-decoration: none;">Дитяча кімната</a>
                 </li>
                 <li th:each="page : ${pages}" th:if="${page.status == 'on'}" style="margin-right: 10px; flex-basis: 20%;">
-                    <a th:href="@{'/page/' + ${page.page_id}}" class="nav-link" th:text="${page.page_name}" style="color: #333; display: block; padding: 5px; text-decoration: none;"></a>
+                    <a th:href="@{/pages/{page_id}(page_id=${page.page_id})}" class="nav-link" th:text="${page.page_name}" style="color: #333; display: block; padding: 5px; text-decoration: none;"></a>
                 </li>
             </ul>
         </nav>
@@ -39,9 +39,9 @@
 
     <div style="display: flex; align-items: center;">
         <!-- Ссылки на социальные сети -->
-        <a href="https://instagram.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/upload/1.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
-        <a href="https://facebook.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/upload/facebook.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
-        <a href="https://twitter.com" style="text-decoration: none;"><img th:src="@{/upload/twitter.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+        <a href="https://instagram.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/static/img/1.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+        <a href="https://facebook.com" style="text-decoration: none; margin-right: 10px;"><img th:src="@{/static/img/facebook.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
+        <a href="https://twitter.com" style="text-decoration: none;"><img th:src="@{/static/img/twitter.png}" alt="Logo" style="height: 30px; width: 30px;"></a>
     </div>
     <style>
         body {

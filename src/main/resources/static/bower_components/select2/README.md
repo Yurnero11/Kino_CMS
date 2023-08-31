@@ -21,7 +21,7 @@ Use cases
 * Tagging: ability to add new items on the fly.
 * Working with large, remote datasets: ability to partially load a dataset based
   on the search term.
-* Paging of large datasets: easy support for loading more pages when the results
+* Paging of large datasets: easy support for loading more page when the results
   are scrolled to the end.
 * Templating: support for custom rendering of results and selections.
 

@@ -47,4 +47,7 @@ public class LastBanner {
 
     @Column(name = "speed")
     private int speed;
+
+    @Column(name = "status")
+    private String status;
 }

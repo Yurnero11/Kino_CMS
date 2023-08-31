@@ -1,19 +1,19 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.Cinemas;
+import com.example.Kino_CMS.entity.Cinema;
 import com.example.Kino_CMS.entity.Gallary;
 
 import java.util.Optional;
 
 public interface CinemaService {
-    Iterable<Cinemas> getAllCinemas();
+    Iterable<Cinema> getAllCinemas();
     Gallary getGalleryByCinemaId(Long cinemaID);
 
-    Cinemas saveCinemas(Cinemas cinemas);
+    Cinema saveCinemas(Cinema cinema);
 
-    void delete(Cinemas cinemas);
+    void delete(Cinema cinema);
 
-    Optional<Cinemas> getCinemaById(Long cinema_id);
+    Optional<Cinema> getCinemaById(Long cinema_id);
 
 
 }

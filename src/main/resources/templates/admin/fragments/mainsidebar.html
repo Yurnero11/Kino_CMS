@@ -3,31 +3,76 @@
 <section class="sidebar" th:fragment="sidebar">
     <!-- Sidebar Menu -->
     <ul class="sidebar-menu" data-widget="tree">
-        <!-- <li class="header"></li> -->
-        <li><a href="/admin/home"><i class="fa fa-dashboard"></i> <span>Статистика</span></a></li>
-        <li><a href="/admin/banners"><i class="fa fa-dashboard"></i> <span>Банери/Слайдери</span></a></li>
-        <li><a href="/admin/films"><i class="fa fa-dashboard"></i> <span>Фільми</span></a></li>
-        <li><a href="/admin/cinemas"><i class="fa fa-dashboard"></i> <span>Кінотеатри</span></a></li>
-        <li><a href="/admin/news"><i class="fa fa-dashboard"></i> <span>Новини</span></a></li>
-        <li><a href="/admin/promotions"><i class="fa fa-dashboard"></i> <span>Акції</span></a></li>
+        <li>
+            <a th:href="@{/admin/home}"><i class="fa fa-home"></i> <span>Статистика</span></a>
+        </li>
+        <li>
+            <a th:href="@{/admin/banners}"><i class="fa fa-picture-o"></i> <span>Банери/Слайдери</span></a>
+        </li>
+        <li>
+            <a th:href="@{/admin/films}"><i class="fa fa-film"></i> <span>Фільми</span></a>
+        </li>
+        <li>
+            <a th:href="@{/admin/cinemas}"><i class="fa fa-building"></i> <span>Кінотеатри</span></a>
+        </li>
+        <li>
+            <a th:href="@{/admin/news}"><i class="fa fa-newspaper-o"></i> <span>Новини</span></a>
+        </li>
+        <li>
+            <a th:href="@{/admin/promotions}"><i class="fa fa-tags"></i> <span>Акції</span></a>
+        </li>
         <li class="treeview">
-            <a href="#" class="trigger"><i class="fa fa-dashboard"></i> <span>Сторінки</span> <i class="right fas fa-angle-left"></i></a>
-            <!-- Вложенные ссылки, которые появятся/скроются при клике -->
+            <a href="#" class="trigger"><i class="fa fa-file"></i> <span>Сторінки</span> <i class="fa fa-angle-down"></i></a>
             <ul class="treeview-menu">
-                <li><a href="/admin/pages">Всі сторінки</a></li>
-                <li><a href="/admin/pages/main-page">Головна сторінка</a></li>
-                <li><a href="/admin/pages/about-cinema">Про кінеатр</a></li>
-                <li><a href="/admin/pages/cafe-bar">Кафе бар</a></li>
-                <li><a href="/admin/pages/vip-hall">Віп зал</a></li>
-                <li><a href="/admin/pages/advertising-page">Реклама</a></li>
-                <li><a href="/admin/pages/kids-room">Дитяча кімната</a></li>
-                <li><a href="/admin/pages/contacts">Контакти</a></li>
+                <li>
+                    <a th:href="@{/admin/pages}">Всі сторінки</a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/pages/main-page}">Головна сторінка</a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/pages/about-cinema}">Про кінотеатр</a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/pages/cafe-bar}">Кафе бар</a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/pages/vip-hall}">Віп зал</a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/pages/advertising-page}">Реклама</a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/pages/kids-room}">Дитяча кімната</a>
+                </li>
+                <li>
+                    <a th:href="@{/admin/pages/contacts}">Контакти</a>
+                </li>
             </ul>
         </li>
-        <li><a href="/admin/users"><i class="fa fa-dashboard"></i> <span>Користувачі</span></a></li>
-        <li><a href="/admin/email-form"><i class="fa fa-dashboard"></i> <span>Розсилка</span></a></li>
+        <li>
+            <a th:href="@{/admin/users}"><i class="fa fa-users"></i> <span>Користувачі</span></a>
+        </li>
+        <li>
+            <a th:href="@{/admin/email-form}"><i class="fa fa-envelope"></i> <span>Розсилка</span></a>
+        </li>
     </ul>
     <script>
+        // Получаем текущий URL страницы
+        var currentURL = window.location.pathname;
+
+        // Получаем все ссылки в боковом меню
+        var menuLinks = document.querySelectorAll('.sidebar-menu a');
+
+        // Проходимся по каждой ссылке и сравниваем её href с текущим URL
+        menuLinks.forEach(function(link) {
+            if (link.getAttribute('href') === currentURL) {
+                // Добавляем класс 'active' к ссылке, если URL совпадает
+                link.parentElement.classList.add('active');
+            }
+        });
+
+
         // Функция для обработки кликов на триггере списка
         function handleTriggerClick(event) {
             // Отменяем стандартное поведение ссылки, чтобы не происходил переход на новую страницу

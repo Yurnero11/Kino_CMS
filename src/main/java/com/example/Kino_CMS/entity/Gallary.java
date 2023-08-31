@@ -32,18 +32,18 @@ public class Gallary {
     private String imagePath5;
 
     @OneToOne(mappedBy = "gallery")
-    private Movies movies;
+    private Movie movie;
 
     @OneToOne(mappedBy = "gallery")
-    private Cinemas cinemas;
+    private Cinema cinema;
 
     @OneToOne(mappedBy = "gallery")
-    private Halls halls;
+    private Hall hall;
 
     @OneToOne(mappedBy = "gallery")
     private News news;
 
     @OneToOne(mappedBy = "gallery")
-    private Promotions promotions;
+    private Promotion promotion;
 
 }

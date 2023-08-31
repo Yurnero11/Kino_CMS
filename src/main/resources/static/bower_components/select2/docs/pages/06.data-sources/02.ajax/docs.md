@@ -122,7 +122,7 @@ $('#mySelect2').select2({
 });
 ```
 
-Select2 will expect a `pagination.more` value in the response.  The value of `more` should be `true` or `false`, which tells Select2 whether or not there are more pages of results available for retrieval:
+Select2 will expect a `pagination.more` value in the response.  The value of `more` should be `true` or `false`, which tells Select2 whether or not there are more page of results available for retrieval:
 
 ```
 {

@@ -30,4 +30,7 @@ public class SeoBlockCinemaContact {
 
     @Column(name = "description")
     private String description;
+
+    @Column(name = "status")
+    private String status;
 }

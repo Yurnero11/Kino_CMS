@@ -6,7 +6,7 @@
 <head>
     <title>Фільми</title>
     <style>
-        .movies-container {
+        .movie-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -52,14 +52,15 @@
 <body>
 <div layout:fragment="content">
     <h1>Фільми</h1>
-    <h2><a href="/admin/films/film-add" class="add-movie-button">Додати фільм</a></h2>
+    <h2><a th:href="@{/admin/films/film-add}" class="add-movie-button">Додати фільм</a></h2>
     <div class="section-container">
         <h3 class="section-title">Вже вийшов</h3>
-        <div class="movies-container">
+        <div class="movie-container">
             <div th:each="movie, iterationStatus : ${movies}" th:if="${movie.movie_data == 'now'}" class="movie">
                 <img class="movie-image" th:src="@{'/upload/' + ${movie.main_page_path}}">
                 <h3 th:text="${movie.name}"></h3>
-                <td><form th:action="'/admin/films/' + ${movie.movie_id} + '/remove'" method="post">
+                <td><a th:href="@{/admin/films/{movie_id}/edit(movie_id=${movie.movie_id})}"  class="btn btn-info">Редагувати</a></td>
+                <td><form th:action="@{/admin/films/{movie_id}/remove(movie_id=${movie.movie_id})}" method="post">
                     <button class="btn btn-warning">Delete</button>
                 </form></td>
             </div>
@@ -67,11 +68,12 @@
     </div>
     <div class="section-container">
         <h3 class="section-title">Скоро вийде</h3>
-        <div class="movies-container">
+        <div class="movie-container">
             <div th:each="movie, iterationStatus : ${movies}" th:if="${movie.movie_data == 'soon'}" class="movie">
                 <img class="movie-image" th:src="@{'/upload/' + ${movie.main_page_path}}">
                 <h3 th:text="${movie.name}"></h3>
-                <td><form th:action="'/admin/films/' + ${movie.movie_id} + '/remove'" method="post">
+                <td><a th:href="@{/admin/films/{movie_id}/edit(movie_id=${movie.movie_id})}"  class="btn btn-info">Редагувати</a></td>
+                <td><form th:action="@{/admin/films/{movie_id}/remove(movie_id=${movie.movie_id})}" method="post">
                     <button class="btn btn-warning">Delete</button>
                 </form></td>
             </div>

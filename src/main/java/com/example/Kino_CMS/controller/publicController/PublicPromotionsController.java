@@ -1,7 +1,6 @@
 package com.example.Kino_CMS.controller.publicController;
 
-import com.example.Kino_CMS.entity.Promotions;
-import com.example.Kino_CMS.repository.PromotionRepository;
+import com.example.Kino_CMS.entity.Promotion;
 import com.example.Kino_CMS.service.impl.PromotionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,7 +18,7 @@ public class PublicPromotionsController {
 
     @GetMapping("/promotions")
     public String promotionsIndex(Model model){
-        Iterable<Promotions> promotions = promotionServiceImpl.getAllPromotions(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
+        Iterable<Promotion> promotions = promotionServiceImpl.getAllPromotions(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
         model.addAttribute("promotions", promotions);
         return "/public/promotions/promotions-index";
     }
@@ -27,13 +26,13 @@ public class PublicPromotionsController {
     @GetMapping("/promotions/{promotion_id}")
     public String promotionsPage(@PathVariable(value = "promotion_id") long id,
                                  Model model){
-        Optional<Promotions> optionalPromotions = promotionServiceImpl.getPromotionById(id);
+        Optional<Promotion> optionalPromotions = promotionServiceImpl.getPromotionById(id);
         if (optionalPromotions.isEmpty()) {
             return "redirect:/promotions";
         }
-        Promotions promotions = optionalPromotions.get();
+        Promotion promotion = optionalPromotions.get();
 
-        model.addAttribute("promotions", promotions);
+        model.addAttribute("promotions", promotion);
         return "/public/promotions/promotion-page";
     }
 }

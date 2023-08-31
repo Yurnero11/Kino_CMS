@@ -1,12 +1,13 @@
 package com.example.Kino_CMS.service;
 
-import com.example.Kino_CMS.entity.MainBanners;
+import com.example.Kino_CMS.entity.MainBanner;
 
 public interface MainBannerService {
-    MainBanners getMainBanners();
-    MainBanners getLatestMainBanner();
+    MainBanner getMainBanners();
+    MainBanner getLatestMainBanner();
 
-    MainBanners saveMainBanners(MainBanners mainBanners);
+    MainBanner saveMainBanners(MainBanner mainBanner);
 
-    Iterable<MainBanners> getAllMainBanners();
+    Iterable<MainBanner> getAllMainBanners();
+
 }

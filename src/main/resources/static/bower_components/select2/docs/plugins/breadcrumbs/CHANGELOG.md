@@ -8,7 +8,7 @@
 ## 07/14/2016
 
 1. [](#improved)
-    * non-routable pages are not linked
+    * non-routable page are not linked
 
 # v1.4.0
 ## 08/25/2015

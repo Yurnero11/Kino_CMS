@@ -51,5 +51,5 @@ public class News {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "seo_id")
-    private SeoBlocks seoBlocks;
+    private SeoBlock seoBlock;
 }

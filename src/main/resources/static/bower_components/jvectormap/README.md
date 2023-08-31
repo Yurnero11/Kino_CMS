@@ -1,4 +1,4 @@
-This is an official git repository for the jVectorMap plug-in for jQuery. Its main purpose is to show interactive vector maps on the web pages.
+This is an official git repository for the jVectorMap plug-in for jQuery. Its main purpose is to show interactive vector maps on the web page.
 
 You can find maps, documentation, examples and more at [the official site](http://jvectormap.com/)
 

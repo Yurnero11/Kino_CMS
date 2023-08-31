@@ -556,7 +556,7 @@ Zone America/Adak	 12:13:21 -	LMT	1867 Oct 18
 # Hawaii
 
 # From Arthur David Olson (2010-12-09):
-# "Hawaiian Time" by Robert C. Schmitt and Doak C. Cox appears on pages 207-225
+# "Hawaiian Time" by Robert C. Schmitt and Doak C. Cox appears on page 207-225
 # of volume 26 of The Hawaiian Journal of History (1992). As of 2010-12-09,
 # the article is available at
 # <a href="http://evols.library.manoa.hawaii.edu/bitstream/10524/239/2/JL26215.pdf">
@@ -1738,7 +1738,7 @@ Zone America/Winnipeg	-6:28:36 -	LMT	1887 Jul 16
 # since sometime in the 1960s.
 
 # From Chris Walton (2006-06-26):
-# The Saskatchewan time act which was last updated in 1996 is about 30 pages
+# The Saskatchewan time act which was last updated in 1996 is about 30 page
 # long and rather painful to read.
 # http://www.qp.gov.sk.ca/documents/English/Statutes/Statutes/T14.pdf
 
@@ -2712,7 +2712,7 @@ Zone America/Costa_Rica	-5:36:20 -	LMT	1890		# San Jose
 #
 # The article also says that Cuba has been observing DST since 1963,
 # while Shanks (and tzdata) has 1965 as the first date (except in the
-# 1940's). Many other web pages in Cuba also claim that it has been
+# 1940's). Many other web page in Cuba also claim that it has been
 # observed since 1963, but with the exception of 1970 - an exception
 # which is not present in tzdata/Shanks. So there is a chance we need to
 # change some historic records as well.

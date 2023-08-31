@@ -39,7 +39,7 @@
             margin-bottom: 10px;
         }
 
-        .movies-container {
+        .movie-container {
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
@@ -85,8 +85,8 @@
 
 <div class="content">
     <div class="section-container">
-        <h3 class="section-title" style="text-align: center">Вже вийшов</h3>
-        <div class="movies-container">
+        <h3 class="section-title" style="text-align: center">Скоро вийде</h3>
+        <div class="movie-container">
             <div th:each="movie, iterationStatus : ${movies}" th:if="${movie.movie_data == 'now'}" class="movie">
                 <img class="movie-image" th:src="@{'/upload/' + ${movie.main_page_path}}">
                 <a th:href="@{'/posts/' + ${movie.movie_id}}">

@@ -2,7 +2,6 @@ package com.example.Kino_CMS.controller.adminController;
 
 import com.example.Kino_CMS.entity.*;
 import com.example.Kino_CMS.repository.*;
-import com.example.Kino_CMS.service.impl.PageServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -28,11 +27,12 @@ public class PagesController {
     private  ContactForTableRepository contactForTableRepository;
     @Autowired
     private  CafeBarRepository cafeBarRepository;
-
+    @Autowired
+    private SeoBlockCinemaContactRepository seoBlockCinemaContactRepository;
 
     @GetMapping("/admin/pages")
     public String pages(Model model){
-        List<Pages> pages = pageRepository.findAll();
+        List<Page> pages = pageRepository.findAll();
         model.addAttribute("pages", pages);
 
         List<AboutCinema> aboutCinemas = aboutCinemaRepository.findAll();
@@ -55,6 +55,9 @@ public class PagesController {
 
         List<Contact_for_table> contactForTables = contactForTableRepository.findAll();
         model.addAttribute("cinemaContactsForTable", contactForTables);
+
+        List<SeoBlockCinemaContact> seoBlockContacts = seoBlockCinemaContactRepository.findAll();
+        model.addAttribute("seoBlockContacts", seoBlockContacts);
 
         return "/admin/pages/pages";
     }

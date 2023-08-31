@@ -1,13 +1,12 @@
 package com.example.Kino_CMS.controller.adminController;
 
-import com.example.Kino_CMS.entity.Promotions;
-import com.example.Kino_CMS.repository.GalleryRepository;
+import com.example.Kino_CMS.entity.Promotion;
 import com.example.Kino_CMS.repository.PromotionRepository;
-import com.example.Kino_CMS.repository.SeoBlocksRepository;
 import com.example.Kino_CMS.service.impl.GallaryServiceImpl;
 import com.example.Kino_CMS.service.impl.PromotionServiceImpl;
 import com.example.Kino_CMS.service.impl.SeoBlocksServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,23 +37,21 @@ public class PromotionEditController {
     @Autowired
     private GallaryServiceImpl gallaryService;
 
-
-
     @GetMapping("/admin/promotions/{promotion_id}/edit")
     public String editCinema(@PathVariable(value = "promotion_id") long id, Model model) {
         if (!promotionRepository.existsById(id)) {
             return "redirect:/admin/promotions";
         }
 
-        Optional<Promotions> promotionsOptional = promotionRepository.findById(id);
+        Optional<Promotion> promotionsOptional = promotionRepository.findById(id);
         if (promotionsOptional.isEmpty()) {
             return "redirect:/admin/promotions";
         }
 
-        Promotions promotions = promotionsOptional.get();
+        Promotion promotion = promotionsOptional.get();
 
         // Добавление объекта cinema в модель
-        model.addAttribute("promotions", promotions);
+        model.addAttribute("promotions", promotion);
 
         return "admin/promotion/promotions-edit";
     }
@@ -63,7 +60,7 @@ public class PromotionEditController {
     public String promotionEdit(
             @PathVariable(value = "promotion_id") long id,
             @RequestParam("promotion_name") String promotion_name,
-            @RequestParam("status") String status,
+            @RequestParam(value = "status", required = false, defaultValue = "off") String status,
             @RequestParam("promotion_description") String promotion_description,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate publication_date,
             @RequestParam("main_image_path") MultipartFile main_image_path,
@@ -77,47 +74,53 @@ public class PromotionEditController {
             @RequestParam("keywords") String keywords,
             @RequestParam("description_seo") String descriptionSeo)
     {
-        Optional<Promotions> promotionsOptional = promotionRepository.findById(id);
+        Optional<Promotion> promotionsOptional = promotionRepository.findById(id);
         if (promotionsOptional.isEmpty()) {
             return "redirect:/admin/promotions";
         }
 
-        Promotions promotions = promotionsOptional.get();
-        promotions.setPromotion_title(promotion_name);
-        promotions.setPromotion_description(promotion_description);
-        promotions.setPublication_date(publication_date);
-        promotions.setStatus(status);
-        promotions.setMain_image_path(saveImage(main_image_path, promotions.getMain_image_path()));
-        promotions.getGallery().setImagePath1(saveImage(upload1, promotions.getGallery().getImagePath1()));
-        promotions.getGallery().setImagePath2(saveImage(upload2, promotions.getGallery().getImagePath2()));
-        promotions.getGallery().setImagePath3(saveImage(upload3, promotions.getGallery().getImagePath3()));
-        promotions.getGallery().setImagePath4(saveImage(upload4, promotions.getGallery().getImagePath4()));
-        promotions.getGallery().setImagePath5(saveImage(upload5, promotions.getGallery().getImagePath5()));
-        promotions.getSeoBlocks().setUrl(url);
-        promotions.getSeoBlocks().setTitle(title);
-        promotions.getSeoBlocks().setKeywords(keywords);
-        promotions.getSeoBlocks().setDescription(descriptionSeo);
+        Promotion promotion = promotionsOptional.get();
+        promotion.setPromotion_title(promotion_name);
+        promotion.setPromotion_description(promotion_description);
+        promotion.setPublication_date(publication_date);
+        if ("on".equals(status)) {
+            // Обработка, когда статус включен
+            promotion.setStatus("on");
+        } else {
+            // Обработка, когда статус выключен или отсутствует
+            promotion.setStatus("off");
+        }
+        promotion.setMain_image_path(saveImage(main_image_path, promotion.getMain_image_path()));
+        promotion.getGallery().setImagePath1(saveImage(upload1, promotion.getGallery().getImagePath1()));
+        promotion.getGallery().setImagePath2(saveImage(upload2, promotion.getGallery().getImagePath2()));
+        promotion.getGallery().setImagePath3(saveImage(upload3, promotion.getGallery().getImagePath3()));
+        promotion.getGallery().setImagePath4(saveImage(upload4, promotion.getGallery().getImagePath4()));
+        promotion.getGallery().setImagePath5(saveImage(upload5, promotion.getGallery().getImagePath5()));
+        promotion.getSeoBlock().setUrl(url);
+        promotion.getSeoBlock().setTitle(title);
+        promotion.getSeoBlock().setKeywords(keywords);
+        promotion.getSeoBlock().setDescription(descriptionSeo);
 
         if (main_image_path != null && !main_image_path.isEmpty()) {
-            promotions.setMain_image_path(saveImage(main_image_path, promotions.getMain_image_path()));
+            promotion.setMain_image_path(saveImage(main_image_path, promotion.getMain_image_path()));
         } else {
-            promotions.setMain_image_path(promotions.getMain_image_path()); // Сохраняем старое значение
+            promotion.setMain_image_path(promotion.getMain_image_path()); // Сохраняем старое значение
         }
 
-        promotionServiceImpl.savePromotions(promotions);
+        promotionServiceImpl.savePromotions(promotion);
 
         return "redirect:/admin/promotions";
     }
 
     @PostMapping("/admin/promotions/{promotions_id}/remove")
     public String removePromotion(@PathVariable("promotions_id") long promotion_id) {
-        Optional<Promotions> optionalPromotions = promotionRepository.findById(promotion_id);
+        Optional<Promotion> optionalPromotions = promotionRepository.findById(promotion_id);
         if (optionalPromotions.isEmpty()) {
             // Обработка ошибки - акция не найдена
             return "redirect:/admin/promotions";
         }
 
-        Promotions promotion = optionalPromotions.get();
+        Promotion promotion = optionalPromotions.get();
 
         // Удаление изображения из папки, если путь к изображению указан
         if (promotion.getMain_image_path() != null) {
@@ -141,7 +144,8 @@ public class PromotionEditController {
         }
     }
 
-    private final String uploadDir = "upload";
+    @Value("${spring.pathImg}")
+    private String pathPhotos;
 
     private String saveImage(MultipartFile file, String currentImagePath) {
         if (file != null && !file.isEmpty()) {
@@ -150,7 +154,7 @@ public class PromotionEditController {
                 String fileExtension = getFileExtension(originalFileName);
                 String uniqueFileName = generateUniqueFileName(fileExtension);
 
-                Path filePath = Paths.get(uploadDir, uniqueFileName);
+                Path filePath = Paths.get(pathPhotos, uniqueFileName);
                 Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 return uniqueFileName;

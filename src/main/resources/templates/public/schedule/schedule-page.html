@@ -89,43 +89,59 @@
             <!-- Добавьте другие города по необходимости -->
         </select>
 
+    <label for="dates">Дата</label>
+    <select id="dates">
+    </select>
+
+    <script>
+        function getRandomDate(start, end) {
+            return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
+        }
+
+        function formatDate(date) {
+            const options = { year: 'numeric', month: 'long', day: 'numeric' };
+            return date.toLocaleDateString(undefined, options);
+        }
+
+        const startDate = new Date(); // Сегодняшняя дата
+        const endDate = new Date();
+        endDate.setFullYear(startDate.getFullYear() + 1); // Через год
+
+        const datesSelect = document.getElementById('dates');
+
+        const defaultOption = document.createElement('option');
+        defaultOption.value = "";
+        defaultOption.textContent = "Виберіть дату"; // Текст по умолчанию
+        datesSelect.appendChild(defaultOption);
+
+        for (let i = 0; i < 10; i++) {
+            const randomDate = getRandomDate(startDate, endDate);
+            const formattedDate = formatDate(randomDate);
+
+            const optionElement = document.createElement('option');
+            optionElement.value = formattedDate;
+            optionElement.textContent = formattedDate;
+            datesSelect.appendChild(optionElement);
+        }
+    </script>
 
 
-        <label for="cities2">Дата</label>
-        <select id="cities2">
-            <option value="Киев">Киев</option>
-            <option value="Харьков">Харьков</option>
-            <option value="Одесса">Одесса</option>
-            <option value="Чернигов">Чернигов</option>
-            <option value="Львов">Львов</option>
-            <option value="Николаев">Николаев</option>
-            <option value="Кривой">Кривой Рог</option>
-            <option value="Полтава">Полтава</option>
-            <option value="Кропивницкий">Кропивницкий</option>
-            <option value="Краматорск">Краматорск</option>
-            <option value="Черновцы">Черновцы</option>
-            <option value="Запорожье">Запорожье</option>
-            <option value="Сумы">Сумы</option>
-            <!-- Добавьте другие города по необходимости -->
-        </select>
 
-
-
-        <label for="cities3">Фильм</label>
+        <label for="cities3">Фільм</label>
         <select id="cities3">
-            <option value="Киев">Киев</option>
-            <option value="Харьков">Харьков</option>
-            <option value="Одесса">Одесса</option>
-            <option value="Чернигов">Чернигов</option>
-            <option value="Львов">Львов</option>
-            <option value="Николаев">Николаев</option>
-            <option value="Кривой">Кривой Рог</option>
-            <option value="Полтава">Полтава</option>
-            <option value="Кропивницкий">Кропивницкий</option>
-            <option value="Краматорск">Краматорск</option>
-            <option value="Черновцы">Черновцы</option>
-            <option value="Запорожье">Запорожье</option>
-            <option value="Сумы">Сумы</option>
+            <option value="Киев">Фільм 1</option>
+            <option value="Харьков">Фільм 2</option>
+            <option value="Одесса">Фільм 3</option>
+            <option value="Чернигов">Фільм 4</option>
+            <option value="Львов">Фільм 5</option>
+            <option value="Николаев">Фільм 6</option>
+            <option value="Кривой">Фільм 7</option>
+            <option value="Полтава">Фільм 8</option>
+            <option value="Кропивницкий">Фільм 9</option>
+            <option value="Краматорск">Фільм 10</option>
+            <option value="Черновцы">Фільм 11</option>
+            <option value="Запорожье">Фільм 12</option>
+            <option value="Сумы">Фільм 13</option>
             <!-- Добавьте другие города по необходимости -->
         </select>
 
@@ -133,19 +149,19 @@
 
         <label for="cities4">Зал</label>
         <select id="cities4">
-            <option value="Киев">Киев</option>
-            <option value="Харьков">Харьков</option>
-            <option value="Одесса">Одесса</option>
-            <option value="Чернигов">Чернигов</option>
-            <option value="Львов">Львов</option>
-            <option value="Николаев">Николаев</option>
-            <option value="Кривой">Кривой Рог</option>
-            <option value="Полтава">Полтава</option>
-            <option value="Кропивницкий">Кропивницкий</option>
-            <option value="Краматорск">Краматорск</option>
-            <option value="Черновцы">Черновцы</option>
-            <option value="Запорожье">Запорожье</option>
-            <option value="Сумы">Сумы</option>
+            <option value="Киев">Зал 1</option>
+            <option value="Харьков">Зал 2</option>
+            <option value="Одесса">Зал3 </option>
+            <option value="Чернигов">Зал 4</option>
+            <option value="Львов">Зал 5</option>
+            <option value="Николаев">Зал 6</option>
+            <option value="Кривой">Зал 7</option>
+            <option value="Полтава">Зал 8</option>
+            <option value="Кропивницкий">Зал 9</option>
+            <option value="Краматорск">Зал 10</option>
+            <option value="Черновцы">Зал 11</option>
+            <option value="Запорожье">Зал 12</option>
+            <option value="Сумы">Зал 13</option>
             <!-- Добавьте другие города по необходимости -->
         </select>
 </div>
@@ -154,35 +170,35 @@
 
 <div class="clearfix">
     <div class="tables-container">
-        <h2>24 июля, Воскресенье</h2>
+        <h2>24 липня, Неділя</h2>
         <table>
             <thead>
             <tr>
-                <th>Время</th>
-                <th>Фильм</th>
+                <th>Час</th>
+                <th>Фільм</th>
                 <th>Зал</th>
-                <th>Цена в грн</th>
-                <th>Бронировать</th>
+                <th>Ціна в грн</th>
+                <th>Забронювати</th>
             </tr>
             </thead>
             <tbody id="table1-body">
-            <!-- Здесь будут добавляться данные -->
+            <!-- Тут будуть додаватися дані -->
             </tbody>
         </table>
 
-        <h2>25 июля, Понедельник</h2>
+        <h2>25 липня, Понеділок</h2>
         <table>
             <thead>
             <tr>
-                <th>Время</th>
-                <th>Фильм</th>
+                <th>Час</th>
+                <th>Фільм</th>
                 <th>Зал</th>
-                <th>Цена в грн</th>
-                <th>Бронировать</th>
+                <th>Ціна в грн</th>
+                <th>Забронювати</th>
             </tr>
             </thead>
             <tbody id="table2-body">
-            <!-- Здесь будут добавляться данные -->
+            <!-- Тут будуть додаватися дані -->
             </tbody>
         </table>
     </div>
@@ -197,32 +213,32 @@
 <script>
     document.addEventListener("DOMContentLoaded", function() {
         const dataDay1 = [
-            { time: "10:00", movie: "Фильм 1", hall: "Зал 1", price: "100", link: "/schedule/ticket" },
-            { time: "12:00", movie: "Фильм 2", hall: "Зал 2", price: "100", link: "/schedule/ticket" },
-            { time: "14:00", movie: "Фильм 3", hall: "Зал 3", price: "100", link: "/schedule/ticket" },
-            { time: "16:00", movie: "Фильм 4", hall: "Зал 4", price: "100", link: "/schedule/ticket" },
-            { time: "18:00", movie: "Фильм 5", hall: "Зал 5", price: "100", link: "/schedule/ticket" },
-            { time: "20:00", movie: "Фильм 6", hall: "Зал 6", price: "100", link: "/schedule/ticket" },
-            { time: "22:00", movie: "Фильм 7", hall: "Зал 7", price: "100", link: "/schedule/ticket" },
-            { time: "24:00", movie: "Фильм 8", hall: "Зал 8", price: "100", link: "/schedule/ticket" },
-            { time: "00:00", movie: "Фильм 9", hall: "Зал 9", price: "100", link: "/schedule/ticket" },
-            { time: "09:00", movie: "Фильм 10", hall: "Зал 10", price: "100", link: "/schedule/ticket" },
-            { time: "13:00", movie: "Фильм 11", hall: "Зал 11", price: "100", link: "/schedule/ticket" },
+            { time: "10:00", movie: "Фільм 1", hall: "Зал 1", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "12:00", movie: "Фільм 2", hall: "Зал 2", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "14:00", movie: "Фільм 3", hall: "Зал 3", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "16:00", movie: "Фільм 4", hall: "Зал 4", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "18:00", movie: "Фільм 5", hall: "Зал 5", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "20:00", movie: "Фільм 6", hall: "Зал 6", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "22:00", movie: "Фільм 7", hall: "Зал 7", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "24:00", movie: "Фільм 8", hall: "Зал 8", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "00:00", movie: "Фільм 9", hall: "Зал 9", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "09:00", movie: "Фільм 10", hall: "Зал 10", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "13:00", movie: "Фільм 11", hall: "Зал 11", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
 
         ];
 
         const dataDay2 = [
-            { time: "12:00", movie: "Фильм 2", hall: "Зал 2", price: "120", link: "/schedule/ticket" },
-            { time: "12:00", movie: "Фильм 2", hall: "Зал 2", price: "100", link: "/schedule/ticket" },
-            { time: "14:00", movie: "Фильм 3", hall: "Зал 3", price: "100", link: "/schedule/ticket" },
-            { time: "16:00", movie: "Фильм 4", hall: "Зал 4", price: "100", link: "/schedule/ticket" },
-            { time: "18:00", movie: "Фильм 5", hall: "Зал 5", price: "100", link: "/schedule/ticket" },
-            { time: "20:00", movie: "Фильм 6", hall: "Зал 6", price: "100", link: "/schedule/ticket" },
-            { time: "22:00", movie: "Фильм 7", hall: "Зал 7", price: "100", link: "/schedule/ticket" },
-            { time: "24:00", movie: "Фильм 8", hall: "Зал 8", price: "100", link: "/schedule/ticket" },
-            { time: "00:00", movie: "Фильм 9", hall: "Зал 9", price: "100", link: "/schedule/ticket" },
-            { time: "09:00", movie: "Фильм 10", hall: "Зал 10", price: "100", link: "/schedule/ticket" },
-            { time: "13:00", movie: "Фильм 11", hall: "Зал 11", price: "100", link: "/schedule/ticket" },
+            { time: "12:00", movie: "Фільм 2", hall: "Зал 2", price: "120", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "12:00", movie: "Фільм 2", hall: "Зал 2", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "14:00", movie: "Фільм 3", hall: "Зал 3", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "16:00", movie: "Фільм 4", hall: "Зал 4", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "18:00", movie: "Фільм 5", hall: "Зал 5", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "20:00", movie: "Фільм 6", hall: "Зал 6", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "22:00", movie: "Фільм 7", hall: "Зал 7", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "24:00", movie: "Фільм 8", hall: "Зал 8", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "00:00", movie: "Фільм 9", hall: "Зал 9", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "09:00", movie: "Фільм 10", hall: "Зал 10", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
+            { time: "13:00", movie: "Фільм 11", hall: "Зал 11", price: "100", link: "/Kino_CMS-Yura_Dmytriv/schedule/ticket" },
         ];
 
         const table1Body = document.getElementById("table1-body");

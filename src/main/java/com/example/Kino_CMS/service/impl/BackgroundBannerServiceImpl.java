@@ -1,7 +1,6 @@
 package com.example.Kino_CMS.service.impl;
 
 import com.example.Kino_CMS.entity.BackgroundBanner;
-import com.example.Kino_CMS.entity.MainBanners;
 import com.example.Kino_CMS.repository.BackgroundBannerRepository;
 import com.example.Kino_CMS.service.BackgroundBannerService;
 import org.apache.logging.log4j.LogManager;
@@ -49,5 +48,13 @@ public class BackgroundBannerServiceImpl implements BackgroundBannerService {
             log.error("Error while retrieving BackgroundBanner: {}", e.getMessage());
             throw e; // Можно обработать иначе в зависимости от вашей логики
         }
+    }
+
+    public boolean isBackgroundCheckedForBanner(BackgroundBanner backgroundBanner) {
+        return "background".equals(backgroundBanner.getBackground_type());
+    }
+
+    public boolean isSimpleCheckedForBanner(BackgroundBanner backgroundBanner) {
+        return "simple".equals(backgroundBanner.getBackground_type());
     }
 }

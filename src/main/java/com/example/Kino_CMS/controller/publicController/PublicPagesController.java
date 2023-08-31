@@ -1,7 +1,6 @@
 package com.example.Kino_CMS.controller.publicController;
 
 import com.example.Kino_CMS.entity.*;
-import com.example.Kino_CMS.repository.*;
 import com.example.Kino_CMS.service.impl.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -57,11 +56,11 @@ public class PublicPagesController {
 
     @GetMapping("/contacts")
     public String contacts(Model model){
-        Iterable<CinemaContacts> contactsList = cinemaContactsService.getAllCinemaContact();
+        Iterable<CinemaContact> contactsList = cinemaContactsService.getAllCinemaContact();
         model.addAttribute("contactsList", contactsList);
 
         // Проход по всем контактам и преобразование координат в десятичные градусы
-        for (CinemaContacts contact : contactsList) {
+        for (CinemaContact contact : contactsList) {
             double latitudeString = contact.getCoordinates1();
             double longitudeString = contact.getCoordinates2();
 
@@ -78,9 +77,9 @@ public class PublicPagesController {
 
     @GetMapping("/page/{page_id}")
     public String page(Model model, @PathVariable(value = "page_id") long id){
-        Optional<Pages> pagesOptional = pageService.findById(id);
+        Optional<Page> pagesOptional = pageService.findById(id);
         if (pagesOptional.isPresent()) {
-            Pages page = pagesOptional.get();
+            Page page = pagesOptional.get();
             model.addAttribute("pages", page);
             return "/public/pages/other-page";
         } else {

@@ -61,7 +61,7 @@ simplesearch:
     filter_combinator: and
 ```
 
- These page headers will only be taken into account if the search route points to this page.  For example: here the the route points to `@self` which in turn resolves to `/blog`.  You can also specify the route explicity with `route: /blog` if you so choose. This header is within the `/user/pages/blog/blog.md` file.  We will cover this self-controlled form of search handling below.
+ These page headers will only be taken into account if the search route points to this page.  For example: here the the route points to `@self` which in turn resolves to `/blog`.  You can also specify the route explicity with `route: /blog` if you so choose. This header is within the `/user/page/blog/blog.md` file.  We will cover this self-controlled form of search handling below.
 
 # Usage
 
@@ -88,7 +88,7 @@ http://yoursite.com/search/query:something
 
 The plugin actively looks for URLs requested that match the configured `route` and if so it intercepts the call and renders the results template as specified by the configuration options, (defaults to `simplesearch_results.html.twig` as provided by the plugin).
 
-With this approach, the filters control which pages are searched.  You can have multiple taxonomy filters here, and can configure the combinator to require **any** match (via `or`) or require **all** conditions to match (via `and`).
+With this approach, the filters control which page are searched.  You can have multiple taxonomy filters here, and can configure the combinator to require **any** match (via `or`) or require **all** conditions to match (via `and`).
 
 You can also completely customize the look and feel of the results by overriding the template. There are two methods to do this.
 
@@ -125,7 +125,7 @@ content:
         dir: desc
 ```
 
-This will mean the search will only search pages that this page already is using for the collection.  The Items could be anything the page collections support:
+This will mean the search will only search page that this page already is using for the collection.  The Items could be anything the page collections support:
 
 For further help with the `filters` and `order` settings, please refer to our [Taxonomy][taxonomy] and [Headers][headers] documentation.
 
@@ -135,7 +135,7 @@ The only thing needed to provide this functionality is a search box that points 
 
 ## Performance
 
-Simple search is not a full-fledged index-powered search engine.  It merely iterates over the pages and searches the content and title for matching strings.  That's it.  This is not going to result in screaming fast searches if your site has lots of content.  One way to optimize things a little is to change the `search_content` configuration option from `rendered` to `raw`.  This means the `rawMarkdown()` method is used rather than the `content()` method, to retrieve the page content, and in turn means plugin events, markdown processing, image processing, and other time consuming tasks are not performed.  This can often yield adequate search results without the need for all this extra work. 
+Simple search is not a full-fledged index-powered search engine.  It merely iterates over the page and searches the content and title for matching strings.  That's it.  This is not going to result in screaming fast searches if your site has lots of content.  One way to optimize things a little is to change the `search_content` configuration option from `rendered` to `raw`.  This means the `rawMarkdown()` method is used rather than the `content()` method, to retrieve the page content, and in turn means plugin events, markdown processing, image processing, and other time consuming tasks are not performed.  This can often yield adequate search results without the need for all this extra work. 
 
 ## Searching Taxonomy
 

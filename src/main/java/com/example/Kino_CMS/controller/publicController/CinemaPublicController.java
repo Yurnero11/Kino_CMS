@@ -1,10 +1,8 @@
 package com.example.Kino_CMS.controller.publicController;
 
-import com.example.Kino_CMS.entity.Cinemas;
+import com.example.Kino_CMS.entity.Cinema;
 import com.example.Kino_CMS.entity.Gallary;
-import com.example.Kino_CMS.entity.Halls;
-import com.example.Kino_CMS.repository.CinemaRepository;
-import com.example.Kino_CMS.repository.HallRepository;
+import com.example.Kino_CMS.entity.Hall;
 import com.example.Kino_CMS.service.impl.CinemaServiceImpl;
 import com.example.Kino_CMS.service.impl.HallServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,25 +24,25 @@ public class CinemaPublicController {
 
     @GetMapping("/cinemas")
     public String cinemas(Model model){
-        Iterable<Cinemas> cinemas = service.getAllCinemas(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
+        Iterable<Cinema> cinemas = service.getAllCinemas(); // Здесь используйте ваш сервис или репозиторий для получения списка кинотеатров
         model.addAttribute("cinemas", cinemas);
         return "/public/cinema/cinemas-page";
     }
 
-    @GetMapping("/cinema/{cinema_id}")
+    @GetMapping("/cinemas/{cinema_id}")
     public String cinemaPage(@PathVariable(value = "cinema_id") long id, Model model){
-        Optional<Cinemas> optionalCinemas = service.getCinemaById(id);
+        Optional<Cinema> optionalCinemas = service.getCinemaById(id);
         if (optionalCinemas.isEmpty()) {
             return "redirect:/cinemas";
         }
 
-        Cinemas cinemas = optionalCinemas.get();
+        Cinema cinema = optionalCinemas.get();
         // Retrieve the list of halls associated with the cinema
-        List<Halls> hallsList = cinemas.getHalls();
+        List<Hall> hallList = cinema.getHalls();
         // Add the halls list to the model
-        model.addAttribute("hallsList", hallsList);
+        model.addAttribute("hallsList", hallList);
 
-        Gallary gallery = service.getGalleryByCinemaId((long) cinemas.getCinema_id());
+        Gallary gallery = service.getGalleryByCinemaId((long) cinema.getCinema_id());
         if (gallery != null) {
             List<String> galleryPaths = new ArrayList<>();
             galleryPaths.add(gallery.getImagePath1());
@@ -56,24 +54,24 @@ public class CinemaPublicController {
         }
 
         // Добавление объекта cinema в модель
-        model.addAttribute("cinemas", cinemas);
+        model.addAttribute("cinemas", cinema);
         return "/public/cinema/cinema-id";
     }
 
-    @GetMapping("/cinema/{cinema_id}/hall/{hall_id}")
+    @GetMapping("/cinemas/{cinema_id}/hall/{hall_id}")
     public String hallPage(@PathVariable("cinema_id") Long cinemaId,
                            @PathVariable("hall_id") Long hallId,
                            Model model)
     {
-        Optional<Halls> optionalHalls = hallService.getHallById(hallId);
+        Optional<Hall> optionalHalls = hallService.getHallById(hallId);
         if (optionalHalls.isEmpty()) {
             return "redirect:/cinemas";
         }
 
-        Halls  halls = optionalHalls.get();
+        Hall hall = optionalHalls.get();
 
 
-        Gallary gallery = hallService.getGalleryByHallId((long) halls.getHall_id());
+        Gallary gallery = hallService.getGalleryByHallId((long) hall.getHall_id());
         if (gallery != null) {
             List<String> galleryPaths = new ArrayList<>();
             galleryPaths.add(gallery.getImagePath1());
@@ -85,7 +83,7 @@ public class CinemaPublicController {
         }
 
         // Добавление объекта cinema в модель
-        model.addAttribute("halls", halls);
+        model.addAttribute("halls", hall);
         return "/public/cinema/hall-page";
     }
 
