@@ -56,7 +56,7 @@
     <div class="section-container">
         <div class="movie-container">
             <div th:each="cinema : ${cinemas}" class="cinema">
-                <img class="movie-image" th:src="@{'/Kino_CMS-Yura_Dmytriv/upload/' + ${cinema.getLogo_image_path()}}">
+                <img class="movie-image" th:src="@{'/upload/' + ${cinema.getLogo_image_path()}}">
                 <h3 th:text="${cinema.name}"></h3>
                 <td><a th:href="@{/admin/cinemas/{cinema_id}/edit(cinema_id=${cinema.cinema_id})}" class="btn btn-info">Редагувати</a></td>
                 <td>
