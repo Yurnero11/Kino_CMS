@@ -14,6 +14,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Arrays;
@@ -158,6 +159,51 @@ public class UserServiceImplTest {
         assertEquals(expectedCount, actualCount);
 
         // Проверьте, что метод userRepository.count() был вызван ровно один раз
+        verify(userRepository, times(1)).count();
+    }
+
+    @Test
+    public void testFindAllPage() {
+        // Создаем тестовые данные
+        List<User> users = Arrays.asList(
+                new User(),
+                new User(),
+                new User()
+        );
+
+        // Создаем объект Page с тестовыми данными
+        Page<User> page = new PageImpl<>(users);
+
+        // Указываем, что при вызове userRepository.findAll с определенными параметрами, метод должен возвращать page
+        when(userRepository.findAll(any(Pageable.class))).thenReturn(page);
+
+        // Вызываем метод findAllPage
+        Integer pageNumber = 0;
+        Integer pageSize = 10;
+        Page<User> result = userService.findAllPage(pageNumber, pageSize);
+
+        // Проверяем, что результат соответствует ожиданиям
+        assertEquals(page, result);
+
+        // Проверяем, что метод userRepository.findAll был вызван с нужными параметрами
+        verify(userRepository, times(1)).findAll(PageRequest.of(pageNumber, pageSize));
+    }
+
+    @Test
+    public void testCountTotalUsers1() {
+        // Создаем тестовое значение, которое мы ожидаем от userRepository.count()
+        long expectedCount = 42L;
+
+        // Указываем, что при вызове userRepository.count(), метод должен возвращать expectedCount
+        when(userRepository.count()).thenReturn(expectedCount);
+
+        // Вызываем метод countTotalUsers
+        long result = userService.countTotalUsers();
+
+        // Проверяем, что результат соответствует ожиданиям
+        assertEquals(expectedCount, result);
+
+        // Проверяем, что метод userRepository.count был вызван один раз
         verify(userRepository, times(1)).count();
     }
 }

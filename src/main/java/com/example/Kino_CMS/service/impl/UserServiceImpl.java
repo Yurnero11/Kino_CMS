@@ -78,7 +78,6 @@ public class UserServiceImpl implements UserServiceInterface {
     public Page<User> findAllPage(Integer pageNumber, Integer pageSize){
         Pageable pageable = PageRequest.of(pageNumber, pageSize);
         return userRepository.findAll(pageable);
-
     }
 
     public long countTotalUsers() {

@@ -6,6 +6,9 @@ import com.example.Kino_CMS.service.NewsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -70,5 +73,19 @@ public class NewsServiceImpl implements NewsService {
             log.error("Error while getting News by ID: {}", newsId, e);
             throw e;
         }
+    }
+
+
+    public Page<News> findAllPage(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        // Получаем только новости со статусом "on"
+        Page<News> newsPage = newsRepository.findByStatus("on", pageable);
+
+        return newsPage;
+    }
+
+    public int countActiveNews() {
+        return (int) newsRepository.countByStatus("on"); // Предположим, что у вас есть метод countByStatus для подсчета активных новостей
     }
 }

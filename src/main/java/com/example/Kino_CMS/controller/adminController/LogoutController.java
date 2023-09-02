@@ -23,6 +23,6 @@ public class LogoutController {
         if (authentication != null) {
             request.getSession().invalidate();
         }
-        return "redirect:/login";
+        return "redirect:/home";
     }
 }

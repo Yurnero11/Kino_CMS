@@ -6,6 +6,9 @@ import com.example.Kino_CMS.service.PromotionsService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -70,5 +73,18 @@ public class PromotionServiceImpl implements PromotionsService {
             log.error("Error while deleting Promotions: {}", promotion, e);
             throw e;
         }
+    }
+
+    public Page<Promotion> findAllPage(int page, int pageSize) {
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        // Получаем только новости со статусом "on"
+        Page<Promotion> newsPage = promotionRepository.findByStatus("on", pageable);
+
+        return newsPage;
+    }
+
+    public int countActiveNews() {
+        return (int) promotionRepository.countByStatus("on"); // Предположим, что у вас есть метод countByStatus для подсчета активных новостей
     }
 }

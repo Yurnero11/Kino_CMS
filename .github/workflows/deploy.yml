@@ -1,4 +1,4 @@
-name: Deploy to Tomcat
+name: CI CD and deploy to Tomcat
 on: push
 jobs:
   deploy:

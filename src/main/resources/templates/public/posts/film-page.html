@@ -284,7 +284,7 @@
         <img style="height: 350px" class="movie-image" th:src="'/Kino_CMS-Yura_Dmytriv/upload/' + ${movies.main_page_path}" alt="Фильм">
         <div class="movie-description">
             <form action="#" method="post" onsubmit="return false;">
-                <button class="btn btn-warning" type="submit">Купити білет</button>
+                <a th:href="@{/schedule/ticket}" class="btn btn-warning">Купити білет</a>
             </form>
             <h2 th:text="${movies.name}"></h2>
             <p style="max-width: 1000px; word-wrap: break-word; text-align: center; margin: 0 auto;" th:text="${movies.description}"></p>

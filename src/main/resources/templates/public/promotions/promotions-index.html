@@ -92,6 +92,29 @@
     </div>
 </div>
 
+<form method="POST" th:if="${showPagination}">
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous" disabled="0"
+                   th:href="@{/promotions(page=0)}">
+                    <span aria-hidden="true">&lt;</span>
+                </a>
+            </li>
+            <li class="page-item" th:each="pageNumber : ${#numbers.sequence(0, totalPages - 1)}">
+                <a class="page-link" href="#" th:href="@{/promotions(page=${pageNumber})}"
+                   th:text="${pageNumber + 1}"></a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next"
+                   th:disabled="${currentPage == totalPages - 1}"
+                   th:href="@{/promotions(page=${nextPage})}">
+                    <span aria-hidden="true">&gt;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</form>
 
 <div class="footer" th:replace="public/content/footer :: footer"></div>
 
